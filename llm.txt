@@ -1,0 +1,28 @@
+# Linden LLM Context
+
+This file provides a high-level orientation for LLMs working in this codebase.
+For full agent instructions, see AGENTS.md.
+
+## What This Project Is
+Linden is a privacy-first local AI platform. All inference runs locally via Ollama.
+No user data leaves the device by default.
+
+## Repository Layout
+- src/          — Go server (cmd, api, orchestrator, inference, storage, discovery) + SvelteKit web
+- validation/   — contracts, integration, security, smoke test suites
+- prompts/      — reusable prompt templates for product and dev use
+- evals/        — AI output evaluation datasets and test harnesses
+- tools/        — MCP-compatible tool definitions and sandboxed plugins
+- .agents/      — agent workflow definitions and role configurations
+- .mcp/         — MCP server configuration and tool manifests
+- .context/     — persistent context files for AI coding assistants
+- docs/adr/     — architecture decision records
+- plans/        — project planning documents (purpose, MVP, exhaustive roadmap)
+
+## Key Rules for AI Agents
+- Never log user data, not even at debug level.
+- Validate all input at the API boundary (src/api).
+- Layers communicate only through their defined interfaces; no layer reaches into another's internals.
+- Do not add features, abstractions, or comments beyond what was explicitly requested.
+- When uncertain, add a TODO comment rather than guessing at design intent.
+- This is a privacy product. Every line of code should be audit-ready.

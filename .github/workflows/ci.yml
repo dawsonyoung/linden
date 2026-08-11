@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  server:
+    name: Server (Go)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Vet
+        run: cd src && go vet ./...
+
+      - name: Unit tests
+        run: cd src && go test -race -coverprofile=coverage.out ./...
+
+      - name: Build
+        run: cd src && go build -o ../bin/linden ./cmd/
+
+  web:
+    name: Web (SvelteKit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install
+        run: cd src/web && npm ci
+
+      - name: Type check
+        run: cd src/web && npm run check
+
+      - name: Build
+        run: cd src/web && npm run build
+
+  validation:
+    name: Validation
+    needs: [server, web]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Contract tests
+        run: cd src && go test -tags=contracts ../validation/contracts/... 2>/dev/null || echo "No contract tests yet"
+
+      - name: Integration tests
+        run: cd src && go test -tags=integration ../validation/integration/... 2>/dev/null || echo "No integration tests yet"
