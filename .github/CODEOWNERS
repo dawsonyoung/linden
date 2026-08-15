@@ -1,0 +1,26 @@
+# Default owner for everything not matched below.
+*                       @dawsonyoung
+
+# Agent framework. .agents/ is canonical; .github mirrors are generated.
+/.agents/               @dawsonyoung
+/.github/agents/        @dawsonyoung
+/.github/instructions/  @dawsonyoung
+/.github/prompts/       @dawsonyoung
+/scripts/sync-agent-framework.ps1  @dawsonyoung
+
+# Agent memory. lessons_learned.md is human-promoted only.
+/.context/              @dawsonyoung
+
+# Published product documentation and privacy commitments.
+/docs/product/          @dawsonyoung
+
+# Decisions are immutable once accepted; changes require a superseding ADR.
+/docs/adr/              @dawsonyoung
+
+# Process standards.
+/docs/project/          @dawsonyoung
+
+# CI and release surface.
+/.github/workflows/     @dawsonyoung
+/Dockerfile             @dawsonyoung
+/Makefile               @dawsonyoung

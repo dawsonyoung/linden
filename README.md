@@ -1,20 +1,64 @@
 # Linden
 
-A privacy-first local AI platform. See [AGENTS.md](AGENTS.md) for architecture and conventions.
+A privacy-first local AI platform. Runs on hardware you own, on your own network, with content you own. Ask your Linden AI anything with safety, privacy, and ownership.
 
-## Quick Start
-
-```powershell
-# Install prerequisites
-.\scripts\setup.ps1
-
-# Start development
-make dev
-```
+See [AGENTS.md](AGENTS.md) for architecture and conventions.
 
 ## Status
 
-**MVP in progress** — hello world inference loop (Go server + Ollama + SvelteKit chat UI).
+**Pre-implementation.** The repository holds specifications, plans, and the agent workflow framework. There is no running server yet.
+
+| Area | State |
+|------|-------|
+| Product spec and PRDs | Stubbed; PRD-0001 accepted |
+| Layer interface spec | Draft, awaiting first contract tests |
+| Agent workflow framework | In use |
+| Go server | Not started — Stage 0.2 |
+| Web client | Not started — Stage C.3 |
+| Inference (Ollama) | Not started — Stage A.3 |
+| CI gates | Present but not yet enforcing — Stage 0.3 |
+| Docker image | Not started — Stage 0.4 |
+
+Current work is Stage 0 groundwork. See [plans/05-stage-0-groundwork.md](plans/05-stage-0-groundwork.md).
+
+## Quick Start
+
+Nothing runs yet. Once Stage 0.2 lands:
+
+```powershell
+.\scripts\setup.ps1    # install Go, Node, Ollama; pull tinyllama
+make dev               # not yet functional
+```
+
+Contributors should read [CONTRIBUTING.md](CONTRIBUTING.md) first.
+
+## Support Matrix
+
+| Platform | State | Notes |
+|----------|-------|-------|
+| Linux | Authoritative | All CI gates run here |
+| Docker (Linux) | Required | Runtime gate from Stage 0.4 |
+| Windows | Development only | `make` requires WSL or Git Bash |
+| macOS | Untested | Expected to work; not gated |
+
+| Dependency | Version |
+|------------|---------|
+| Go | 1.22+ |
+| Node.js | 20+ |
+| Ollama | current, with a pulled model |
+
+## MVP Checklist
+
+Tracked against [plans/02-repository-setup-and-mvp-plan.md](plans/02-repository-setup-and-mvp-plan.md).
+
+- [ ] Server builds and boots with health and version endpoints
+- [ ] Linux CI gates can fail, and gate on every PR
+- [ ] Docker image builds and passes a container health check
+- [ ] Chat request completes against a local model
+- [ ] Replies stream to the client
+- [ ] Conversations persist across restarts
+- [ ] A second device on the LAN can pair and connect
+- [ ] Privacy controls are visible and test-covered
 
 ## Documentation
 
@@ -31,3 +75,12 @@ make dev
 6. [Branching Strategy](docs/project/branching-strategy.md)
 7. [Implementation Sequence](plans/04-implementation-sequence.md)
 8. [Stage 0: Groundwork](plans/05-stage-0-groundwork.md)
+
+## Security
+
+Report vulnerabilities privately. See [SECURITY.md](SECURITY.md).
+
+## License
+
+See [LICENSE](LICENSE).
+
