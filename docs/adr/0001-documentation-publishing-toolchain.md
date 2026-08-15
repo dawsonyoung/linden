@@ -53,10 +53,21 @@ Option C remains the fallback if fetching a third-party artifact in CI becomes u
 
 - CI fetches a pinned mdBook release. Rust is not installed; only the prebuilt binary is downloaded.
 - The pinned version is recorded in the CI workflow. Upgrades are deliberate, in their own PR.
-- `book.toml` is added under `docs/`, configured to treat `docs/product/` as the book source.
-- `docs/product/spec/SUMMARY.md` remains the navigation source. A page absent from it does not publish, and the build fails.
+- `book.toml` is added at the repository root, configured to treat `docs/product/` as the book source.
+- `docs/product/SUMMARY.md` is the navigation source. A page absent from it does not publish, and the build fails.
 - Output goes to `docs/.site/`, which is git-ignored.
 - `make docs` builds; `make docs-serve` previews.
 - A broken relative link fails the build.
-- mdBook renders one book per source root. `docs/product/prd/` must either be listed in `SUMMARY.md` or rendered as a second book; resolve during Stage 0.6.
 - Offline requirement holds: mdBook's search index is generated at build time and needs no network at render or read time.
+
+## Resolution, Stage 0.6
+
+PRDs are a section of the single book, not a second book.
+
+The specification and the PRDs cross-reference each other: a PRD cites the spec sections it produced, and a capability cites its originating PRD. Two books would make those links external, unverifiable by the link checker, and absent from a shared search index.
+
+`SUMMARY.md` moved from `docs/product/spec/` to `docs/product/`, because mdBook requires it at the book root.
+
+mdBook does not enforce either guarantee claimed above: it silently ignores pages absent from `SUMMARY.md`, and it does not verify relative links. Both are enforced by `scripts/check-docs.sh`, which runs before the build. `create-missing = false` covers the inverse case, a `SUMMARY.md` entry with no file.
+
+Two files are deliberately unpublished and allowlisted in the checker: `README.md`, which is contributor guidance about the directory, and `prd/TEMPLATE.md`, which is a scaffold.

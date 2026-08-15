@@ -1,4 +1,4 @@
-.PHONY: build build-web build-server dev test test-web validate validate-contracts validate-integration lint lint-web clean docs docs-serve docker-build docker-smoke
+.PHONY: build build-web build-server dev test test-web validate validate-contracts validate-integration lint lint-web clean docs docs-check docs-serve docker-build docker-smoke
 
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 COMMIT  ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)
@@ -79,13 +79,16 @@ lint-web:
 	fi
 
 # Documentation
-docs:
-	@echo "TODO: implement tools/docgen (Stage 0.6). See docs/adr/0001-documentation-publishing-toolchain.md"
-	@exit 1
+# docs-check catches what mdBook does not: pages absent from SUMMARY.md are
+# silently unpublished, and relative links are never verified.
+docs: docs-check
+	mdbook build
 
-docs-serve:
-	@echo "TODO: implement tools/docgen (Stage 0.6). See docs/adr/0001-documentation-publishing-toolchain.md"
-	@exit 1
+docs-check:
+	@sh scripts/check-docs.sh
+
+docs-serve: docs-check
+	mdbook serve --open
 
 # Container
 docker-build:

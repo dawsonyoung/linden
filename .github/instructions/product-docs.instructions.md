@@ -10,6 +10,6 @@ applyTo: "docs/product/**"
 - The spec is present tense and describes what is real today. Planned behavior belongs in a PRD until it ships.
 - A PRD is frozen once shipped. Do not rewrite it to match what was built; update the spec instead.
 - Layer-internal detail belongs in `docs/architecture/layer-interface-spec.md`. Link to it rather than restating it.
-- A new page must be listed in `docs/product/spec/SUMMARY.md` or it is not published.
+- A new page must be listed in `docs/product/SUMMARY.md` or it is not published.
 - Any change touching data handling, retention, or network egress must update `spec/30-privacy-model.md`, even if only to state that nothing changed.
 - Every user-visible behavior change updates the spec in the same PR that changes the behavior.

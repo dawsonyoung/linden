@@ -56,7 +56,7 @@ Duplication is drift. When content exists in `docs/`, `.context` links to it.
 | Concern | Authoritative source |
 |---------|---------------------|
 | What Linden does, observable behavior | `docs/product/spec/` |
-| Published navigation manifest | `docs/product/spec/SUMMARY.md` |
+| Published navigation manifest | `docs/product/SUMMARY.md` |
 | Capability proposals and rationale | `docs/product/prd/` |
 | Privacy commitments | `docs/product/spec/30-privacy-model.md` |
 | Publishing toolchain decision | `docs/adr/0001-documentation-publishing-toolchain.md` |

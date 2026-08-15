@@ -35,7 +35,7 @@ Fully specified in `plans/05-stage-0-groundwork.md`.
 | 0.3 | `ci/linux-gate-honesty` | Remove pass-through echoes, split CI jobs per gate, Linux authoritative | CI green |
 | 0.4 | `ci/docker-linux-parity` | Dockerfile, .dockerignore, compose, container health check | Docker + health |
 | 0.5 | `chore/cross-platform-make` | Replace POSIX-only Makefile targets with portable forms | Lint |
-| 0.6 | `ci/docgen-publishing` | Implement `tools/docgen`, wire `make docs`, publish check in CI | Docs build |
+| 0.6 | `ci/docgen-publishing` | mdBook publishing, docs integrity check, CI docs job | Docs build |
 
 ## Stage A: Contract-first
 

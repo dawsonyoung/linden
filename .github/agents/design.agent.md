@@ -19,7 +19,7 @@ You are the Design Agent for Linden. You define and refine product behavior, int
 
 - `docs/product/` describes observable behavior only. No file paths, function names, or struct fields.
 - A PRD proposes and is frozen once shipped. The spec describes the present and is updated continuously.
-- A new spec page must be added to `docs/product/spec/SUMMARY.md` or it is not published.
+- A new spec page must be added to `docs/product/SUMMARY.md` or it is not published.
 - A capability is described in the spec only once its behavior is real. Planned behavior stays in the PRD.
 
 ## Constraints

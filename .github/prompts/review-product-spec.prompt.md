@@ -29,7 +29,7 @@ Answer all four. "No" must be a decision, not an omission.
 
 - Spec is present tense and describes only what is real. Planned behavior stays in the PRD until it ships.
 - No implementation detail: no file paths, function names, or struct fields.
-- A new page must be added to `docs/product/spec/SUMMARY.md` or it will not publish.
+- A new page must be added to `docs/product/SUMMARY.md` or it will not publish.
 - Privacy-relevant changes always touch `30-privacy-model.md`, even when the answer is "nothing changed" — say so explicitly.
 
 ## Step 4: Report

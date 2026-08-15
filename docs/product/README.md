@@ -34,6 +34,6 @@ A PRD is a decision record for a capability. Once accepted and shipped, it is no
 
 ## Publishing
 
-Sources are Markdown. `make docs` renders this directory to HTML into `docs/.site/` (git-ignored). See `tools/docgen/README.md` and `docs/adr/0001-documentation-publishing-toolchain.md`.
+Sources are Markdown, rendered with mdBook. `make docs` builds this directory to HTML into `docs/.site/` (git-ignored); `make docs-serve` previews it. See `docs/adr/0001-documentation-publishing-toolchain.md`.
 
-Navigation is declared in `spec/SUMMARY.md`. A new page is not published until it appears there.
+Navigation is declared in `SUMMARY.md`. A new page is not published until it appears there, and `make docs-check` fails if one is missing or a relative link is broken.
