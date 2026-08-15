@@ -188,7 +188,18 @@ Rules:
 4. Context cancellation is user-initiated stop; a callback error is
    consumer-side failure. Both are supported and they are distinct.
 5. Errors use `src/errs` codes: provider unreachable maps to `unavailable`,
-   provider timeout to `deadline_exceeded`, unknown model to `not_found`.
+   provider timeout to `deadline_exceeded`, unknown model to `not_found`, and a
+   request carrying no messages to `invalid_argument` before any provider call.
+6. The callback is invoked on the calling goroutine, in order, and never after
+   ChatStream returns. Consumers need no synchronization.
+7. An implementation checks `ctx.Err()` before each delivery and before
+   classifying any transport failure. Cancellation takes precedence over
+   transport classification.
+8. Result is meaningful only when the error is nil or is a context error. On
+   every other error path it is the zero value.
+
+Every implementation must pass the conformance suite in
+`validation/contracts/inference_contract_test.go`.
 
 ### storage layer
 Responsibility:
