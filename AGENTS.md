@@ -21,13 +21,18 @@ src/
 │                      Depends on: inference, storage (future)
 ├── inference/       # LLM abstraction — talks to Ollama or other backends
 │                      Interface: Client (ChatStream, ListModels)
-│                      Depends on: nothing (leaf layer)
+│                      Depends on: errs (shared kernel)
 ├── storage/         # Data persistence — conversations, profiles, documents (future)
 │                      Interface: Store (Save, Load, Query)
-│                      Depends on: nothing (leaf layer)
+│                      Depends on: errs (shared kernel)
 ├── discovery/       # Network discovery — mDNS advertisement (future)
 │                      Interface: Advertiser (Start, Stop)
-│                      Depends on: nothing (leaf layer)
+│                      Depends on: errs (shared kernel)
+├── errs/            # Shared kernel — the published error taxonomy
+│                      Interface: Code, Error, New, Wrap, CodeOf, Is
+│                      Depends on: nothing (stdlib only)
+├── config/          # Environment configuration loading and validation
+│                      Depends on: nothing (stdlib only)
 └── web/             # SvelteKit frontend — builds to static files served by api
                        Interface: HTTP (static assets consumed by api layer)
                        Depends on: nothing (standalone build artifact)
@@ -37,8 +42,13 @@ src/
 - `cmd/` depends on all layers (it wires them). No other layer imports `cmd/`.
 - `api/` depends only on `orchestrator/`.
 - `orchestrator/` depends on `inference/` and `storage/`.
-- `inference/`, `storage/`, `discovery/` are leaf layers — zero internal dependencies.
+- `inference/`, `storage/`, `discovery/` are leaf layers — they depend on no other layer.
 - `web/` is a separate build (Node/SvelteKit). Its output is static files consumed by `api/`.
+
+**Shared kernels:** a dependency-free, logic-free package may be imported by any
+layer, including leaf layers. Leaf layers exist for modularity — replaceability
+behind a clear interface — not independence for its own sake. `errs/` is the only
+such package; a second requires an ADR. See `docs/adr/0004-shared-error-taxonomy.md`.
 
 ### Validation (`validation/`)
 

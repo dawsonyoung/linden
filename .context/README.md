@@ -70,6 +70,7 @@ Duplication is drift. When content exists in `docs/`, `.context` links to it.
 | Interface shapes, error taxonomy, SSE contract | `docs/architecture/layer-interface-spec.md` |
 | Role of Docker in distribution | `docs/adr/0002-role-of-docker-in-distribution.md` |
 | Target platform policy | `docs/adr/0003-target-platform-policy.md` |
+| Error taxonomy and shared kernels | `docs/adr/0004-shared-error-taxonomy.md` |
 | Repository layout and conventions | `AGENTS.md` |
 
 ### Process
@@ -104,5 +105,8 @@ question someone would ask.
   existing row already routes to it.
 - Moving or deleting a doc? Update any row that names it, in the same PR.
 - An index row whose value changes over time must name the recurring step that refreshes it.
-- Changes to `.context` go on a `workflow/` branch.
+- Changes to `.context` go on a `workflow/` branch, with one exception: an index
+  row for a document added in the same PR travels with that PR. Requiring a
+  separate branch for a one-line routing entry guarantees the index rots, which
+  defeats its purpose.
 - A lesson that restates a doc is rejected in review — link instead.

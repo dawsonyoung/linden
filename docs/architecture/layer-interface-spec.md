@@ -36,6 +36,9 @@ cmd -> api -> orchestrator -> storage
 cmd -> discovery
 api serves static output from web build artifacts
 
+Any layer may import `src/errs`. It is a shared kernel, not a layer, and it
+imports nothing itself.
+
 Forbidden:
 
 1. api importing inference or storage directly.
@@ -85,6 +88,10 @@ SSE behavior requirements:
 
 ### Error taxonomy
 
+Implemented by `src/errs`. The package and this list are one contract: adding a
+code requires changing both in the same PR. See
+`docs/adr/0004-shared-error-taxonomy.md`.
+
 - invalid_argument
 - unauthenticated
 - permission_denied
@@ -100,6 +107,9 @@ Rules:
 1. API maps internal errors to stable error codes.
 2. Internal details remain server-side only.
 3. Correlation/request ID included in server logs and optional response header.
+4. An error carrying no code is treated as `internal`.
+5. Any layer may import `src/errs`. No layer imports another layer for error
+   definitions.
 
 ## Layer Interfaces
 
@@ -166,12 +176,19 @@ Responsibility:
 Expected interface shape:
 
 - ListModels(ctx) -> []Model, error
-- ChatStream(ctx, request, onChunk) -> Result, error
+- ChatStream(ctx, request, onChunk func(Chunk) error) -> Result, error
 
 Rules:
 
 1. Provider-specific details are hidden behind interface.
 2. Timeouts and retry policy are explicit and testable.
+3. The callback returns an error so a consumer can abort a stream. When it
+   returns non-nil, ChatStream stops delivering, does no further provider work,
+   and returns that error unwrapped.
+4. Context cancellation is user-initiated stop; a callback error is
+   consumer-side failure. Both are supported and they are distinct.
+5. Errors use `src/errs` codes: provider unreachable maps to `unavailable`,
+   provider timeout to `deadline_exceeded`, unknown model to `not_found`.
 
 ### storage layer
 Responsibility:
