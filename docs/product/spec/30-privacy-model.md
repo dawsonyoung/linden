@@ -14,7 +14,11 @@ TODO: Enumerate every category of data Linden handles, and for each: where it is
 
 ## Logging commitment
 
-No user content appears in logs at any level, including debug. Logs record request metadata only: method, path, status, duration, and request identifier.
+No user content appears in logs at any level, including debug. Logs record
+request metadata only: method, path, status, duration, and request identifier.
+
+Query strings are never logged, because they can carry user content. This is
+enforced by an automated test, not by convention.
 
 ## Network behavior
 

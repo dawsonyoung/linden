@@ -191,8 +191,11 @@ Required:
 3. User-visible behavior change has the corresponding `docs/product/spec/` pages updated in the same PR as the behavior.
 4. Interface changes documented.
 5. Dependency direction remains valid.
-6. Any new spec page appears in `docs/product/SUMMARY.md`.
+6. Any new spec page appears in `docs/product/SUMMARY.md`.7. **Currency check.** If this PR changes what the software can do, every statement of current state is re-read and corrected in the same PR: `README.md`, `docs/product/spec/00-overview.md`, and the endpoint table in `docs/product/spec/40-api-surface.md`.
 
+A new endpoint, a changed response, or a new runtime dependency is a user-visible
+change. "It was already listed as planned" does not satisfy item 3; a planned
+entry must be changed to reflect that it shipped.
 ### Gate 2: Contract Gate
 
 Required:

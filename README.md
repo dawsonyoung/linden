@@ -6,28 +6,33 @@ See [AGENTS.md](AGENTS.md) for architecture and conventions.
 
 ## Status
 
-**Pre-implementation.** The repository holds specifications, plans, and the agent workflow framework. There is no running server yet.
+Early development. The server runs and serves operational endpoints; there is no
+chat capability yet.
 
-| Area | State |
-|------|-------|
-| Product spec and PRDs | Stubbed; PRD-0001 accepted |
-| Layer interface spec | Draft, awaiting first contract tests |
-| Agent workflow framework | In use |
-| Go server | Not started — Stage 0.2 |
-| Web client | Not started — Stage C.3 |
-| Inference (Ollama) | Not started — Stage A.3 |
-| CI gates | Present but not yet enforcing — Stage 0.3 |
-| Docker image | Not started — Stage 0.4 |
+Current stage and what remains: [plans/04-implementation-sequence.md](plans/04-implementation-sequence.md).
 
-Current work is Stage 0 groundwork. See [plans/05-stage-0-groundwork.md](plans/05-stage-0-groundwork.md).
+This file deliberately does not track per-stage progress. That belongs in the
+plan, which is updated as the work is done.
 
 ## Quick Start
 
-Nothing runs yet. Once Stage 0.2 lands:
+Linux, or Windows and macOS via the devcontainer.
 
-```powershell
-.\scripts\setup.ps1    # install Go, Node, Ollama; pull tinyllama
-make dev               # not yet functional
+```sh
+./scripts/setup.sh     # check the toolchain
+make build             # produces bin/linden
+./bin/linden           # serves on :8080
+```
+
+```sh
+curl http://localhost:8080/health    # {"status":"ok"}
+curl http://localhost:8080/version   # build metadata
+```
+
+Or run it as a container:
+
+```sh
+make docker-smoke
 ```
 
 Contributors should read [CONTRIBUTING.md](CONTRIBUTING.md) first.
@@ -37,7 +42,7 @@ Contributors should read [CONTRIBUTING.md](CONTRIBUTING.md) first.
 | Platform | Role | Notes |
 |----------|------|-------|
 | Linux | Deployment target | The only supported runtime; all CI gates run here |
-| Docker (Linux) | Deployment vehicle | Required gate from Stage 0.4 |
+| Docker (Linux) | Deployment vehicle | Required CI gate |
 | Windows | Development host | Via devcontainer; deploys by running the Linux container |
 | macOS | Development host | Expected to work; not gated |
 
@@ -53,9 +58,9 @@ See [docs/adr/0003-target-platform-policy.md](docs/adr/0003-target-platform-poli
 
 Tracked against [plans/02-repository-setup-and-mvp-plan.md](plans/02-repository-setup-and-mvp-plan.md).
 
-- [ ] Server builds and boots with health and version endpoints
-- [ ] Linux CI gates can fail, and gate on every PR
-- [ ] Docker image builds and passes a container health check
+- [x] Server builds and boots with health and version endpoints
+- [x] Linux CI gates can fail, and gate on every PR
+- [x] Docker image builds and passes a container health check
 - [ ] Chat request completes against a local model
 - [ ] Replies stream to the client
 - [ ] Conversations persist across restarts

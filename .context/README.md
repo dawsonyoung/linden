@@ -96,8 +96,13 @@ Duplication is drift. When content exists in `docs/`, `.context` links to it.
 
 ## Maintenance
 
-- Adding a doc under `docs/` or `plans/`? Add its row to the index above.
-- Moving or deleting a doc? Update the index in the same PR.
+The index routes by **concern**, not by file. A directory row covers the files
+beneath it; a file gets its own row only when it is the authoritative answer to a
+question someone would ask.
+
+- Adding a doc? Add a row only if it answers a new question. Otherwise confirm an
+  existing row already routes to it.
+- Moving or deleting a doc? Update any row that names it, in the same PR.
 - An index row whose value changes over time must name the recurring step that refreshes it.
 - Changes to `.context` go on a `workflow/` branch.
 - A lesson that restates a doc is rejected in review — link instead.

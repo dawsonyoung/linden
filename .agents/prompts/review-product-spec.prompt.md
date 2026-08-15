@@ -32,7 +32,18 @@ Answer all four. "No" must be a decision, not an omission.
 - A new page must be added to `docs/product/SUMMARY.md` or it will not publish.
 - Privacy-relevant changes always touch `30-privacy-model.md`, even when the answer is "nothing changed" — say so explicitly.
 
-## Step 4: Report
+## Step 4: Check currency
+
+Re-read every statement of current state and correct any that this change
+falsifies:
+
+- `README.md` — status and quick start
+- `docs/product/spec/00-overview.md` — current state section
+- `docs/product/spec/40-api-surface.md` — endpoint table
+
+An endpoint listed as planned that now works is a defect, not a formality.
+
+## Step 5: Report
 
 Produce, for the PR body:
 
