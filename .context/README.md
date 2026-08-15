@@ -27,7 +27,7 @@ Do not record implementation details, code snippets, function signatures, API pa
 Point at the primary source. Do not reproduce it.
 
 ```
-Good:  SSE event contract → docs/architecture/01-layer-interface-spec.md
+Good:  SSE event contract → docs/architecture/layer-interface-spec.md
 Bad:   SSE emits `event: message` then `event: done` with fields ...
 ```
 
@@ -38,9 +38,11 @@ A `.context` entry should be one line and a path.
 | Content | Lives in |
 |---------|----------|
 | Function and type behavior | Godoc beside the code |
-| API request/response schemas | `docs/architecture/01-layer-interface-spec.md` |
+| Observable product behavior | `docs/product/spec/` |
+| Capability proposals and rationale | `docs/product/prd/` |
+| API request/response schemas | `docs/architecture/layer-interface-spec.md` |
 | Architecture and layer rules | `docs/architecture/` |
-| Process standards | `docs/branching-strategy.md`, `AGENTS.md` |
+| Process standards | `docs/project/`, `AGENTS.md` |
 | Roadmap and stage plans | `plans/` |
 | Agent behavior definitions | `.agents/` |
 | Orientation and process lessons | `.context/` |
@@ -49,21 +51,33 @@ Duplication is drift. When content exists in `docs/`, `.context` links to it.
 
 ## Index
 
+### Product
+
+| Concern | Authoritative source |
+|---------|---------------------|
+| What Linden does, observable behavior | `docs/product/spec/` |
+| Published navigation manifest | `docs/product/spec/SUMMARY.md` |
+| Capability proposals and rationale | `docs/product/prd/` |
+| Privacy commitments | `docs/product/spec/30-privacy-model.md` |
+| Publishing toolchain decision | `docs/adr/0001-documentation-publishing-toolchain.md` |
+
 ### Architecture
 
 | Concern | Authoritative source |
 |---------|---------------------|
-| Layer boundaries and dependency rules | `docs/architecture/01-layer-interface-spec.md` |
-| Interface shapes, error taxonomy, SSE contract | `docs/architecture/01-layer-interface-spec.md` |
-| Contract-first delivery policy | `docs/architecture/02-contract-first-delivery-plan.md` |
-| Agent workflow, gates, delegation | `docs/architecture/03-agentic-workflow-framework.md` |
+| What belongs in architecture docs | `docs/architecture/README.md` |
+| Layer boundaries and dependency rules | `docs/architecture/layer-interface-spec.md` |
+| Interface shapes, error taxonomy, SSE contract | `docs/architecture/layer-interface-spec.md` |
 | Repository layout and conventions | `AGENTS.md` |
 
 ### Process
 
 | Concern | Authoritative source |
 |---------|---------------------|
-| Branching, commits, PR rules | `docs/branching-strategy.md` |
+| What belongs in each project doc | `docs/project/README.md` |
+| Branching, commits, PR titles and bodies | `docs/project/branching-strategy.md` |
+| Contract-first delivery policy | `docs/project/contract-first-delivery.md` |
+| Agent workflow, gates, delegation | `docs/project/agentic-workflow-framework.md` |
 | Product purpose and positioning | `plans/01-high-level-purpose-overview.md` |
 | MVP scope and phase plan | `plans/02-repository-setup-and-mvp-plan.md` |
 | Long-range roadmap and tracks | `plans/03-exhaustive-full-implementation-plan.md` |

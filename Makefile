@@ -1,4 +1,4 @@
-.PHONY: build build-web build-server dev test validate lint clean
+.PHONY: build build-web build-server dev test validate lint clean docs docs-serve
 
 # Build everything
 build: build-web build-server
@@ -35,6 +35,15 @@ lint:
 	cd src && go vet ./...
 	cd src/web && npm run check
 
+# Documentation
+docs:
+	@echo "TODO: implement tools/docgen (Stage 0.6). See docs/adr/0001-documentation-publishing-toolchain.md"
+	@exit 1
+
+docs-serve:
+	@echo "TODO: implement tools/docgen (Stage 0.6). See docs/adr/0001-documentation-publishing-toolchain.md"
+	@exit 1
+
 # Clean
 clean:
-	rm -rf bin/ src/web/build/
+	rm -rf bin/ src/web/build/ docs/.site/

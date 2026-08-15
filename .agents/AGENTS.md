@@ -30,7 +30,8 @@ Other files under `.github/` are hand-authored and are not touched by the sync s
 | instructions/contract-first.instructions.md | All implementation and test work |
 | instructions/linux-docker-parity.instructions.md | All build and CI work |
 | instructions/pr-size-and-history.instructions.md | All PR preparation |
-| instructions/context-hygiene.instructions.md | Any change under `.context/` |
+| instructions/context-hygiene.instructions.md | Changes under `.context/`, `docs/`, `plans/` |
+| instructions/product-docs.instructions.md | Changes under `docs/product/` |
 
 ## Prompts
 
@@ -39,6 +40,7 @@ Other files under `.github/` are hand-authored and are not touched by the sync s
 | prompts/create-contract-tests.prompt.md | Guided contract test authoring |
 | prompts/implement-from-contract.prompt.md | Guided implementation from contract |
 | prompts/run-validation-gates.prompt.md | Run and interpret all quality gates |
+| prompts/review-product-spec.prompt.md | Classify a change against spec and PRDs at the Spec step |
 
 ## Skills
 

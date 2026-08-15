@@ -16,11 +16,18 @@ make dev
 
 **MVP in progress** — hello world inference loop (Go server + Ollama + SvelteKit chat UI).
 
-## Architecture Specs
+## Documentation
 
-1. [Layer Interface Specification](docs/architecture/01-layer-interface-spec.md)
-2. [Contract-First Delivery Plan](docs/architecture/02-contract-first-delivery-plan.md)
-3. [Agentic Workflow Framework](docs/architecture/03-agentic-workflow-framework.md)
-4. [Branching Strategy](docs/branching-strategy.md)
-5. [Implementation Sequence](plans/04-implementation-sequence.md)
-6. [Stage 0: Groundwork](plans/05-stage-0-groundwork.md)
+**Product** — what Linden does
+
+1. [Product Spec](docs/product/spec/00-overview.md)
+2. [Product Requirements (PRDs)](docs/product/prd/)
+
+**Engineering** — how it is built
+
+3. [Layer Interface Specification](docs/architecture/layer-interface-spec.md)
+4. [Contract-First Delivery](docs/project/contract-first-delivery.md)
+5. [Agentic Workflow Framework](docs/project/agentic-workflow-framework.md)
+6. [Branching Strategy](docs/project/branching-strategy.md)
+7. [Implementation Sequence](plans/04-implementation-sequence.md)
+8. [Stage 0: Groundwork](plans/05-stage-0-groundwork.md)
