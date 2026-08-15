@@ -69,10 +69,20 @@ Not every gate applies to every change. Documentation-only PRs need lint alone.
 
 `main` is protected. These checks must pass before merge:
 
-- `Server (Go)`
-- `Web (SvelteKit)`
+| Check | Gate |
+|-------|------|
+| `lint` | `go vet` and `gofmt` |
+| `unit` | `go test -race` across `src/` |
+| `build` | Server binary compiles |
+| `contract` | Contract suite, when present |
+| `integration` | Integration suite, when present |
+| `web` | Type check and build, when present |
 
-The list expands when CI splits into one job per gate in Stage 0.3. Update branch protection in the same PR that renames the jobs, or merges will block on checks that no longer exist.
+`contract`, `integration`, and `web` report a visible skip until the
+corresponding suite or project exists. A skip is recorded as a notice in the
+job log; it never reports a passing test run.
+
+The Docker runtime check joins this list in Stage 0.4.
 
 ## Documentation
 

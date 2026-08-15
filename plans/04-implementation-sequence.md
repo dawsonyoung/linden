@@ -42,6 +42,11 @@ Fully specified in `plans/05-stage-0-groundwork.md`.
 | # | Branch | Purpose | Gates |
 |---|--------|---------|-------|
 | A.1 | `test/contract-harness` | Contract test harness, shared assertion helpers, build tags | Contract |
+
+A.1 must create `validation/go.mod` as a separate module with a `replace`
+directive pointing at `../src`. `validation/` sits outside the `src` module, so
+`go test ../validation/...` from `src` fails with "directory prefix does not
+contain main module". Contract suites run as `cd validation && go test ./contracts/...`.
 | A.2 | `test/inference-contracts` | `ListModels`, `ChatStream` contract tests | Contract |
 | A.3 | `feat/inference-ollama-adapter` | Ollama adapter implementation + unit tests | Contract + Unit |
 | A.4 | `test/orchestrator-contracts` | `ChatService` contract tests with doubles | Contract |
