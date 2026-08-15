@@ -2,7 +2,7 @@
 
 Human-readable product documentation. This directory is the published surface — it ships with the source and is rendered to HTML for reading outside the repository.
 
-Everything here describes **what Linden does and why**. Nothing here describes how the repository is organized or how work gets done; that lives in `docs/process/`.
+Everything here describes **what Linden does and why**. Nothing here describes how the repository is organized or how work gets done; that lives in `docs/project/`.
 
 ## Structure
 

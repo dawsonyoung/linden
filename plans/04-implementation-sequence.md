@@ -7,10 +7,10 @@ Active roadmap.
 
 Stage-by-stage branch and PR sequence from groundwork to MVP hardening.
 
-- Branching rules: `docs/process/branching-strategy.md`
+- Branching rules: `docs/project/branching-strategy.md`
 - Stage 0 detail: `plans/05-stage-0-groundwork.md`
 - Interface definitions: `docs/architecture/layer-interface-spec.md`
-- Delivery policy: `docs/process/contract-first-delivery.md`
+- Delivery policy: `docs/project/contract-first-delivery.md`
 
 Each row is one branch and one PR. Create the branch from `main` when the work starts, not before.
 

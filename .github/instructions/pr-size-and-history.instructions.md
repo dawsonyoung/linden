@@ -10,5 +10,5 @@ applyTo: "**"
 - One logical concern per PR. Split if review would take more than 30 minutes.
 - Commit order within a PR: contract tests → implementation → unit tests.
 - Commit messages use Conventional Commits: `feat:`, `fix:`, `test:`, `docs:`, `refactor:`.
-- PR titles and bodies follow the standard in `docs/process/branching-strategy.md`. The body template is `.github/pull_request_template.md`; every section is required and unused sections say `N/A` with a reason.
-- Full branching model: `docs/process/branching-strategy.md`.
+- PR titles and bodies follow the standard in `docs/project/branching-strategy.md`. The body template is `.github/pull_request_template.md`; every section is required and unused sections say `N/A` with a reason.
+- Full branching model: `docs/project/branching-strategy.md`.
