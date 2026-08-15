@@ -78,9 +78,59 @@ One logical concern per commit. Do not mix layers in a single commit.
 
 1. Target 250 to 600 net lines changed. Max 900 for cross-cutting wiring.
 2. One concern per PR.
-3. PR body includes: Intent, Interface changes, Tests added, Linux/Docker evidence, Risks.
-4. Linux CI must be green before review.
-5. Docker gate must be green for any runtime-affecting change.
+3. Linux CI must be green before review.
+4. Docker gate must be green for any runtime-affecting change.
+
+## PR Titles
+
+Format: `<type>(<scope>): <summary>`
+
+- `<type>` matches the branch type: `feat`, `fix`, `test`, `refactor`, `docs`, `ci`, `chore`, `workflow`.
+- `<scope>` is the layer or subsystem. Omit the parentheses entirely when the change is repo-wide.
+- `<summary>` is imperative mood, lowercase, no trailing period.
+- Keep the whole title at 72 characters or fewer.
+- No issue or PR numbers in the title. Link them in the body.
+
+Because we squash merge, the PR title becomes the commit subject on `main`. Write it for someone reading `git log` a year from now, not for someone who already knows the context.
+
+```
+feat(inference): add ollama chat streaming adapter
+test(api): cover SSE terminal event ordering
+ci: split validation into one job per gate
+workflow: promote lessons from stage 0
+```
+
+Avoid titles that describe activity rather than outcome:
+
+```
+fix: various fixes          → what broke, and where?
+feat: update orchestrator   → update it how?
+docs: changes               → says nothing
+```
+
+## PR Body
+
+Five required sections. Every section appears in every PR. A section that does not apply says `N/A` **and why** — never blank, never deleted.
+
+### Intent
+
+What changes and why, in two or three sentences. Lead with the problem, not the diff. If the PR implements a planned item, cite it: `Implements 0.2 from plans/05-stage-0-groundwork.md`.
+
+### Interface changes
+
+Any change to a layer interface, HTTP schema, SSE event shape, error code, config key, or environment variable. State `None` when nothing crosses a boundary. Breaking changes are called out explicitly with the affected consumers.
+
+### Tests added
+
+What was added and at which level — contract, unit, integration, smoke, security. Name the behaviors covered, not the file count. If no tests were added, justify it here; reviewers treat an unjustified absence as a blocker.
+
+### Linux/Docker evidence
+
+Gate results from a Linux run. Paste the evidence table from the validation gates prompt. State `N/A` plus a reason only when no runtime surface is touched.
+
+### Risks
+
+Known gaps, deferrals, and anything a reviewer should watch. Include follow-up work that this PR deliberately leaves undone and where it is tracked. "None" is acceptable but rare — most changes defer something.
 
 ## Branch Lifecycle
 

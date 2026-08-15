@@ -63,8 +63,9 @@ Agent: Document Agent. No other specialist required.
 1. `CONTRIBUTING.md` — prerequisites, setup, branch and commit conventions, test-first rule, PR checklist, required status checks, Windows-via-WSL note.
 2. `SECURITY.md` — disclosure process, response expectation, no-user-data-in-logs rule, no secrets in repo.
 3. `.github/CODEOWNERS` — default owner for all paths; `.agents/**` and `.context/**` called out explicitly.
-4. `.github/pull_request_template.md` — Intent, Interface changes, Tests added, Linux/Docker evidence, Risks.
-5. `README.md` — replace the false status line, add support matrix and MVP checklist linked to the MVP plan.
+4. `README.md` — replace the false status line, add support matrix and MVP checklist linked to the MVP plan.
+
+`.github/pull_request_template.md` already exists. CONTRIBUTING links the PR standard in `docs/branching-strategy.md` rather than restating it.
 
 ### Acceptance Criteria
 

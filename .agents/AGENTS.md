@@ -3,6 +3,9 @@
 This directory is the canonical source for all workflow agent definitions.
 Provider-specific paths are generated mirrors — edit here, not there.
 
+Only `.github/agents/`, `.github/instructions/`, and `.github/prompts/` are generated.
+Other files under `.github/` are hand-authored and are not touched by the sync script.
+
 ## Agents
 
 | File | Role | User-Invocable |
