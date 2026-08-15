@@ -111,7 +111,7 @@ Detailed, implementation-ready plans are written one stage ahead:
 | Stage | Document | Status |
 |-------|----------|--------|
 | 0 | `plans/05-stage-0-groundwork.md` | Ready |
-| A | `plans/06-stage-a-contract-first.md` | Not written |
+| A | `plans/06-stage-a-contract-first.md` | Ready |
 | B | — | Not written |
 | C | — | Not written |
 

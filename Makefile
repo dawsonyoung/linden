@@ -63,7 +63,12 @@ validate-integration:
 # run the same checks by construction.
 lint:
 	cd src && go vet ./...
-	@unformatted=$$(gofmt -l src); \
+	@if [ -f validation/go.mod ]; then \
+	  cd validation && go vet -tags=contracts ./...; \
+	else \
+	  echo "skip validation vet: validation/go.mod not present (Stage A.1)"; \
+	fi
+	@unformatted=$$(gofmt -l src validation); \
 	if [ -n "$$unformatted" ]; then \
 	  echo "gofmt reported unformatted files:"; \
 	  echo "$$unformatted"; \

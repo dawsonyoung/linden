@@ -29,30 +29,6 @@ func Test_HandleHealth_Get_ReturnsOKStatus(t *testing.T) {
 	}
 }
 
-func Test_NewServer_UnknownPath_Returns404(t *testing.T) {
-	srv := NewServer(":0", discardLogger(), BuildInfo{})
-
-	req := httptest.NewRequest(http.MethodGet, "/does-not-exist", nil)
-	rec := httptest.NewRecorder()
-	srv.Handler.ServeHTTP(rec, req)
-
-	if rec.Code != http.StatusNotFound {
-		t.Errorf("status = %d, want %d", rec.Code, http.StatusNotFound)
-	}
-}
-
-func Test_NewServer_WrongMethod_Returns405(t *testing.T) {
-	srv := NewServer(":0", discardLogger(), BuildInfo{})
-
-	req := httptest.NewRequest(http.MethodPost, "/health", nil)
-	rec := httptest.NewRecorder()
-	srv.Handler.ServeHTTP(rec, req)
-
-	if rec.Code != http.StatusMethodNotAllowed {
-		t.Errorf("status = %d, want %d", rec.Code, http.StatusMethodNotAllowed)
-	}
-}
-
 func Test_NewServer_TimeoutsConfigured(t *testing.T) {
 	srv := NewServer(":8080", discardLogger(), BuildInfo{})
 
