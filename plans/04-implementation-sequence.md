@@ -77,6 +77,14 @@ Two container obligations fall due during these stages, per
 |---|--------|---------|-------|
 | C.1 | `test/discovery-contracts` | Start/Stop/Status lifecycle contracts | Contract |
 | C.2 | `feat/discovery-mdns` | mDNS advertisement + unit tests | Contract + Unit |
+
+**C.2 networking constraint.** mDNS requires multicast on the physical LAN, and
+Docker's default bridge network does not forward it. A containerized server will
+not be discoverable. Options are `network_mode: host` (Linux only, discards
+network isolation), a `macvlan` network, or running discovery outside the
+container. Decide before implementing. On Docker Desktop for Windows or macOS
+the container sits behind a VM boundary, so LAN multicast does not work reliably
+regardless of configuration; discovery cannot be validated there.
 | C.3 | `feat/web-chat-ui` | SvelteKit chat view consuming SSE | Web check |
 | C.4 | `test/smoke-container` | Container startup, `/health`, SSE stream smoke | Smoke + Docker |
 | C.5 | `test/security-baseline` | Input validation, log leakage, error message safety | Security |

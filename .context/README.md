@@ -69,6 +69,7 @@ Duplication is drift. When content exists in `docs/`, `.context` links to it.
 | Layer boundaries and dependency rules | `docs/architecture/layer-interface-spec.md` |
 | Interface shapes, error taxonomy, SSE contract | `docs/architecture/layer-interface-spec.md` |
 | Role of Docker in distribution | `docs/adr/0002-role-of-docker-in-distribution.md` |
+| Target platform policy | `docs/adr/0003-target-platform-policy.md` |
 | Repository layout and conventions | `AGENTS.md` |
 
 ### Process

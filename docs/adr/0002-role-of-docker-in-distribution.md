@@ -112,3 +112,14 @@ the right base for the device image, this ADR is superseded rather than edited.
 This ADR governs the role of the image, not its contents. Base image choice,
 healthcheck mechanism, and build layout are implementation decisions recorded in
 the Dockerfile itself.
+
+## Amendment, 2026-08-15
+
+`docs/adr/0003-target-platform-policy.md` establishes that short-term deployment
+on a Windows host runs the Linux container, with Ollama native on the host.
+
+This does not change the decision: the image is still not a published artifact
+and carries no external support commitment. It does mean the image is running
+real workloads sooner than Track E assumed, so image quality is load-bearing
+now rather than at first publication. The deferred items and their triggers are
+unchanged.
