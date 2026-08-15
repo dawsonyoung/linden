@@ -286,14 +286,21 @@ Estimated size: 100–200 lines.
 
 ## Stage 0 Exit Criteria
 
-All five branches merged, and:
+All six branches merged, and:
 
-1. `git clone` → `make build` produces `bin/linden` on Linux with no manual steps.
+1. `git clone` → `make build` produces `bin/linden` on Linux with no manual
+   steps. Verified by the `make build` step in the build job.
 2. `docker build` and container `/health` both pass in CI.
 3. Every CI job can fail. Verified by deliberate breakage during 0.3.
 4. README describes the repository as it actually is.
 5. No Makefile target references a nonexistent file.
-6. Contract, integration, and smoke jobs exist and report visible skips rather than false passes.
+6. Contract and integration jobs exist and report visible skips rather than
+   false passes. The smoke suite arrives in C.4.
+7. `docs/product/` builds to HTML, and a page missing from `SUMMARY.md` or a
+   broken relative link fails the build.
+8. Branch protection on `main` requires every gate: `lint`, `unit`, `build`,
+   `contract`, `integration`, `web`, `docs`, `docker`. Gates that are not
+   required checks do not gate.
 
 Only then does Stage A begin.
 

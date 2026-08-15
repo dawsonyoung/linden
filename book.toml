@@ -1,0 +1,19 @@
+[book]
+title = "Linden"
+description = "A privacy-first local AI platform"
+authors = ["dawsonyoung"]
+language = "en"
+src = "docs/product"
+
+[build]
+build-dir = "docs/.site"
+# Fail on a SUMMARY entry with no file, rather than silently creating a stub.
+create-missing = false
+
+[output.html]
+git-repository-url = "https://github.com/dawsonyoung/linden"
+edit-url-template = "https://github.com/dawsonyoung/linden/edit/main/{path}"
+no-section-label = false
+
+[output.html.search]
+enable = true

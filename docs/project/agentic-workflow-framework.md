@@ -191,7 +191,7 @@ Required:
 3. User-visible behavior change has the corresponding `docs/product/spec/` pages updated in the same PR as the behavior.
 4. Interface changes documented.
 5. Dependency direction remains valid.
-6. Any new spec page appears in `docs/product/spec/SUMMARY.md`.
+6. Any new spec page appears in `docs/product/SUMMARY.md`.
 
 ### Gate 2: Contract Gate
 
