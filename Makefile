@@ -1,5 +1,9 @@
 .PHONY: build build-web build-server dev test validate lint clean docs docs-serve
 
+VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
+COMMIT  ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)
+LDFLAGS := -X main.version=$(VERSION) -X main.commit=$(COMMIT)
+
 # Build everything
 build: build-web build-server
 
@@ -7,7 +11,7 @@ build-web:
 	cd src/web && npm ci && npm run build
 
 build-server: build-web
-	cd src && go build -o ../bin/linden ./cmd/
+	cd src && go build -ldflags "$(LDFLAGS)" -o ../bin/linden ./cmd/
 
 # Development
 dev: build-web
