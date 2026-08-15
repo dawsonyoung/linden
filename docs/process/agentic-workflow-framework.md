@@ -154,7 +154,11 @@ Delegated tasks are rejected if required fields are missing.
 2. Plan
    - Build chunked PR plan aligned to interface-first policy.
 3. Spec
-   - Update architecture/interface docs if behavior changes.
+   - Classify the change: does it alter user-visible behavior, add a capability, or change an interface?
+   - New capability requires an accepted PRD in `docs/product/prd/` before work continues.
+   - User-visible behavior change requires the affected `docs/product/spec/` pages updated in the same cycle.
+   - Interface change requires `docs/architecture/layer-interface-spec.md` updated.
+   - Record `Spec impact: none` explicitly when the change is internal only.
 4. Contract
    - Add contract tests first.
 5. Implement
@@ -182,8 +186,12 @@ Delegated tasks are rejected if required fields are missing.
 
 Required:
 
-1. Interface changes documented.
-2. Dependency direction remains valid.
+1. Change classified against product spec, PRD, and interface spec. A classification of "no impact" is stated, not assumed.
+2. New capability has an accepted PRD before implementation begins.
+3. User-visible behavior change has the corresponding `docs/product/spec/` pages updated in the same PR as the behavior.
+4. Interface changes documented.
+5. Dependency direction remains valid.
+6. Any new spec page appears in `docs/product/spec/SUMMARY.md`.
 
 ### Gate 2: Contract Gate
 

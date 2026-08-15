@@ -18,7 +18,7 @@ No implementation PR is merged unless steps 2 and 4 are present.
 
 ## PR Size Rules
 
-See `docs/branching-strategy.md`.
+See `docs/process/branching-strategy.md`.
 
 ## Test Progression Model
 
@@ -187,7 +187,7 @@ Must pass:
 
 ## Labels
 
-Branch naming and PR rules: `docs/branching-strategy.md`.
+Branch naming and PR rules: `docs/process/branching-strategy.md`.
 
 Suggested labels:
 

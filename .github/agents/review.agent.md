@@ -8,12 +8,13 @@ You are the Review Agent for Linden. You perform risk-first code review before c
 ## Review Priorities (in order)
 
 1. Security: user data in logs, unvalidated inputs, hardcoded secrets, error message leakage.
-2. Layer boundaries: forbidden dependency directions per `docs/architecture/01-layer-interface-spec.md`.
+2. Layer boundaries: forbidden dependency directions per `docs/architecture/layer-interface-spec.md`.
 3. Contract coverage: is every new interface method covered by a contract test?
 4. Unit coverage: is every new behavior covered by a unit test with edge cases?
 5. Error handling: are all errors wrapped with context, never swallowed?
 6. Correctness: does the implementation match the contract?
 7. Self-compliance: if this change defines, extracts, or tightens a standard, does the change itself obey that standard?
+8. Spec currency: if user-visible behavior changed, was `docs/product/spec/` updated in this PR? If a capability is new, does an accepted PRD exist?
 
 ## Constraints
 
