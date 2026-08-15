@@ -6,58 +6,173 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
+# Supersede in-flight runs for the same ref.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GO_VERSION: '1.22'
+  NODE_VERSION: '20'
+
 jobs:
-  server:
-    name: Server (Go)
+  lint:
+    name: lint
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.22'
+          go-version: ${{ env.GO_VERSION }}
+          # No go.sum yet; the module has no dependencies. Enable when one is added.
+          cache: false
 
-      - name: Vet
+      - name: go vet
         run: cd src && go vet ./...
+
+      - name: gofmt
+        run: |
+          unformatted=$(gofmt -l src)
+          if [ -n "$unformatted" ]; then
+            echo "::error::gofmt reported unformatted files:"
+            echo "$unformatted"
+            exit 1
+          fi
+
+  unit:
+    name: unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
 
       - name: Unit tests
         run: cd src && go test -race -coverprofile=coverage.out ./...
 
-      - name: Build
-        run: cd src && go build -o ../bin/linden ./cmd/
+      - name: Coverage summary
+        run: cd src && go tool cover -func=coverage.out | tail -1
 
-  web:
-    name: Web (SvelteKit)
+  build:
+    name: build
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install
-        run: cd src/web && npm ci
-
-      - name: Type check
-        run: cd src/web && npm run check
-
-      - name: Build
-        run: cd src/web && npm run build
-
-  validation:
-    name: Validation
-    needs: [server, web]
-    runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.22'
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+
+      - name: Build server
+        run: cd src && go build -o ../bin/linden ./cmd/
+
+  contract:
+    name: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+
+      - name: Detect contract suite
+        id: detect
+        run: |
+          if [ -f validation/go.mod ] && [ -n "$(find validation/contracts -name '*_test.go' -print -quit 2>/dev/null)" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Suite not present
+        if: steps.detect.outputs.present == 'false'
+        run: |
+          echo "::notice title=contract::No contract suite yet. Requires validation/go.mod and at least one _test.go file. Arrives in Stage A.1."
 
       - name: Contract tests
-        run: cd src && go test -tags=contracts ../validation/contracts/... 2>/dev/null || echo "No contract tests yet"
+        if: steps.detect.outputs.present == 'true'
+        run: cd validation && go test -tags=contracts -race ./contracts/...
+
+  integration:
+    name: integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+
+      - name: Detect integration suite
+        id: detect
+        run: |
+          if [ -f validation/go.mod ] && [ -n "$(find validation/integration -name '*_test.go' -print -quit 2>/dev/null)" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Suite not present
+        if: steps.detect.outputs.present == 'false'
+        run: |
+          echo "::notice title=integration::No integration suite yet. Arrives in Stage B.2."
 
       - name: Integration tests
-        run: cd src && go test -tags=integration ../validation/integration/... 2>/dev/null || echo "No integration tests yet"
+        if: steps.detect.outputs.present == 'true'
+        run: cd validation && go test -tags=integration -race ./integration/...
+
+  web:
+    name: web
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect web project
+        id: detect
+        run: |
+          if [ -f src/web/package.json ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Project not present
+        if: steps.detect.outputs.present == 'false'
+        run: |
+          echo "::notice title=web::No src/web/package.json yet. Arrives in Stage C.3."
+
+      - uses: actions/setup-node@v4
+        if: steps.detect.outputs.present == 'true'
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: src/web/package-lock.json
+
+      - name: Install
+        if: steps.detect.outputs.present == 'true'
+        run: cd src/web && npm ci
+
+      - name: Type check
+        if: steps.detect.outputs.present == 'true'
+        run: cd src/web && npm run check
+
+      - name: Build
+        if: steps.detect.outputs.present == 'true'
+        run: cd src/web && npm run build
