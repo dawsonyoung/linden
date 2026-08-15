@@ -125,7 +125,7 @@ make build        # Production build → bin/linden
 - Commits: Conventional Commits (`feat:`, `fix:`, `docs:`, etc.)
 - Every PR must pass CI (lint + test + build).
 - Squash merge to main; delete branch after merge.
-- See `docs/process/branching-strategy.md` for the full branching model and PR rules.
+- See `docs/project/branching-strategy.md` for the full branching model and PR rules.
 
 ## Design Principles
 

@@ -26,8 +26,8 @@ make dev
 **Engineering** — how it is built
 
 3. [Layer Interface Specification](docs/architecture/layer-interface-spec.md)
-4. [Contract-First Delivery](docs/process/contract-first-delivery.md)
-5. [Agentic Workflow Framework](docs/process/agentic-workflow-framework.md)
-6. [Branching Strategy](docs/process/branching-strategy.md)
+4. [Contract-First Delivery](docs/project/contract-first-delivery.md)
+5. [Agentic Workflow Framework](docs/project/agentic-workflow-framework.md)
+6. [Branching Strategy](docs/project/branching-strategy.md)
 7. [Implementation Sequence](plans/04-implementation-sequence.md)
 8. [Stage 0: Groundwork](plans/05-stage-0-groundwork.md)

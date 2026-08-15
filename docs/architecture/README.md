@@ -4,13 +4,14 @@ How the system is decomposed internally: what the parts are, what depends on wha
 
 ## What belongs here
 
-Three tests. A document belongs in `docs/architecture/` if it fails the first two and passes the third.
+Four tests, in order. A document belongs in `docs/architecture/` if it fails the first two and passes the third.
 
 | Question | If yes |
 |----------|--------|
 | Could a user observe this without reading code? | `docs/product/` |
-| Does it describe how work gets done? | `docs/process/` |
+| Does it describe how the project works? | `docs/project/` |
 | Does it describe how the system is built internally? | here |
+| Is it a single decision with alternatives and consequences? | `docs/adr/` |
 
 Concretely, this directory owns:
 
@@ -42,5 +43,6 @@ Both this directory and `docs/product/spec/` describe the HTTP API, at different
 
 ## Related
 
+- What belongs in each documentation directory: `docs/project/README.md`
 - Decisions that shaped this structure: `docs/adr/`
-- Why interfaces are specified before implementation: `docs/process/contract-first-delivery.md`
+- Why interfaces are specified before implementation: `docs/project/contract-first-delivery.md`
