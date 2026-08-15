@@ -28,6 +28,10 @@ Plan: plans/<filename>.md   ← only when structural changes are proposed
 2. Every lesson must include a Negative line.
 3. Structural change proposals (agent defs, scripts, CI) require a `plans/` document before any edits.
 4. Do not write to `.context/lessons_learned.md` — that file is human-promoted only.
+5. Lessons capture process rules and failure patterns only. Never restate architecture, interface shapes, or code behavior — link to the authoritative doc instead. See `.context/README.md`.
+6. When a lesson references a doc that does not yet exist in the `.context/README.md` index, add the index row in the same PR.
+7. Prefer a structural fix over a lesson. If the behavior can be enforced by an agent definition, an instruction `applyTo` scope, a script, or a CI check, propose that instead. Reserve lessons for judgment that cannot be encoded.
+8. A lesson that duplicates an existing agent constraint or instruction is rejected. Check both before appending.
 
 ## Edit Scope
 

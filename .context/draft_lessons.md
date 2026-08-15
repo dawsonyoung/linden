@@ -7,3 +7,4 @@ Reject or delete rules that are incorrect, too narrow, or already covered.
 
 <!-- Agents append here during task completion when they encounter unexpected failures or retries. -->
 <!-- Format: [Rule-NNN]: <actionable rule> | Context: <trigger> | Negative: <what to avoid> -->
+<!-- Prefer a structural fix (agent definition, instruction, script) over a rule when one would enforce the behavior directly. -->

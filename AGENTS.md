@@ -58,7 +58,7 @@ evals/           # AI output evaluation datasets and test harnesses
 tools/           # MCP-compatible tool definitions and sandboxed plugins
 .agents/         # Agent workflow definitions and role configurations
 .mcp/            # MCP server configuration and tool manifests
-.context/        # Persistent context files for AI coding assistants
+.context/        # Orientation index for AI agents (see .context/README.md)
 llm.txt          # Top-level LLM orientation file (codebase summary for AI agents)
 ```
 
@@ -106,10 +106,14 @@ make build        # Production build → bin/linden
 - TLS for all network communication (future).
 
 ### Git
-- Branch: `feat/`, `fix/`, `docs/`, `refactor/`, `test/`
+- Branch per PR, created from latest `main` when work starts.
+- Branch types: `feat/`, `fix/`, `test/`, `refactor/`, `docs/`, `ci/`, `chore/`, `workflow/`
+- Format: `<type>/<scope>-<short-description>` (e.g. `test/inference-contracts`)
+- `workflow/` is reserved for `.agents/**`, `.context/**`, and workflow tooling changes. Never mix with product code.
 - Commits: Conventional Commits (`feat:`, `fix:`, `docs:`, etc.)
 - Every PR must pass CI (lint + test + build).
-- Squash merge to main.
+- Squash merge to main; delete branch after merge.
+- See `docs/branching-strategy.md` for the full branching model and PR rules.
 
 ## Design Principles
 
@@ -121,6 +125,7 @@ make build        # Production build → bin/linden
 
 ## Self-Correction and Learning
 
+- `.context/` is an orientation index, not a source of truth. See `.context/README.md` for its role and rules.
 - Read `.context/lessons_learned.md` at the start of every session to avoid known failure patterns.
 - Before closing any task that involved a build error, test failure, lint issue, or repeated retry, append a structured lesson to `.context/draft_lessons.md`.
 - Use this format for each entry: `[Rule-NNN]: <actionable rule> | Context: <trigger> | Negative: <what to avoid>`.

@@ -310,6 +310,7 @@ Merge is blocked if contract-first ordering is violated.
    - this document
    - layer and delivery specs
 8. .context/
+   - README.md           — role definition, hygiene rules, and index of authoritative sources
    - lessons_learned.md  — human-promoted rules injected at session start
    - draft_lessons.md    — agent-generated candidates pending human review
 

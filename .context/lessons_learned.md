@@ -4,5 +4,7 @@ Human-promoted rules only. To add a rule, promote it from `.context/draft_lesson
 
 ## Domain Rules
 
-<!-- Rules will be added here as they are promoted from draft_lessons.md -->
-<!-- Format: [Rule-NNN]: <actionable rule> | Context: <trigger> | Negative: <what to avoid> -->
+[Rule-001]: Verify a change against the policy it establishes before requesting review.
+Context: Any change that defines, extracts, or tightens a standard.
+Negative: Do not assume authorship implies compliance. The change that defines a rule is the most likely place to violate it.
+

@@ -3,6 +3,9 @@
 This directory is the canonical source for all workflow agent definitions.
 Provider-specific paths are generated mirrors — edit here, not there.
 
+Only `.github/agents/`, `.github/instructions/`, and `.github/prompts/` are generated.
+Other files under `.github/` are hand-authored and are not touched by the sync script.
+
 ## Agents
 
 | File | Role | User-Invocable |
@@ -27,6 +30,7 @@ Provider-specific paths are generated mirrors — edit here, not there.
 | instructions/contract-first.instructions.md | All implementation and test work |
 | instructions/linux-docker-parity.instructions.md | All build and CI work |
 | instructions/pr-size-and-history.instructions.md | All PR preparation |
+| instructions/context-hygiene.instructions.md | Any change under `.context/` |
 
 ## Prompts
 
@@ -46,6 +50,8 @@ Provider-specific paths are generated mirrors — edit here, not there.
 
 ## Self-Correction
 
+- `.context/` is an orientation index, not a source of truth. See `.context/README.md`.
 - Read `.context/lessons_learned.md` at session start.
 - Append to `.context/draft_lessons.md` when tasks encounter failures or retries.
+- Lessons link to authoritative docs; they never restate them.
 - Structural change proposals go to `plans/` first; lesson entries reference the plan file.
