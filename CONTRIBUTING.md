@@ -37,6 +37,33 @@ Windows CI job, and no platform-conditional code is accepted in `src/`.
 Short-term deployment on a Windows machine runs the Linux container with Ollama
 native on the host. See `docs/adr/0002-role-of-docker-in-distribution.md`.
 
+## Reaching Ollama
+
+The server reads `OLLAMA_URL`. Two topologies are supported; both are the same
+to the server, which only makes HTTP requests to that address.
+
+**Ollama on the host, Linden in a container.** The default, and the only option
+on Windows and macOS, where GPU passthrough into a Linux container is
+impractical. The compose file resolves `host.docker.internal` for this, which on
+Linux requires the `host-gateway` mapping it already declares.
+
+```sh
+OLLAMA_URL=http://host.docker.internal:11434 docker compose up --build
+```
+
+**Ollama as a sibling container.** Linux only, and preferable there: GPU access
+works through `nvidia-container-toolkit` without a VM boundary.
+
+```sh
+OLLAMA_URL=http://ollama:11434 docker compose --profile ollama up --build
+```
+
+Ollama is never part of the Linden image. Models are multi-gigabyte and have a
+different lifecycle from the binary, so they live in their own volume.
+
+Running the server directly on the host needs neither: the default
+`http://localhost:11434` is correct.
+
 ## Branching and commits
 
 Follow [docs/project/branching-strategy.md](docs/project/branching-strategy.md). In short:
