@@ -12,7 +12,7 @@ description: "Guide through implementing a source layer to satisfy existing cont
 ## Procedure
 
 1. Read the contract test file(s) in full before writing any code.
-2. Read the interface spec section for this layer in `docs/architecture/01-layer-interface-spec.md`.
+2. Read the interface spec section for this layer in `docs/architecture/layer-interface-spec.md`.
 3. Check `.context/lessons_learned.md` for relevant rules.
 4. Implement the minimal code in `src/<layer>/` that makes the contract tests pass.
 5. Verify layer dependency direction — no forbidden imports.

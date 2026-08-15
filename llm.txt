@@ -16,7 +16,10 @@ No user data leaves the device by default.
 - .agents/      — agent workflow definitions and role configurations
 - .mcp/         — MCP server configuration and tool manifests
 - .context/     — orientation index for agents; points at sources, never duplicates them
-- docs/          — architecture specs, branching strategy, ADRs (see .context/README.md for the index)
+- docs/product/  — published product spec and PRDs (what Linden does, for humans)
+- docs/architecture/ — layer interfaces and dependency rules
+- docs/project/  — branching, contract-first delivery, agent workflow
+- docs/adr/      — architecture decision records
 - plans/         — project planning documents (purpose, MVP, roadmap, stage detail)
 
 ## Key Rules for AI Agents

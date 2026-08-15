@@ -2,6 +2,9 @@
 bin/
 *.exe
 
+# Generated documentation site
+docs/.site/
+
 # Go
 src/**/vendor/
 *.out

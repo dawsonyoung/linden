@@ -7,7 +7,7 @@ Ready to implement.
 
 Make the repository truthful and buildable. Today the Makefile and CI reference source files, manifests, and scripts that do not exist, and the CI validation job masks missing suites with pass-through echoes so it cannot fail. Nothing downstream can be trusted until this is corrected.
 
-Branching rules for all work below: `docs/branching-strategy.md`.
+Branching rules for all work below: `docs/project/branching-strategy.md`.
 
 ## Contract-First Exemption
 
@@ -65,13 +65,13 @@ Agent: Document Agent. No other specialist required.
 3. `.github/CODEOWNERS` — default owner for all paths; `.agents/**` and `.context/**` called out explicitly.
 4. `README.md` — replace the false status line, add support matrix and MVP checklist linked to the MVP plan.
 
-`.github/pull_request_template.md` already exists. CONTRIBUTING links the PR standard in `docs/branching-strategy.md` rather than restating it.
+`.github/pull_request_template.md` already exists. CONTRIBUTING links the PR standard in `docs/project/branching-strategy.md` rather than restating it.
 
 ### Acceptance Criteria
 
 1. README status reflects actual repository state: scaffold plus agent framework, no runnable server yet.
 2. A new contributor can read CONTRIBUTING and know the branch name, commit order, and gate expectations.
-3. CONTRIBUTING links `docs/branching-strategy.md` rather than restating it.
+3. CONTRIBUTING links `docs/project/branching-strategy.md` rather than restating it.
 4. PR template renders on a test PR.
 
 ### Gate
@@ -171,7 +171,7 @@ Agents: Implementation Agent (workflow YAML), Validation Agent (verification).
 
 1. A deliberately broken test causes a red check. Verify by pushing a temporary failing commit, confirming red, then reverting within the same PR. Link both runs in the PR body.
 2. No step in the workflow can exit non-zero and still report success.
-3. Job names map one-to-one onto the quality gates in `docs/architecture/03-agentic-workflow-framework.md`.
+3. Job names map one-to-one onto the quality gates in `docs/project/agentic-workflow-framework.md`.
 
 ### Gate
 
@@ -286,6 +286,37 @@ All five branches merged, and:
 6. Contract, integration, and smoke jobs exist and report visible skips rather than false passes.
 
 Only then does Stage A begin.
+
+---
+
+## 0.6 `ci/docgen-publishing`
+
+Intent: make `docs/product/` publishable so the spec can be read outside the repository.
+
+Agents: Design Agent (resolve the ADR), then Implementation Agent, then Validation Agent.
+### Tasks
+
+1. Add `docs/book.toml` configuring mdBook with `docs/product/` as the book source and `docs/.site/` as output.
+2. Decide how `docs/product/prd/` is rendered — listed in `SUMMARY.md` as a section, or built as a second book. Record the choice in the ADR consequences.
+3. Add the mdBook fetch to CI with a pinned version.
+4. Replace the placeholder `docs` and `docs-serve` Makefile targets with real ones.
+5. Add a CI job that builds the docs and fails on a broken link or a page missing from `SUMMARY.md`.
+
+### Acceptance Criteria
+
+1. `make docs` renders `docs/product/` to `docs/.site/` on a clean Linux checkout.
+2. Output is browsable from `file://` with no server.
+3. A page added without a `SUMMARY.md` entry fails the build. Verify deliberately.
+4. A broken relative link fails the build. Verify deliberately.
+
+### Gate
+
+Docs build job green, plus the two deliberate failure verifications recorded in the PR body.
+
+Depends on: 0.3 merged, so the new job slots into an honest CI.
+
+Estimated size: 250–400 lines.
+
 
 ## Post-Stage Action
 
