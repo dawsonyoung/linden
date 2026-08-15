@@ -48,8 +48,7 @@ directive pointing at `../src`. `validation/` sits outside the `src` module, so
 `go test ../validation/...` from `src` fails with "directory prefix does not
 contain main module". Contract suites run as `cd validation && go test ./contracts/...`.
 | A.2 | `test/inference-contracts` | `ListModels`, `ChatStream` contract tests | Contract |
-| A.3 | `feat/inference-ollama-adapter` | Ollama adapter implementation + unit tests | Contract + Unit |
-| A.4 | `test/orchestrator-contracts` | `ChatService` contract tests with doubles | Contract |
+| A.3 | `feat/inference-ollama-adapter` | Ollama adapter implementation + unit tests | Contract + Unit || A.4 | `test/orchestrator-contracts` | `ChatService` contract tests with doubles | Contract |
 | A.5 | `feat/orchestrator-chat-service` | ChatService implementation + unit tests | Contract + Unit |
 | A.6 | `test/api-contracts-sse` | HTTP schema + SSE framing, ordering, terminal event contracts | Contract |
 | A.7 | `feat/api-chat-handlers` | Chat handler (JSON + SSE), model list, validation + unit tests | Contract + Unit |
@@ -63,6 +62,14 @@ contain main module". Contract suites run as `cd validation && go test ./contrac
 | B.3 | `test/storage-contracts` | Session save/load/list contract tests | Contract |
 | B.4 | `feat/storage-session-store` | Session store implementation + unit tests | Contract + Unit |
 | B.5 | `test/integration-session-path` | Session persistence across chat turns | Integration |
+
+Two container obligations fall due during these stages, per
+`docs/adr/0002-role-of-docker-in-distribution.md`:
+
+- **A.3** must document the supported container topologies for reaching Ollama,
+  on the host versus as a sibling service.
+- **B.4** must declare a data directory and a corresponding volume. A container
+  without one loses conversations on restart.
 
 ## Stage C: Functional and hardening
 

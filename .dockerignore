@@ -1,0 +1,8 @@
+# Minimal build context: only the source tree is needed to build the image.
+*
+!src
+
+# Build outputs that must not leak into the image context.
+src/web/node_modules
+src/web/build
+src/web/.svelte-kit

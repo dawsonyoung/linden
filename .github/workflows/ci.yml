@@ -176,3 +176,96 @@ jobs:
       - name: Build
         if: steps.detect.outputs.present == 'true'
         run: cd src/web && npm run build
+
+  docker:
+    name: docker
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: |
+          docker build \
+            --build-arg VERSION="${GITHUB_REF_NAME}" \
+            --build-arg COMMIT="${GITHUB_SHA::7}" \
+            -t linden:ci .
+
+      - name: Verify non-root
+        run: |
+          user=$(docker image inspect linden:ci --format '{{.Config.User}}')
+          echo "image user: ${user}"
+          if [ -z "${user}" ] || [ "${user}" = "root" ] || [ "${user}" = "0" ]; then
+            echo "::error::image runs as root"
+            exit 1
+          fi
+
+      - name: Image size
+        run: |
+          bytes=$(docker image inspect linden:ci --format '{{.Size}}')
+          echo "::notice title=image size::$(numfmt --to=iec "${bytes}")"
+
+      - name: Start container
+        run: docker run -d --name linden-smoke -p 8080:8080 linden:ci
+
+      - name: Health endpoint returns 200
+        run: |
+          for i in $(seq 1 20); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/health || true)
+            if [ "${code}" = "200" ]; then
+              echo "health returned 200 after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::health endpoint did not return 200 within 20s"
+          docker logs linden-smoke
+          exit 1
+
+      - name: Version endpoint reports build args
+        run: |
+          body=$(curl -sf http://localhost:8080/version)
+          echo "${body}"
+          echo "${body}" | grep -q "${GITHUB_SHA::7}" || {
+            echo "::error::version endpoint did not report the injected commit"
+            exit 1
+          }
+
+      - name: Container healthcheck reports healthy
+        run: |
+          for i in $(seq 1 30); do
+            status=$(docker inspect --format '{{.State.Health.Status}}' linden-smoke 2>/dev/null || echo unknown)
+            if [ "${status}" = "healthy" ]; then
+              echo "container healthcheck healthy after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::container healthcheck never reported healthy"
+          docker inspect --format '{{json .State.Health}}' linden-smoke || true
+          exit 1
+
+      # Verifies the graceful shutdown path deferred from Stage 0.2.
+      # docker stop sends SIGTERM; the server must drain and log before exiting.
+      - name: Graceful shutdown on SIGTERM
+        run: |
+          docker stop -t 15 linden-smoke
+          logs=$(docker logs linden-smoke 2>&1)
+          echo "${logs}"
+          echo "${logs}" | grep -q "shutdown signal received" || {
+            echo "::error::server did not report receiving the shutdown signal"
+            exit 1
+          }
+          echo "${logs}" | grep -q "server stopped" || {
+            echo "::error::server did not complete graceful shutdown"
+            exit 1
+          }
+
+      - name: Container logs
+        if: failure()
+        run: docker logs linden-smoke || true
+
+      - name: Clean up
+        if: always()
+        run: docker rm -f linden-smoke || true
+

@@ -77,12 +77,11 @@ Not every gate applies to every change. Documentation-only PRs need lint alone.
 | `contract` | Contract suite, when present |
 | `integration` | Integration suite, when present |
 | `web` | Type check and build, when present |
+| `docker` | Image builds, runs non-root, serves health, shuts down gracefully |
 
 `contract`, `integration`, and `web` report a visible skip until the
 corresponding suite or project exists. A skip is recorded as a notice in the
 job log; it never reports a passing test run.
-
-The Docker runtime check joins this list in Stage 0.4.
 
 ## Documentation
 
