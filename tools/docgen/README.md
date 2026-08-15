@@ -2,7 +2,9 @@
 
 Renders `docs/product/` to a browsable HTML site.
 
-> **Status:** Stub. The toolchain is not yet chosen — see `docs/adr/0001-documentation-publishing-toolchain.md`. Implementation is tracked as Stage 0.6 in `plans/05-stage-0-groundwork.md`.
+> **Status:** Not yet implemented. Toolchain is **mdBook**, decided in `docs/adr/0001-documentation-publishing-toolchain.md`. Implementation is Stage 0.6 in `plans/05-stage-0-groundwork.md`.
+
+mdBook is a prebuilt binary fetched in CI — no Rust toolchain is installed. This directory holds the configuration and any wrapper scripting needed to invoke it; there is no generator source to write.
 
 ## Intended usage
 

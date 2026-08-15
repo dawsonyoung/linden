@@ -294,13 +294,13 @@ Only then does Stage A begin.
 Intent: make `docs/product/` publishable so the spec can be read outside the repository.
 
 Agents: Design Agent (resolve the ADR), then Implementation Agent, then Validation Agent.
-
 ### Tasks
 
-1. Resolve `docs/adr/0001-documentation-publishing-toolchain.md` — move status from Proposed to Accepted with a chosen option.
-2. Implement `tools/docgen` per the requirements in `tools/docgen/README.md`.
-3. Replace the placeholder `docs` and `docs-serve` Makefile targets with real ones.
-4. Add a CI job that builds the docs and fails on a broken link or a page missing from `SUMMARY.md`.
+1. Add `docs/book.toml` configuring mdBook with `docs/product/` as the book source and `docs/.site/` as output.
+2. Decide how `docs/product/prd/` is rendered — listed in `SUMMARY.md` as a section, or built as a second book. Record the choice in the ADR consequences.
+3. Add the mdBook fetch to CI with a pinned version.
+4. Replace the placeholder `docs` and `docs-serve` Makefile targets with real ones.
+5. Add a CI job that builds the docs and fails on a broken link or a page missing from `SUMMARY.md`.
 
 ### Acceptance Criteria
 
