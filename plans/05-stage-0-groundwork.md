@@ -245,18 +245,28 @@ Agent: Implementation Agent, then Validation Agent.
 
 ### Tasks
 
-1. Replace `rm -rf bin/ src/web/build/` in `clean` with a portable form.
-2. `validate-smoke` calls `./run.sh`, which does not exist. Drop the target rather than ship one that cannot run. C.4 reintroduces it.
-3. Guard `build-web`, `test`, and `lint` web steps so they no-op cleanly while `src/web` has no `package.json`.
-4. Confirm `docker-build` and `docker-smoke` targets from 0.4 are present.
-5. Add `scripts/make.ps1` wrapper, or document in CONTRIBUTING that Windows contributors run targets through WSL or Git Bash.
+Rescoped by `docs/adr/0003-target-platform-policy.md`. The Makefile stays
+POSIX-only; no PowerShell wrapper is written, because Windows contributors run
+targets inside the devcontainer.
+
+1. Replace `rm -rf bin/ src/web/build/ docs/.site/` in `clean` with a form that
+   does not fail when a directory is absent.
+2. `validate-smoke` calls `./run.sh`, which does not exist. Drop the target
+   rather than ship one that cannot run. C.4 reintroduces it.
+3. Correct the `validate-contracts` and `validate-integration` paths. They
+   currently run `cd src && go test ../validation/...`, which cannot work:
+   `validation/` is outside the `src` module. Target the form A.1 will use,
+   `cd validation && go test ./contracts/...`, and guard on `validation/go.mod`
+   existing.
+4. Guard `build-web`, `test`, and `lint` web steps so they no-op cleanly while
+   `src/web` has no `package.json`.
+5. Confirm `docker-build` and `docker-smoke` from 0.4 behave on a clean checkout.
 
 ### Acceptance Criteria
 
 1. Every Makefile target either succeeds or fails with an actionable message on a clean Linux checkout.
 2. No target references a file that does not exist.
-3. Windows path documented and verified once manually.
-4. CI continues to gate on the Linux form only.
+3. CI continues to gate on the Linux form only.
 
 ### Verification
 

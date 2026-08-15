@@ -12,19 +12,30 @@
 
 ## Setup
 
-```powershell
-.\scripts\setup.ps1
+**Recommended: the devcontainer.** Open the repository in VS Code and reopen in
+container. The toolchain then matches CI exactly, which means `go test -race`,
+Docker, and line endings all behave the same locally as they do in the gates.
+
+Without a devcontainer:
+
+```sh
+./scripts/setup.sh              # check the toolchain
+./scripts/setup.sh --pull-model # also fetch the model used from Stage A.3
 ```
 
-Installs Go, Node, and Ollama if missing and pulls the `tinyllama` model. Restart your terminal afterward if anything was newly installed.
+`scripts/setup.ps1` exists as a Windows convenience and is not the canonical
+path. See `docs/adr/0003-target-platform-policy.md`.
 
-## Windows
+## Platforms
 
-Linux is the authoritative platform. Windows is supported for development, but CI gates on Linux only.
+Linux is the only deployment target. Windows and macOS are development hosts.
 
-`make` is not available on Windows by default. Run targets through WSL or Git Bash. PowerShell scripts under `scripts/` work natively.
+The Makefile and CI are POSIX-only by policy. Windows contributors run targets
+inside the devcontainer rather than through a wrapper. There is deliberately no
+Windows CI job, and no platform-conditional code is accepted in `src/`.
 
-If a command behaves differently across platforms, the Linux form is correct.
+Short-term deployment on a Windows machine runs the Linux container with Ollama
+native on the host. See `docs/adr/0002-role-of-docker-in-distribution.md`.
 
 ## Branching and commits
 
@@ -77,12 +88,11 @@ Not every gate applies to every change. Documentation-only PRs need lint alone.
 | `contract` | Contract suite, when present |
 | `integration` | Integration suite, when present |
 | `web` | Type check and build, when present |
+| `docker` | Image builds, runs non-root, serves health, shuts down gracefully |
 
 `contract`, `integration`, and `web` report a visible skip until the
 corresponding suite or project exists. A skip is recorded as a notice in the
 job log; it never reports a passing test run.
-
-The Docker runtime check joins this list in Stage 0.4.
 
 ## Documentation
 

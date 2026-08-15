@@ -34,12 +34,14 @@ Contributors should read [CONTRIBUTING.md](CONTRIBUTING.md) first.
 
 ## Support Matrix
 
-| Platform | State | Notes |
-|----------|-------|-------|
-| Linux | Authoritative | All CI gates run here |
-| Docker (Linux) | Required | Runtime gate from Stage 0.4 |
-| Windows | Development only | `make` requires WSL or Git Bash |
-| macOS | Untested | Expected to work; not gated |
+| Platform | Role | Notes |
+|----------|------|-------|
+| Linux | Deployment target | The only supported runtime; all CI gates run here |
+| Docker (Linux) | Deployment vehicle | Required gate from Stage 0.4 |
+| Windows | Development host | Via devcontainer; deploys by running the Linux container |
+| macOS | Development host | Expected to work; not gated |
+
+See [docs/adr/0003-target-platform-policy.md](docs/adr/0003-target-platform-policy.md).
 
 | Dependency | Version |
 |------------|---------|

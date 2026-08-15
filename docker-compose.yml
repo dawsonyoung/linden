@@ -1,0 +1,38 @@
+# Local development convenience. Not a supported deployment topology — see
+# docs/adr/0002-role-of-docker-in-distribution.md.
+#
+#   docker compose up --build                   server, using Ollama on the host
+#   OLLAMA_URL=http://ollama:11434 \
+#     docker compose --profile ollama up --build  server plus a sibling Ollama
+
+services:
+  linden:
+    build:
+      context: .
+      args:
+        VERSION: ${VERSION:-dev}
+        COMMIT: ${COMMIT:-unknown}
+    image: linden:dev
+    ports:
+      - "8080:8080"
+    environment:
+      LINDEN_ADDR: ":8080"
+      LINDEN_LOG_LEVEL: info
+      # Defaults to Ollama on the host. Override when using the ollama profile.
+      OLLAMA_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
+    extra_hosts:
+      # Linux does not resolve host.docker.internal without this mapping.
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  ollama:
+    profiles: [ollama]
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  ollama-models:

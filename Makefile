@@ -1,4 +1,4 @@
-.PHONY: build build-web build-server dev test validate lint clean docs docs-serve
+.PHONY: build build-web build-server dev test validate lint clean docs docs-serve docker-build docker-smoke
 
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 COMMIT  ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)
@@ -47,6 +47,23 @@ docs:
 docs-serve:
 	@echo "TODO: implement tools/docgen (Stage 0.6). See docs/adr/0001-documentation-publishing-toolchain.md"
 	@exit 1
+
+# Container
+docker-build:
+	docker build --build-arg VERSION=$(VERSION) --build-arg COMMIT=$(COMMIT) -t linden:dev .
+
+docker-smoke: docker-build
+	-docker rm -f linden-smoke
+	docker run -d --name linden-smoke -p 8080:8080 linden:dev
+	for i in $$(seq 1 20); do \
+	  code=$$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/health || true); \
+	  if [ "$$code" = "200" ]; then echo "health 200 after $${i}s"; break; fi; \
+	  if [ $$i -eq 20 ]; then echo "health check failed"; docker logs linden-smoke; docker rm -f linden-smoke; exit 1; fi; \
+	  sleep 1; \
+	done
+	docker stop -t 15 linden-smoke
+	docker logs linden-smoke
+	docker rm -f linden-smoke
 
 # Clean
 clean:

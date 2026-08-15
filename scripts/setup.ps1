@@ -1,5 +1,9 @@
 # Linden Development Environment Setup (Windows)
 # Run: .\scripts\setup.ps1
+#
+# Convenience only. The canonical setup script is scripts/setup.sh, and the
+# recommended environment is the devcontainer, which matches CI exactly.
+# See docs/adr/0003-target-platform-policy.md for when this file is removed.
 
 $ErrorActionPreference = "Stop"
 

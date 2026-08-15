@@ -4,7 +4,10 @@ package main
 import (
 	"context"
 	"errors"
+	"flag"
+	"fmt"
 	"log/slog"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -21,13 +24,59 @@ var (
 	commit  string
 )
 
-const shutdownTimeout = 10 * time.Second
+const (
+	shutdownTimeout    = 10 * time.Second
+	healthProbeTimeout = 2 * time.Second
+)
 
 func main() {
+	health := flag.Bool("health", false, "probe the local health endpoint and exit; used by the container HEALTHCHECK")
+	flag.Parse()
+
+	if *health {
+		if err := probeHealth(); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		return
+	}
+
 	if err := run(); err != nil {
 		slog.Error("server failed", slog.String("error", err.Error()))
 		os.Exit(1)
 	}
+}
+
+func probeHealth() error {
+	cfg, err := config.Load()
+	if err != nil {
+		return err
+	}
+	return probeHealthAt(cfg.Addr)
+}
+
+// probeHealthAt reports whether the server at addr is serving health checks.
+// A wildcard listen address is probed over loopback.
+func probeHealthAt(addr string) error {
+	host, port, err := net.SplitHostPort(addr)
+	if err != nil {
+		return fmt.Errorf("parse address: %w", err)
+	}
+	if host == "" || host == "0.0.0.0" || host == "::" {
+		host = "127.0.0.1"
+	}
+
+	client := &http.Client{Timeout: healthProbeTimeout}
+	resp, err := client.Get("http://" + net.JoinHostPort(host, port) + "/health")
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("health endpoint returned %d", resp.StatusCode)
+	}
+	return nil
 }
 
 func run() error {
