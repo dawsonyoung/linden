@@ -2,8 +2,8 @@
 
 | Field | Value |
 |-------|-------|
-| Status | Draft |
-| Author | |
+| Status | Accepted |
+| Author | dawsonyoung |
 | Created | 2026-08-15 |
 | Spec sections | `spec/10-capabilities.md` (once shipped) |
 | Supersedes | None |
@@ -30,6 +30,8 @@ Privacy-conscious individuals who want to ask questions, draft text, and reason 
 - Multi-device access. Separate PRD.
 - Conversation history that survives a restart. Separate PRD.
 - Any remote model provider.
+- Proactive detection of a model becoming unavailable mid-session. Deferred; see R8.
+- A visual marker distinguishing a stopped reply from a complete one. Deferred; see R7.
 
 ## Requirements
 
@@ -39,6 +41,8 @@ Privacy-conscious individuals who want to ask questions, draft text, and reason 
 4. R4 — When no local model is available, the user sees an actionable message naming what to install.
 5. R5 — When the local model backend is unreachable, the user sees an actionable message and the client remains usable.
 6. R6 — The user can select from the models available locally.
+7. R7 — Stopping generation retains the text received so far as the reply. It is not discarded and is not visually distinguished from a complete reply.
+8. R8 — If the selected model becomes unavailable while a session is open, no notice is shown until the user sends again, at which point R4 applies.
 
 ## Privacy considerations
 
@@ -51,8 +55,11 @@ Message content is sent to the local model backend and held in memory for the du
 
 ## Open questions
 
-- TODO: Does stopping generation preserve the partial reply in the conversation, or discard it?
-- TODO: What is shown when the selected model is removed while a session is open?
+None. Both were resolved toward the smallest MVP implementation and are captured as R7 and R8.
+
+R7 keeps the partial reply because the client has already rendered that text; discarding it would require additional rollback logic to produce a worse outcome. R8 avoids any liveness polling or session-watching by letting the existing error path in R4 surface the problem at the moment it actually matters.
+
+Both are deliberate reductions. Revisit once the chat path is stable.
 
 ## Implementation notes
 
