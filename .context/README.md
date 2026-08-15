@@ -65,6 +65,7 @@ Duplication is drift. When content exists in `docs/`, `.context` links to it.
 
 | Concern | Authoritative source |
 |---------|---------------------|
+| What belongs in architecture docs | `docs/architecture/README.md` |
 | Layer boundaries and dependency rules | `docs/architecture/layer-interface-spec.md` |
 | Interface shapes, error taxonomy, SSE contract | `docs/architecture/layer-interface-spec.md` |
 | Repository layout and conventions | `AGENTS.md` |

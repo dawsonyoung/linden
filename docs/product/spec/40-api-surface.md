@@ -2,7 +2,9 @@
 
 > **Status:** Stub.
 
-The client-facing HTTP contract. This page describes the surface a client can depend on. Layer-internal interfaces are in `docs/architecture/layer-interface-spec.md` and are not part of this contract.
+The client-facing HTTP contract, described for someone building against Linden.
+
+Exact schemas, event names, and field types are normative in `docs/architecture/layer-interface-spec.md`. This page describes what each endpoint is for and what it guarantees; it links rather than restating, because a duplicated schema drifts.
 
 ## Stability
 
@@ -21,7 +23,7 @@ TODO: Specify as each endpoint lands. For each: purpose, request shape, response
 
 ## Streaming
 
-Replies stream over Server-Sent Events. TODO: Restate the client-visible event contract here once `docs/architecture/layer-interface-spec.md` stabilizes, describing observable behavior only.
+Replies stream over Server-Sent Events. TODO: Describe the observable behavior a client can rely on — ordering, termination, and what happens if the connection drops. Link to the event contract in `docs/architecture/layer-interface-spec.md` for exact event names and payload shapes.
 
 ## Errors
 
