@@ -16,8 +16,8 @@ No user data leaves the device by default.
 - .agents/      — agent workflow definitions and role configurations
 - .mcp/         — MCP server configuration and tool manifests
 - .context/     — orientation index for agents; points at sources, never duplicates them
-- docs/adr/     — architecture decision records
-- plans/        — project planning documents (purpose, MVP, exhaustive roadmap)
+- docs/          — architecture specs, branching strategy, ADRs (see .context/README.md for the index)
+- plans/         — project planning documents (purpose, MVP, roadmap, stage detail)
 
 ## Key Rules for AI Agents
 - Never log user data, not even at debug level.

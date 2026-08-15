@@ -64,6 +64,9 @@ Duplication is drift. When content exists in `docs/`, `.context` links to it.
 | Concern | Authoritative source |
 |---------|---------------------|
 | Branching, commits, PR rules | `docs/branching-strategy.md` |
+| Product purpose and positioning | `plans/01-high-level-purpose-overview.md` |
+| MVP scope and phase plan | `plans/02-repository-setup-and-mvp-plan.md` |
+| Long-range roadmap and tracks | `plans/03-exhaustive-full-implementation-plan.md` |
 | Implementation roadmap | `plans/04-implementation-sequence.md` |
 | Current stage detail | `plans/05-stage-0-groundwork.md` |
 | Agent definitions and tool scopes | `.agents/AGENTS.md` |

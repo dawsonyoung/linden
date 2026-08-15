@@ -84,4 +84,4 @@ Detailed, implementation-ready plans are written one stage ahead:
 | B | — | Not written |
 | C | — | Not written |
 
-Write the next stage detail during the Reflect step of the preceding stage.
+Write the next stage detail during the Reflect step of the preceding stage. In the same change, update the "Current stage detail" row in `.context/README.md` to point at the new document.

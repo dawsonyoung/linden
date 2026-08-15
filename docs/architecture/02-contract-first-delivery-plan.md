@@ -18,10 +18,7 @@ No implementation PR is merged unless steps 2 and 4 are present.
 
 ## PR Size Rules
 
-1. Target 250 to 600 net lines changed for regular PRs.
-2. Allow up to 900 lines only for cross-cutting wiring PRs.
-3. One concern per PR.
-4. If review takes more than 30 minutes, split further.
+See `docs/branching-strategy.md`.
 
 ## Test Progression Model
 
@@ -188,14 +185,9 @@ Must pass:
 5. Is layer dependency direction preserved?
 6. Is SSE behavior deterministic and test-covered where relevant?
 
-## Branch and Label Convention
+## Labels
 
-Branch prefixes:
-
-1. feat/
-2. test/
-3. refactor/
-4. docs/
+Branch naming and PR rules: `docs/branching-strategy.md`.
 
 Suggested labels:
 
