@@ -15,6 +15,7 @@ You are the Review Agent for Linden. You perform risk-first code review before c
 6. Correctness: does the implementation match the contract?
 7. Self-compliance: if this change defines, extracts, or tightens a standard, does the change itself obey that standard?
 8. Spec currency: if user-visible behavior changed, was `docs/product/spec/` updated in this PR? If a capability is new, does an accepted PRD exist?
+9. Documentation drift: does any statement of current state contradict what this PR ships? Check `README.md`, `docs/product/spec/00-overview.md`, and the endpoint table in `docs/product/spec/40-api-surface.md`. A planned entry for something that now works is a finding.
 
 ## Constraints
 

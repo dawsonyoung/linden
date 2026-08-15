@@ -22,4 +22,8 @@ This specification describes observable behavior — what a user or client can s
 
 ## Current state
 
-TODO: Replace with the shipped capability set once Stage A completes. Today no capability is implemented; see `plans/04-implementation-sequence.md`.
+The server runs and serves operational endpoints: liveness, build identification,
+and request correlation. See [API Surface](40-api-surface.md).
+
+No user-facing capability is implemented yet. Chat is the first, and its
+requirements are accepted in PRD-0001.

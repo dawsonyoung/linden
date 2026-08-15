@@ -88,6 +88,7 @@ Not every gate applies to every change. Documentation-only PRs need lint alone.
 | `contract` | Contract suite, when present |
 | `integration` | Integration suite, when present |
 | `web` | Type check and build, when present |
+| `docs` | Product docs render; no unpublished page or broken link |
 | `docker` | Image builds, runs non-root, serves health, shuts down gracefully |
 
 `contract`, `integration`, and `web` report a visible skip until the
