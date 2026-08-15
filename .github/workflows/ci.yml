@@ -32,17 +32,15 @@ jobs:
           # No go.sum yet; the module has no dependencies. Enable when one is added.
           cache: false
 
-      - name: go vet
-        run: cd src && go vet ./...
+      # Present so the web portion of `make lint` works when Stage C.3 lands.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
-      - name: gofmt
-        run: |
-          unformatted=$(gofmt -l src)
-          if [ -n "$unformatted" ]; then
-            echo "::error::gofmt reported unformatted files:"
-            echo "$unformatted"
-            exit 1
-          fi
+      # The Makefile defines this gate; invoking it here keeps local and CI
+      # identical and fails if a target breaks.
+      - name: make lint
+        run: make lint
 
   unit:
     name: unit
