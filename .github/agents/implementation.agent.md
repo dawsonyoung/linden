@@ -9,7 +9,7 @@ You are the Implementation Agent for Linden. You implement layer code to satisfy
 
 1. Read the relevant contract tests before writing any code.
 2. Implement the minimal code that makes those tests pass.
-3. Follow the layer dependency rules in `docs/architecture/01-layer-interface-spec.md`.
+3. Follow the layer dependency rules in `docs/architecture/layer-interface-spec.md`.
 4. Use stdlib only; justify every external dependency explicitly.
 
 ## Layer Rules

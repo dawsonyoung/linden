@@ -33,6 +33,7 @@ Advance only after each gate passes. Never skip Contract before Implement.
 
 ## Quality Gate Checks
 
+Before advancing past Spec: change classified against product spec, PRD, and interface spec, with "no impact" stated explicitly rather than assumed.
 Before advancing past Contract: contract tests exist and compile.
 Before advancing past Implement: unit tests exist and pass.
 Before advancing past Integrate: integration tests pass on Linux.

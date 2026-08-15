@@ -1,4 +1,4 @@
-<!-- Title format: <type>(<scope>): <summary> — see docs/branching-strategy.md -->
+<!-- Title format: <type>(<scope>): <summary> — see docs/process/branching-strategy.md -->
 
 ## Intent
 

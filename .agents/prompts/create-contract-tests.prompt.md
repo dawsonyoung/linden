@@ -12,7 +12,7 @@ description: "Guide through writing a contract test for a Linden layer interface
 
 ## Procedure
 
-1. Read `docs/architecture/01-layer-interface-spec.md` for the target layer's interface shape.
+1. Read `docs/architecture/layer-interface-spec.md` for the target layer's interface shape.
 2. Create or open `validation/contracts/<layer>_contract_test.go`.
 3. Add build tag `//go:build contracts` at the top.
 4. For each method, write a table-driven test covering:

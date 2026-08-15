@@ -55,12 +55,24 @@ validation/
 ```
 prompts/         # Reusable prompt templates for product features and dev tooling
 evals/           # AI output evaluation datasets and test harnesses
-tools/           # MCP-compatible tool definitions and sandboxed plugins
+tools/           # MCP-compatible tool definitions, sandboxed plugins, docgen
 .agents/         # Agent workflow definitions and role configurations
 .mcp/            # MCP server configuration and tool manifests
 .context/        # Orientation index for AI agents (see .context/README.md)
 llm.txt          # Top-level LLM orientation file (codebase summary for AI agents)
 ```
+
+### Documentation (`docs/`)
+
+```
+docs/
+├── product/      # Published: product spec and PRDs. Observable behavior only.
+├── architecture/ # Layer interfaces and dependency rules
+├── process/      # Branching, contract-first delivery, agent workflow
+└── adr/          # Architecture decision records
+```
+
+`docs/product/` never contains file paths, function names, or struct fields. It is written for readers who have not seen the codebase.
 
 ### Planned (future directories at repo root)
 - Deferred expansion directories (content-sdk, protocol, marketplace, clients/mobile, system) are tracked in the exhaustive implementation plan (`plans/03-exhaustive-full-implementation-plan.md`) and should not be scaffolded in the current repository phase.
@@ -113,7 +125,7 @@ make build        # Production build → bin/linden
 - Commits: Conventional Commits (`feat:`, `fix:`, `docs:`, etc.)
 - Every PR must pass CI (lint + test + build).
 - Squash merge to main; delete branch after merge.
-- See `docs/branching-strategy.md` for the full branching model and PR rules.
+- See `docs/process/branching-strategy.md` for the full branching model and PR rules.
 
 ## Design Principles
 

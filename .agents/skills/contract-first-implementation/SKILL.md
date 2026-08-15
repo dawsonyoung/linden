@@ -14,7 +14,7 @@ description: "Step-by-step contract-first development workflow for Linden. Use w
 
 ### Step 1: Read the interface spec
 
-Open `docs/architecture/01-layer-interface-spec.md`.
+Open `docs/architecture/layer-interface-spec.md`.
 Locate the target layer section. Note the method signatures and behavior rules.
 
 ### Step 2: Write the contract test

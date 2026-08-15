@@ -7,12 +7,22 @@ Active roadmap.
 
 Stage-by-stage branch and PR sequence from groundwork to MVP hardening.
 
-- Branching rules: `docs/branching-strategy.md`
+- Branching rules: `docs/process/branching-strategy.md`
 - Stage 0 detail: `plans/05-stage-0-groundwork.md`
-- Interface definitions: `docs/architecture/01-layer-interface-spec.md`
-- Delivery policy: `docs/architecture/02-contract-first-delivery-plan.md`
+- Interface definitions: `docs/architecture/layer-interface-spec.md`
+- Delivery policy: `docs/process/contract-first-delivery.md`
 
 Each row is one branch and one PR. Create the branch from `main` when the work starts, not before.
+
+## Standing Pre-Implementation Step
+
+Every branch below begins with the Spec step before any contract test or code is written. Run `.agents/prompts/review-product-spec.prompt.md` and record the result in the PR body:
+
+```
+Spec impact: <none | spec updated | PRD required | interface updated>
+```
+
+A new capability requires an accepted PRD in `docs/product/prd/` before implementation starts. A user-visible behavior change updates `docs/product/spec/` in the same PR as the behavior. "No impact" is stated explicitly, never assumed.
 
 ## Stage 0: Groundwork
 
@@ -25,6 +35,7 @@ Fully specified in `plans/05-stage-0-groundwork.md`.
 | 0.3 | `ci/linux-gate-honesty` | Remove pass-through echoes, split CI jobs per gate, Linux authoritative | CI green |
 | 0.4 | `ci/docker-linux-parity` | Dockerfile, .dockerignore, compose, container health check | Docker + health |
 | 0.5 | `chore/cross-platform-make` | Replace POSIX-only Makefile targets with portable forms | Lint |
+| 0.6 | `ci/docgen-publishing` | Implement `tools/docgen`, wire `make docs`, publish check in CI | Docs build |
 
 ## Stage A: Contract-first
 
