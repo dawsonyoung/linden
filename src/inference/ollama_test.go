@@ -128,7 +128,7 @@ func Test_ChatStream_MalformedFrame_ReturnsInternal(t *testing.T) {
 	}
 }
 
-func Test_ChatStream_StreamEndsWithoutTerminalFrame_ReturnsInternal(t *testing.T) {
+func Test_ChatStream_StreamEndsWithoutTerminalFrame_ReturnsUnavailable(t *testing.T) {
 	client := newTestClient(t, http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		_, _ = w.Write([]byte(`{"message":{"content":"partial"}}` + "\n"))
 	}))
@@ -137,8 +137,8 @@ func Test_ChatStream_StreamEndsWithoutTerminalFrame_ReturnsInternal(t *testing.T
 	if err == nil {
 		t.Fatal("ChatStream() error = nil, want an error")
 	}
-	if got := errs.CodeOf(err); got != errs.Internal {
-		t.Errorf("code = %q, want %q", got, errs.Internal)
+	if got := errs.CodeOf(err); got != errs.Unavailable {
+		t.Errorf("code = %q, want %q", got, errs.Unavailable)
 	}
 }
 
