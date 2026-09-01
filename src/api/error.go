@@ -27,6 +27,9 @@ func writeError(w http.ResponseWriter, err error) {
 	case errs.Unavailable:
 		statusCode = http.StatusServiceUnavailable
 		codeStr = "unavailable"
+	case errs.DeadlineExceeded:
+		statusCode = http.StatusServiceUnavailable // API maps deadline to 503
+		codeStr = "deadline_exceeded"
 	default:
 		statusCode = http.StatusInternalServerError
 		codeStr = "internal"
