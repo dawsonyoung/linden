@@ -29,7 +29,6 @@ func doJSON(t *testing.T, h http.Handler, method, path string, body any, headers
 }
 
 func Test_Chat_Post_EmptyMessages_Returns400(t *testing.T) {
-	t.Skip("Pending Stage A.7")
 	h := newHandler(t, api.BuildInfo{}, &scriptedChatService{})
 
 	reqBody := map[string]any{
@@ -46,7 +45,6 @@ func Test_Chat_Post_EmptyMessages_Returns400(t *testing.T) {
 }
 
 func Test_Chat_Post_UnknownModel_Returns404(t *testing.T) {
-	t.Skip("Pending Stage A.7")
 	s := orchestratorScript{
 		Models: []orchestrator.Model{{Name: "llama2"}},
 	}
@@ -61,7 +59,6 @@ func Test_Chat_Post_UnknownModel_Returns404(t *testing.T) {
 }
 
 func Test_Chat_Post_SSE_ReturnsStream(t *testing.T) {
-	t.Skip("Pending Stage A.7")
 	s := orchestratorScript{
 		Models: []orchestrator.Model{{Name: "llama2"}},
 		Chunks: []string{"Hello", " ", "World"},

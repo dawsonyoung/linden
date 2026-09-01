@@ -14,8 +14,8 @@ import (
 const (
 	readHeaderTimeout = 5 * time.Second
 	readTimeout       = 15 * time.Second
-	// TODO: SSE responses outlive this. Streaming routes need per-route write
-	// deadlines when chat lands in Stage A.7.
+	// TODO: Per-route timeouts via middleware would be better.
+	// For now, SSE handlers reset this deadline using ResponseController.
 	writeTimeout   = 30 * time.Second
 	idleTimeout    = 60 * time.Second
 	maxHeaderBytes = 1 << 20
@@ -34,6 +34,8 @@ func NewServer(addr string, logger *slog.Logger, build BuildInfo, chatService or
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health", handleHealth())
 	mux.HandleFunc("GET /version", handleVersion(build))
+	mux.HandleFunc("GET /models", handleModels(chatService))
+	mux.HandleFunc("POST /chat", handleChat(chatService))
 
 	return &http.Server{
 		Addr:              addr,
