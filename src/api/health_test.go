@@ -30,7 +30,7 @@ func Test_HandleHealth_Get_ReturnsOKStatus(t *testing.T) {
 }
 
 func Test_NewServer_TimeoutsConfigured(t *testing.T) {
-	srv := NewServer(":8080", discardLogger(), BuildInfo{})
+	srv := NewServer("localhost:0", discardLogger(), BuildInfo{}, nil)
 
 	if srv.ReadHeaderTimeout == 0 {
 		t.Error("ReadHeaderTimeout is unset; slow-header requests would hold connections open")

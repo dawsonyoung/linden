@@ -15,6 +15,7 @@ import (
 	"testing"
 
 	"github.com/dawsonyoung/linden/api"
+	"github.com/dawsonyoung/linden/orchestrator"
 )
 
 func discardLogger() *slog.Logger {
@@ -24,18 +25,18 @@ func discardLogger() *slog.Logger {
 // newHandler returns the server's HTTP handler as a client would reach it, with
 // middleware applied. Contract tests exercise the published surface, so they
 // must not invoke handlers directly.
-func newHandler(t *testing.T, build api.BuildInfo) http.Handler {
+func newHandler(t *testing.T, build api.BuildInfo, chatService orchestrator.ChatService) http.Handler {
 	t.Helper()
-	srv := api.NewServer(":0", discardLogger(), build)
+	srv := api.NewServer(":0", discardLogger(), build, chatService)
 	if srv.Handler == nil {
 		t.Fatal("NewServer returned a server with no handler")
 	}
 	return srv.Handler
 }
 
-func do(t *testing.T, h http.Handler, method, path string, headers map[string]string) *http.Response {
+func do(t *testing.T, h http.Handler, method, path string, body io.Reader, headers map[string]string) *http.Response {
 	t.Helper()
-	req := httptest.NewRequest(method, path, nil)
+	req := httptest.NewRequest(method, path, body)
 	for k, v := range headers {
 		req.Header.Set(k, v)
 	}

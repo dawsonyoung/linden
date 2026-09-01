@@ -7,6 +7,8 @@ import (
 	"log/slog"
 	"net/http"
 	"time"
+
+	"github.com/dawsonyoung/linden/orchestrator"
 )
 
 const (
@@ -28,7 +30,7 @@ type BuildInfo struct {
 
 // NewServer wires routes and middleware and applies timeouts. The caller owns
 // starting and stopping the returned server.
-func NewServer(addr string, logger *slog.Logger, build BuildInfo) *http.Server {
+func NewServer(addr string, logger *slog.Logger, build BuildInfo, chatService orchestrator.ChatService) *http.Server {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health", handleHealth())
 	mux.HandleFunc("GET /version", handleVersion(build))
