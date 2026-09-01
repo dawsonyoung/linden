@@ -25,7 +25,7 @@ func Test_Models_Get_ReturnsModelsArray(t *testing.T) {
 	if !ok {
 		t.Fatalf("response has no 'models' field; got %v", fieldNames(body))
 	}
-	
+
 	models, ok := rawModels.([]any)
 	if !ok {
 		t.Fatalf("models field = %T, want array", rawModels)
@@ -56,7 +56,7 @@ func Test_Models_Get_ProviderFailure_Returns503(t *testing.T) {
 	resp := do(t, h, http.MethodGet, "/models", nil, nil)
 	requireStatus(t, resp, http.StatusServiceUnavailable)
 	body := requireJSONObject(t, resp)
-	
+
 	if got := requireStringField(t, body, "error"); got == "" {
 		t.Error("error field is missing or empty")
 	}
