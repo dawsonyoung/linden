@@ -201,6 +201,20 @@ Rules:
 Every implementation must pass the conformance suite in
 `validation/contracts/inference_contract_test.go`.
 
+#### Supported Ollama Container Topologies
+
+Per `docs/adr/0002-role-of-docker-in-distribution.md`, three network topologies are supported for communicating with Ollama:
+
+1. **Host-native Ollama (GPU-accelerated)**:
+   - Ollama runs natively on the host OS for direct GPU hardware acceleration.
+   - The Linden container connects using `OLLAMA_URL=http://host.docker.internal:11434` (Docker Desktop / host gateway).
+2. **Compose Sibling Container**:
+   - Ollama runs as a container service on the same Docker network as Linden.
+   - Linden connects using `OLLAMA_URL=http://ollama:11434`.
+3. **Local Process (Bare Metal / Development)**:
+   - Linden and Ollama run directly as local processes on the host.
+   - Linden connects using `OLLAMA_URL=http://127.0.0.1:11434`.
+
 ### storage layer
 Responsibility:
 
