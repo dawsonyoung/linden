@@ -16,6 +16,8 @@ import (
 
 	"github.com/dawsonyoung/linden/api"
 	"github.com/dawsonyoung/linden/config"
+	"github.com/dawsonyoung/linden/inference"
+	"github.com/dawsonyoung/linden/orchestrator"
 )
 
 // Injected via -ldflags at build time; empty values are normalized by the api layer.
@@ -88,7 +90,17 @@ func run() error {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: cfg.LogLevel}))
 	slog.SetDefault(logger)
 
-	srv := api.NewServer(cfg.Addr, logger, api.BuildInfo{Version: version, Commit: commit}, nil)
+	inf, err := inference.NewOllama(inference.OllamaConfig{
+		BaseURL:         cfg.OllamaURL,
+		ResponseTimeout: 30 * time.Second, // Default to a reasonable headers wait
+	})
+	if err != nil {
+		return fmt.Errorf("configure inference: %w", err)
+	}
+
+	chatService := orchestrator.NewService(inf)
+
+	srv := api.NewServer(cfg.Addr, logger, api.BuildInfo{Version: version, Commit: commit}, chatService)
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
