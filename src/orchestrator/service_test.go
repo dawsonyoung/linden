@@ -62,7 +62,7 @@ func Test_Service_ListModels_ErrorPropagation(t *testing.T) {
 
 func Test_Service_ChatStream_EmptyMessages_ReturnsInvalidArgument(t *testing.T) {
 	svc := NewService(&mockInferenceClient{})
-	
+
 	_, err := svc.ChatStream(context.Background(), Request{Model: "test-model"}, func(c Chunk) error { return nil })
 	if err == nil {
 		t.Fatal("expected error, got nil")
@@ -81,7 +81,7 @@ func Test_Service_ChatStream_Success(t *testing.T) {
 			if len(req.Messages) != 1 || req.Messages[0].Content != "hello" {
 				t.Errorf("unexpected messages: %+v", req.Messages)
 			}
-			
+
 			_ = onChunk(inference.Chunk{Text: "world"})
 			return inference.Result{Model: "test-model", FinishReason: inference.FinishStop}, nil
 		},
@@ -89,16 +89,16 @@ func Test_Service_ChatStream_Success(t *testing.T) {
 	svc := NewService(client)
 
 	req := Request{
-		Model: "test-model",
+		Model:    "test-model",
 		Messages: []Message{{Role: RoleUser, Content: "hello"}},
 	}
-	
+
 	chunks := []string{}
 	res, err := svc.ChatStream(context.Background(), req, func(c Chunk) error {
 		chunks = append(chunks, c.Text)
 		return nil
 	})
-	
+
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
 	}
@@ -120,12 +120,12 @@ func Test_Service_ChatStream_ErrorPropagation(t *testing.T) {
 	svc := NewService(client)
 
 	req := Request{
-		Model: "test-model",
+		Model:    "test-model",
 		Messages: []Message{{Role: RoleUser, Content: "hello"}},
 	}
-	
+
 	res, err := svc.ChatStream(context.Background(), req, func(c Chunk) error { return nil })
-	
+
 	if !errors.Is(err, expectedErr) {
 		t.Errorf("expected %v, got %v", expectedErr, err)
 	}
