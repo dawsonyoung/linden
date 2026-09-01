@@ -10,7 +10,7 @@ In scope:
 2. Local model inference via Ollama.
 3. Web client for chat and settings.
 4. Local document ingestion and retrieval (basic RAG).
-5. LAN pairing/authentication for second device access.
+5. LAN pairing/authentication for second device access (via explicit IP; mDNS deferred).
 6. Structured logging and baseline observability.
 7. CI checks and validation workflows in the repository.
 
@@ -116,7 +116,7 @@ Acceptance criteria:
 ### Phase 5: Discovery and LAN Access
 Deliverables:
 
-1. Service discovery strategy (mDNS or explicit host flow).
+1. Service discovery strategy (explicit host flow; mDNS deferred to post-MVP).
 2. Device pairing flow with one-time approval token.
 3. Auth/session token model for local network clients.
 4. Basic allow-list of paired devices.

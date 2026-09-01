@@ -75,19 +75,9 @@ Two container obligations fall due during these stages, per
 
 | # | Branch | Purpose | Gates |
 |---|--------|---------|-------|
-| C.1 | `test/discovery-contracts` | Start/Stop/Status lifecycle contracts | Contract |
-| C.2 | `feat/discovery-mdns` | mDNS advertisement + unit tests | Contract + Unit |
-
-**C.2 networking constraint.** mDNS requires multicast on the physical LAN, and
-Docker's default bridge network does not forward it. A containerized server will
-not be discoverable. Options are `network_mode: host` (Linux only, discards
-network isolation), a `macvlan` network, or running discovery outside the
-container. Decide before implementing. On Docker Desktop for Windows or macOS
-the container sits behind a VM boundary, so LAN multicast does not work reliably
-regardless of configuration; discovery cannot be validated there.
-| C.3 | `feat/web-chat-ui` | SvelteKit chat view consuming SSE | Web check |
-| C.4 | `test/smoke-container` | Container startup, `/health`, SSE stream smoke | Smoke + Docker |
-| C.5 | `test/security-baseline` | Input validation, log leakage, error message safety | Security |
+| C.1 | `feat/web-chat-ui` | SvelteKit chat view consuming SSE | Web check |
+| C.2 | `test/smoke-container` | Container startup, `/health`, SSE stream smoke | Smoke + Docker |
+| C.3 | `test/security-baseline` | Input validation, log leakage, error message safety | Security |
 
 ## Continuous: Workflow
 
@@ -101,7 +91,7 @@ regardless of configuration; discovery cannot be validated there.
 1. Stage 0 completes before Stage A begins. CI must be honest before it gates anything.
 2. Within Stage A, contract branch merges before its paired implementation branch.
 3. Stage B.1 requires A.3, A.5, and A.7 merged.
-4. Stage C.4 requires B.1 merged and Docker gate green.
+4. Stage C.2 requires B.1 merged and Docker gate green.
 5. `workflow/` branches merge independently at any time.
 
 ## Stage Detail Documents
