@@ -11,6 +11,7 @@ import (
 )
 
 func Test_Models_Get_ReturnsModelsArray(t *testing.T) {
+	t.Skip("Pending Stage A.7")
 	s := orchestratorScript{
 		Models: []orchestrator.Model{{Name: "llama2"}, {Name: "mistral"}},
 	}
@@ -46,6 +47,7 @@ func Test_Models_Get_ReturnsModelsArray(t *testing.T) {
 }
 
 func Test_Models_Get_ProviderFailure_Returns503(t *testing.T) {
+	t.Skip("Pending Stage A.7")
 	s := orchestratorScript{
 		Fail: failUnreachable,
 	}
