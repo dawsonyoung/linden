@@ -88,7 +88,7 @@ func run() error {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: cfg.LogLevel}))
 	slog.SetDefault(logger)
 
-	srv := api.NewServer(cfg.Addr, logger, api.BuildInfo{Version: version, Commit: commit})
+	srv := api.NewServer(cfg.Addr, logger, api.BuildInfo{Version: version, Commit: commit}, nil)
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
