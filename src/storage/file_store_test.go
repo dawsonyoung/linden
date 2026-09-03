@@ -46,7 +46,7 @@ func TestFileStore_EdgeCases(t *testing.T) {
 	t.Run("SaveTurn on non-existent directory", func(t *testing.T) {
 		// Create a store pointing to a bad path to force an open error
 		badStore, _ := storage.NewFileStore(filepath.Join(tmpDir, "does-not-exist", "deep"))
-		
+
 		// Wait, NewFileStore creates the dir.
 		// Let's just remove the dir out from under it.
 		os.RemoveAll(filepath.Join(tmpDir, "does-not-exist"))

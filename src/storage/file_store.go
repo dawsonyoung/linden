@@ -84,7 +84,7 @@ func (s *FileStore) LoadSession(ctx context.Context, sessionID string) ([]Turn, 
 
 	var turns []Turn
 	scanner := bufio.NewScanner(file)
-	
+
 	// Skip the first line (Session metadata)
 	if !scanner.Scan() {
 		return nil, nil
