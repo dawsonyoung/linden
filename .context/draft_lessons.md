@@ -8,5 +8,3 @@ Reject or delete rules that are incorrect, too narrow, or already covered.
 <!-- Agents append here during task completion when they encounter unexpected failures or retries. -->
 <!-- Format: [Rule-NNN]: <actionable rule> | Context: <trigger> | Negative: <what to avoid> -->
 <!-- Prefer a structural fix (agent definition, instruction, script) over a rule when one would enforce the behavior directly. -->
-
-[Rule-001]: Monitor CI verification checks (e.g. via `gh pr checks`) automatically after pushing a PR and resolve any lint, test, or build failures before closing the task. | Context: Opening a pull request | Negative: Do not end the turn immediately after pushing a PR without waiting for CI checks to pass.
