@@ -16,9 +16,10 @@ type chatMessage struct {
 }
 
 type chatRequest struct {
-	Model    string        `json:"model"`
-	Messages []chatMessage `json:"messages"`
-	Stream   bool          `json:"stream"`
+	Model     string        `json:"model"`
+	Messages  []chatMessage `json:"messages"`
+	Stream    bool          `json:"stream"`
+	SessionID string        `json:"sessionId,omitempty"`
 }
 
 type chatChunk struct {
@@ -39,8 +40,9 @@ func handleChat(chatService orchestrator.ChatService) http.HandlerFunc {
 		}
 
 		orchReq := orchestrator.Request{
-			Model:    req.Model,
-			Messages: make([]orchestrator.Message, len(req.Messages)),
+			Model:     req.Model,
+			SessionID: req.SessionID,
+			Messages:  make([]orchestrator.Message, len(req.Messages)),
 		}
 		for i, m := range req.Messages {
 			orchReq.Messages[i] = orchestrator.Message{

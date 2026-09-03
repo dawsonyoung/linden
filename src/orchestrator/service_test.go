@@ -7,7 +7,18 @@ import (
 
 	"github.com/dawsonyoung/linden/errs"
 	"github.com/dawsonyoung/linden/inference"
+	"github.com/dawsonyoung/linden/storage"
 )
+
+type dummyStore struct{}
+
+func (dummyStore) SaveTurn(ctx context.Context, sessionID string, turn storage.Turn) error {
+	return nil
+}
+func (dummyStore) LoadSession(ctx context.Context, sessionID string) ([]storage.Turn, error) {
+	return nil, errs.New(errs.NotFound, "not found")
+}
+func (dummyStore) ListSessions(ctx context.Context) ([]storage.Session, error) { return nil, nil }
 
 type mockInferenceClient struct {
 	ListModelsFunc func(ctx context.Context) ([]inference.Model, error)
@@ -34,7 +45,7 @@ func Test_Service_ListModels_Success(t *testing.T) {
 			return []inference.Model{{Name: "test-model"}}, nil
 		},
 	}
-	svc := NewService(client)
+	svc := NewService(client, &dummyStore{})
 
 	models, err := svc.ListModels(context.Background())
 	if err != nil {
@@ -52,7 +63,7 @@ func Test_Service_ListModels_ErrorPropagation(t *testing.T) {
 			return nil, expectedErr
 		},
 	}
-	svc := NewService(client)
+	svc := NewService(client, &dummyStore{})
 
 	_, err := svc.ListModels(context.Background())
 	if !errors.Is(err, expectedErr) {
@@ -61,7 +72,7 @@ func Test_Service_ListModels_ErrorPropagation(t *testing.T) {
 }
 
 func Test_Service_ChatStream_EmptyMessages_ReturnsInvalidArgument(t *testing.T) {
-	svc := NewService(&mockInferenceClient{})
+	svc := NewService(&mockInferenceClient{}, &dummyStore{})
 
 	_, err := svc.ChatStream(context.Background(), Request{Model: "test-model"}, func(c Chunk) error { return nil })
 	if err == nil {
@@ -86,7 +97,7 @@ func Test_Service_ChatStream_Success(t *testing.T) {
 			return inference.Result{Model: "test-model", FinishReason: inference.FinishStop}, nil
 		},
 	}
-	svc := NewService(client)
+	svc := NewService(client, &dummyStore{})
 
 	req := Request{
 		Model:    "test-model",
@@ -117,7 +128,7 @@ func Test_Service_ChatStream_ErrorPropagation(t *testing.T) {
 			return inference.Result{Model: "test-model", FinishReason: inference.FinishCanceled}, expectedErr
 		},
 	}
-	svc := NewService(client)
+	svc := NewService(client, &dummyStore{})
 
 	req := Request{
 		Model:    "test-model",

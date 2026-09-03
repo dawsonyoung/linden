@@ -17,6 +17,7 @@ import (
 	"github.com/dawsonyoung/linden/api"
 	"github.com/dawsonyoung/linden/inference"
 	"github.com/dawsonyoung/linden/orchestrator"
+	"github.com/dawsonyoung/linden/storage"
 )
 
 func newIntegrationHarness(t *testing.T, ollamaHandler http.Handler) (*httptest.Server, *bytes.Buffer) {
@@ -34,7 +35,10 @@ func newIntegrationHarness(t *testing.T, ollamaHandler http.Handler) (*httptest.
 		t.Fatalf("build inference: %v", err)
 	}
 
-	chatService := orchestrator.NewService(inf)
+	tmpDir := t.TempDir()
+	store, _ := storage.NewFileStore(tmpDir)
+
+	chatService := orchestrator.NewService(inf, store)
 
 	var logBuf bytes.Buffer
 	logger := slog.New(slog.NewJSONHandler(&logBuf, &slog.HandlerOptions{Level: slog.LevelDebug}))

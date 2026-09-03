@@ -18,6 +18,7 @@ import (
 	"github.com/dawsonyoung/linden/config"
 	"github.com/dawsonyoung/linden/inference"
 	"github.com/dawsonyoung/linden/orchestrator"
+	"github.com/dawsonyoung/linden/storage"
 )
 
 // Injected via -ldflags at build time; empty values are normalized by the api layer.
@@ -98,7 +99,12 @@ func run() error {
 		return fmt.Errorf("configure inference: %w", err)
 	}
 
-	chatService := orchestrator.NewService(inf)
+	store, err := storage.NewFileStore(cfg.DataDir)
+	if err != nil {
+		return fmt.Errorf("configure storage: %w", err)
+	}
+
+	chatService := orchestrator.NewService(inf, store)
 
 	srv := api.NewServer(cfg.Addr, logger, api.BuildInfo{Version: version, Commit: commit}, chatService)
 
