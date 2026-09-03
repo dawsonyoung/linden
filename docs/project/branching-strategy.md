@@ -144,6 +144,10 @@ git checkout -b test/inference-contracts
 git fetch origin
 git rebase origin/main
 
+# After pushing and opening PR
+gh pr checks --watch
+# Resolve any lint, test, or build failures before concluding your workflow.
+
 # After merge
 git checkout main
 git pull
