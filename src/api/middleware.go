@@ -76,6 +76,10 @@ func (s *statusRecorder) WriteHeader(code int) {
 	s.ResponseWriter.WriteHeader(code)
 }
 
+func (s *statusRecorder) Unwrap() http.ResponseWriter {
+	return s.ResponseWriter
+}
+
 // accessLog records request metadata only. Query strings, headers, and bodies
 // are never logged: all three can carry user content.
 func accessLog(logger *slog.Logger, next http.Handler) http.Handler {

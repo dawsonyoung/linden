@@ -14,6 +14,7 @@ const (
 	defaultAddr      = ":8080"
 	defaultLogLevel  = "info"
 	defaultOllamaURL = "http://localhost:11434"
+	defaultDataDir   = "data"
 )
 
 // Config holds validated runtime settings.
@@ -21,6 +22,7 @@ type Config struct {
 	Addr      string
 	LogLevel  slog.Level
 	OllamaURL string
+	DataDir   string
 }
 
 // Load reads configuration from the environment, applying defaults for unset
@@ -42,7 +44,9 @@ func Load() (Config, error) {
 		return Config{}, fmt.Errorf("OLLAMA_URL: %w", err)
 	}
 
-	return Config{Addr: addr, LogLevel: level, OllamaURL: ollamaURL}, nil
+	dataDir := lookup("LINDEN_DATA_DIR", defaultDataDir)
+
+	return Config{Addr: addr, LogLevel: level, OllamaURL: ollamaURL, DataDir: dataDir}, nil
 }
 
 func lookup(key, fallback string) string {

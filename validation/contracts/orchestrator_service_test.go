@@ -9,13 +9,18 @@ import (
 	"github.com/dawsonyoung/linden/errs"
 	"github.com/dawsonyoung/linden/inference"
 	"github.com/dawsonyoung/linden/orchestrator"
+	"github.com/dawsonyoung/linden/storage"
 )
 
 // Test_Service_SatisfiesChatServiceContract runs the conformance suite against
 // the concrete Service implementation wired to a scripted inference double.
 func Test_Service_SatisfiesChatServiceContract(t *testing.T) {
 	runChatServiceContract(t, func(t *testing.T, s orchestratorScript) orchestrator.ChatService {
-		return orchestrator.NewService(&scriptedInferenceClient{script: s})
+		store := &scriptedStore{
+			sessions: make(map[string]*storage.Session),
+			turns:    make(map[string][]storage.Turn),
+		}
+		return orchestrator.NewService(&scriptedInferenceClient{script: s}, store)
 	})
 }
 
