@@ -18,11 +18,14 @@ services:
     environment:
       LINDEN_ADDR: ":8080"
       LINDEN_LOG_LEVEL: info
+      LINDEN_DATA_DIR: /app/data
       # Defaults to Ollama on the host. Override when using the ollama profile.
       OLLAMA_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
     extra_hosts:
       # Linux does not resolve host.docker.internal without this mapping.
       - "host.docker.internal:host-gateway"
+    volumes:
+      - linden-data:/app/data
     restart: unless-stopped
 
   ollama:
@@ -36,3 +39,4 @@ services:
 
 volumes:
   ollama-models:
+  linden-data:
