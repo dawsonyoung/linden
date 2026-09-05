@@ -4,5 +4,6 @@
 
 # Build outputs that must not leak into the image context.
 src/web/node_modules
-src/web/build
+src/web/build/*
+!src/web/build/.keep
 src/web/.svelte-kit

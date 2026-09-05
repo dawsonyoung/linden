@@ -2,7 +2,7 @@
 
 # Web assets. src/web has no package.json until Stage C.3; the placeholder keeps
 # the final image layout stable so C.3 changes only this stage.
-FROM node:20-alpine AS web
+FROM node:22-alpine AS web
 WORKDIR /build
 COPY src/web/ ./
 RUN if [ -f package.json ]; then \
@@ -27,6 +27,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build \
 FROM gcr.io/distroless/static-debian12:nonroot
 COPY --from=server /out/linden /linden
 COPY --from=web /build/build /web
+ENV LINDEN_HOST=0.0.0.0
 EXPOSE 8080
 USER nonroot:nonroot
 # No shell in the image, so the binary probes itself.

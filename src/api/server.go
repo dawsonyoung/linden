@@ -41,7 +41,7 @@ func NewServer(addr string, logger *slog.Logger, build BuildInfo, chatService or
 
 	buildFS, err := fs.Sub(web.BuildFS, "build")
 	if err == nil {
-		mux.Handle("/", http.FileServer(http.FS(buildFS)))
+		mux.Handle("GET /", http.FileServer(http.FS(buildFS)))
 	} else {
 		// Log this when initializing the server
 		logger.Warn("Failed to load embedded web assets", slog.String("error", err.Error()))

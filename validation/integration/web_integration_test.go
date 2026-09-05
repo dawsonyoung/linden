@@ -22,18 +22,18 @@ import (
 func Test_WebUI_Integration_ServesStaticAssets(t *testing.T) {
 	// Create test dependencies
 	logger := slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelDebug}))
-	
+
 	// Use an in-memory store and a dummy inference client since we just test UI serving
 	store, _ := storage.NewFileStore(t.TempDir())
 	inf, _ := inference.NewOllama(inference.OllamaConfig{
 		BaseURL: "http://localhost:11434",
 	})
 	chatSvc := orchestrator.NewService(inf, store)
-	
+
 	// Create the API server
 	buildInfo := api.BuildInfo{Version: "test", Commit: "test"}
 	srv := api.NewServer("localhost:0", logger, buildInfo, chatSvc)
-	
+
 	// Extract the actual handler from the server
 	handler := srv.Handler
 
@@ -44,7 +44,7 @@ func Test_WebUI_Integration_ServesStaticAssets(t *testing.T) {
 	// Perform a GET request to the root URL
 	client := ts.Client()
 	client.Timeout = 2 * time.Second
-	
+
 	resp, err := client.Get(ts.URL + "/")
 	if err != nil {
 		t.Fatalf("Failed to GET /: %v", err)
@@ -88,17 +88,17 @@ func Test_WebUI_Integration_BrowserE2E(t *testing.T) {
 		BaseURL: "http://localhost:11434",
 	})
 	chatSvc := orchestrator.NewService(inf, store)
-	
+
 	buildInfo := api.BuildInfo{Version: "test", Commit: "test"}
 	srv := api.NewServer("localhost:0", logger, buildInfo, chatSvc)
-	
+
 	ts := httptest.NewServer(srv.Handler)
 	defer ts.Close()
 
 	cmd := exec.Command("node", "../../src/web/test-browser.mjs", ts.URL)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	
+
 	err := cmd.Run()
 	if err != nil {
 		t.Fatalf("Browser E2E test failed. Ensure no JS errors occurred. Error: %v", err)
