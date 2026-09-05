@@ -11,7 +11,8 @@ import (
 )
 
 const (
-	defaultAddr      = ":8080"
+	defaultHost      = "localhost"
+	defaultPort      = "8080"
 	defaultLogLevel  = "info"
 	defaultOllamaURL = "http://localhost:11434"
 	defaultDataDir   = "data"
@@ -29,9 +30,11 @@ type Config struct {
 // values. It returns an error naming the offending variable rather than
 // falling back silently, so a misconfigured deployment fails at startup.
 func Load() (Config, error) {
-	addr := lookup("LINDEN_ADDR", defaultAddr)
+	host := lookup("LINDEN_HOST", defaultHost)
+	port := lookup("LINDEN_PORT", defaultPort)
+	addr := net.JoinHostPort(host, port)
 	if err := validateAddr(addr); err != nil {
-		return Config{}, fmt.Errorf("LINDEN_ADDR: %w", err)
+		return Config{}, fmt.Errorf("invalid host/port combination: %w", err)
 	}
 
 	level, err := parseLevel(lookup("LINDEN_LOG_LEVEL", defaultLogLevel))

@@ -4,11 +4,13 @@ package api
 
 import (
 	"encoding/json"
+	"io/fs"
 	"log/slog"
 	"net/http"
 	"time"
 
 	"github.com/dawsonyoung/linden/orchestrator"
+	"github.com/dawsonyoung/linden/web"
 )
 
 const (
@@ -36,6 +38,14 @@ func NewServer(addr string, logger *slog.Logger, build BuildInfo, chatService or
 	mux.HandleFunc("GET /version", handleVersion(build))
 	mux.HandleFunc("GET /models", handleModels(chatService))
 	mux.HandleFunc("POST /chat", handleChat(chatService))
+
+	buildFS, err := fs.Sub(web.BuildFS, "build")
+	if err == nil {
+		mux.Handle("/", http.FileServer(http.FS(buildFS)))
+	} else {
+		// Log this when initializing the server
+		logger.Warn("Failed to load embedded web assets", slog.String("error", err.Error()))
+	}
 
 	return &http.Server{
 		Addr:              addr,
