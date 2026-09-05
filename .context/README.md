@@ -85,7 +85,7 @@ Duplication is drift. When content exists in `docs/`, `.context` links to it.
 | MVP scope and phase plan | `plans/02-repository-setup-and-mvp-plan.md` |
 | Long-range roadmap and tracks | `plans/03-exhaustive-full-implementation-plan.md` |
 | Implementation roadmap | `plans/04-implementation-sequence.md` |
-| Current stage detail | `plans/07-stage-b-vertical-slice.md` |
+| Current stage detail | `plans/08-stage-c-functional.md` |
 | Agent definitions and tool scopes | `.agents/AGENTS.md` |
 
 ### Memory
