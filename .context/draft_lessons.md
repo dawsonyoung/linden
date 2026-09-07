@@ -10,3 +10,6 @@ Reject or delete rules that are incorrect, too narrow, or already covered.
 <!-- Prefer a structural fix (agent definition, instruction, script) over a rule when one would enforce the behavior directly. -->
 
 [Rule-002]: Always verify local build/lint health before concluding a task | Context: Changing function signatures (e.g. NewService) or pushing code | Negative: Do not rely solely on GitHub Actions to catch unformatted code (gofmt) or missed unit test compilation errors (go vet). Run them locally.
+
+[Rule-003]: Always run all CI validation gates locally (lint, unit, contract, integration, web) via manual commands or make targets prior to pushing to verify changes. | Context: Implementing new features or fixing bugs. | Negative: Do not push code assuming it works without local verification, and do not rely on remote CI pipelines as the primary debugging environment.
+[Rule-004]: Actively monitor remote CI via 'gh pr checks --watch' or polling after pushing. | Context: Waiting for CI completion. | Negative: Do not stop and wait for the user to report CI failures; automatically poll and resolve them.
