@@ -106,6 +106,13 @@ func run() error {
 
 	chatService := orchestrator.NewService(inf, store)
 
+	// Validate inference engine connection before serving
+	pingCtx, pingCancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer pingCancel()
+	if _, err := chatService.ListModels(pingCtx); err != nil {
+		return fmt.Errorf("fatal: inference engine unreachable at startup: %w", err)
+	}
+
 	srv := api.NewServer(cfg.Addr, logger, api.BuildInfo{Version: version, Commit: commit}, chatService)
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
