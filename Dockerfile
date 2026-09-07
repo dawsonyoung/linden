@@ -16,6 +16,7 @@ WORKDIR /build
 COPY src/go.mod ./
 RUN go mod download
 COPY src/ ./
+COPY --from=web /build/build/ web/build/
 ARG VERSION=dev
 ARG COMMIT=unknown
 # Static binary: the runtime image has no libc and no shell.
@@ -26,7 +27,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build \
 
 FROM gcr.io/distroless/static-debian12:nonroot
 COPY --from=server /out/linden /linden
-COPY --from=web /build/build /web
 ENV LINDEN_HOST=0.0.0.0
 EXPOSE 8080
 USER nonroot:nonroot
