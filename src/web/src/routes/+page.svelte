@@ -23,7 +23,7 @@
 			const res = await fetch("/chat", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ messages: payloadMessages }),
+				body: JSON.stringify({ model: "tinyllama", messages: payloadMessages }),
 			});
 
 			if (!res.ok) throw new Error(await res.text());
