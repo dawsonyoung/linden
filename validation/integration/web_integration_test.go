@@ -82,20 +82,27 @@ func Test_WebUI_Integration_BrowserE2E(t *testing.T) {
 		t.Skip("test-browser.mjs not found, skipping browser E2E test")
 	}
 
-	logger := slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelDebug}))
-	store, _ := storage.NewFileStore(t.TempDir())
-	inf, _ := inference.NewOllama(inference.OllamaConfig{
-		BaseURL: "http://localhost:11434",
-	})
-	chatSvc := orchestrator.NewService(inf, store)
+	targetURL := os.Getenv("LINDEN_TEST_URL")
 
-	buildInfo := api.BuildInfo{Version: "test", Commit: "test"}
-	srv := api.NewServer("localhost:0", logger, buildInfo, chatSvc)
+	if targetURL == "" {
+		logger := slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelDebug}))
+		store, _ := storage.NewFileStore(t.TempDir())
+		inf, _ := inference.NewOllama(inference.OllamaConfig{
+			BaseURL: "http://localhost:11434",
+		})
+		chatSvc := orchestrator.NewService(inf, store)
 
-	ts := httptest.NewServer(srv.Handler)
-	defer ts.Close()
+		buildInfo := api.BuildInfo{Version: "test", Commit: "test"}
+		srv := api.NewServer("localhost:0", logger, buildInfo, chatSvc)
 
-	cmd := exec.Command("node", "../../src/web/test-browser.mjs", ts.URL)
+		ts := httptest.NewServer(srv.Handler)
+		defer ts.Close()
+		targetURL = ts.URL
+	} else {
+		t.Logf("Running browser E2E test against external URL: %s", targetURL)
+	}
+
+	cmd := exec.Command("node", "../../src/web/test-browser.mjs", targetURL)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 

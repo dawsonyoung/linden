@@ -100,17 +100,7 @@ docker-build:
 	docker build --build-arg VERSION=$(VERSION) --build-arg COMMIT=$(COMMIT) -t linden:dev .
 
 docker-smoke: docker-build
-	-docker rm -f linden-smoke
-	docker run -d --name linden-smoke -p 8080:8080 linden:dev
-	@for i in $$(seq 1 20); do \
-	  code=$$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/health || true); \
-	  if [ "$$code" = "200" ]; then echo "health 200 after $${i}s"; break; fi; \
-	  if [ $$i -eq 20 ]; then echo "health check failed"; docker logs linden-smoke; docker rm -f linden-smoke; exit 1; fi; \
-	  sleep 1; \
-	done
-	docker stop -t 15 linden-smoke
-	docker logs linden-smoke
-	docker rm -f linden-smoke
+	@sh validation/smoke/smoke_test.sh
 
 # Clean
 clean:

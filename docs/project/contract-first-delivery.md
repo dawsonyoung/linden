@@ -58,6 +58,11 @@ Primary focus:
 2. validation/security for boundary checks and leak prevention
 3. Browser/API functional tests for core user journeys
 
+#### LAN Testing
+When Stage C is complete, testing from a mobile device or separate computer on the local network is supported and automated.
+- **Automated Check:** `make docker-smoke` will automatically dynamically determine the host's LAN IP, boot the container on `0.0.0.0`, and run the Playwright integration suite against the LAN interface to prove it is accessible.
+- **Manual Verification:** Developers can run `docker compose up --build` and connect from their phone or another device by navigating to `http://<LAN_IP>:8080`.
+
 ## Linux and Docker Parity Policy
 
 1. Linux CI is the source of truth and must be green on every PR.
