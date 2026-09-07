@@ -1,6 +1,11 @@
 #!/bin/sh
 set -e
 
+if ! docker info >/dev/null 2>&1; then
+    echo "Error: Docker daemon is not running. Please start Docker and try again."
+    exit 1
+fi
+
 # Find LAN IP to strictly verify 0.0.0.0 binding
 LAN_IP=""
 if command -v ip >/dev/null 2>&1; then
