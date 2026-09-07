@@ -16,7 +16,7 @@ concurrency:
 
 env:
   GO_VERSION: '1.22'
-  NODE_VERSION: '20'
+  NODE_VERSION: '22'
   # Pinned deliberately; upgrades are their own PR so output changes are visible.
   MDBOOK_VERSION: '0.4.40'
 
@@ -38,6 +38,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: src/web/package-lock.json
+
+      - name: Install web dependencies
+        run: if [ -f src/web/package.json ]; then cd src/web && npm ci; fi
 
       # The Makefile defines this gate; invoking it here keeps local and CI
       # identical and fails if a target breaks.
@@ -136,6 +141,25 @@ jobs:
         if: steps.detect.outputs.present == 'false'
         run: |
           echo "::notice title=integration::No integration suite yet. Arrives in Stage B.2."
+
+      - uses: actions/setup-node@v4
+        if: steps.detect.outputs.present == 'true'
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: src/web/package-lock.json
+
+      - name: Install web dependencies for E2E
+        if: steps.detect.outputs.present == 'true'
+        run: cd src/web && npm ci
+
+      - name: Install Playwright browsers
+        if: steps.detect.outputs.present == 'true'
+        run: cd src/web && npx playwright install chromium
+
+      - name: Build web assets for E2E
+        if: steps.detect.outputs.present == 'true'
+        run: cd src/web && npm run build
 
       - name: Integration tests
         if: steps.detect.outputs.present == 'true'

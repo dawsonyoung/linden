@@ -165,3 +165,4 @@ When working in this codebase:
 - Never generate placeholder/example user data that looks real (names, emails, SSNs, etc).
 - Test edge cases: empty input, missing Ollama, network timeout, malformed JSON.
 - This is a privacy product. Treat every line of code as if an auditor is reviewing it for data leaks.
+- Always strictly follow the full development process (contract-first delivery, implementation sequence stages, branching rules). Start by invoking the Workflow Orchestrator (`.agents/agents/workflow-orchestrator.agent.md`) as the primary entrypoint for any task. Never circumvent the process, and always run local validation gates to confirm health before pushing; do not rely on remote CI as the primary testing environment.

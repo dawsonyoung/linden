@@ -7,7 +7,8 @@ import (
 
 func clearEnv(t *testing.T) {
 	t.Helper()
-	t.Setenv("LINDEN_ADDR", "")
+	t.Setenv("LINDEN_HOST", "")
+	t.Setenv("LINDEN_PORT", "")
 	t.Setenv("LINDEN_LOG_LEVEL", "")
 	t.Setenv("OLLAMA_URL", "")
 }
@@ -19,8 +20,8 @@ func Test_Load_EnvUnset_AppliesDefaults(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Load() error = %v, want nil", err)
 	}
-	if got.Addr != defaultAddr {
-		t.Errorf("Addr = %q, want %q", got.Addr, defaultAddr)
+	if got.Addr != "localhost:8080" {
+		t.Errorf("Addr = %q, want %q", got.Addr, "localhost:8080")
 	}
 	if got.LogLevel != slog.LevelInfo {
 		t.Errorf("LogLevel = %v, want %v", got.LogLevel, slog.LevelInfo)
@@ -32,7 +33,8 @@ func Test_Load_EnvUnset_AppliesDefaults(t *testing.T) {
 
 func Test_Load_EnvSet_OverridesDefaults(t *testing.T) {
 	clearEnv(t)
-	t.Setenv("LINDEN_ADDR", "127.0.0.1:9090")
+	t.Setenv("LINDEN_HOST", "127.0.0.1")
+	t.Setenv("LINDEN_PORT", "9090")
 	t.Setenv("LINDEN_LOG_LEVEL", "debug")
 	t.Setenv("OLLAMA_URL", "https://ollama.internal:1234")
 
@@ -53,14 +55,14 @@ func Test_Load_EnvSet_OverridesDefaults(t *testing.T) {
 
 func Test_Load_WhitespaceValue_FallsBackToDefault(t *testing.T) {
 	clearEnv(t)
-	t.Setenv("LINDEN_ADDR", "   ")
+	t.Setenv("LINDEN_HOST", "   ")
 
 	got, err := Load()
 	if err != nil {
 		t.Fatalf("Load() error = %v, want nil", err)
 	}
-	if got.Addr != defaultAddr {
-		t.Errorf("Addr = %q, want %q", got.Addr, defaultAddr)
+	if got.Addr != "localhost:8080" {
+		t.Errorf("Addr = %q, want %q", got.Addr, "localhost:8080")
 	}
 }
 
@@ -70,8 +72,6 @@ func Test_Load_InvalidValue_ReturnsError(t *testing.T) {
 		key   string
 		value string
 	}{
-		{"address without port", "LINDEN_ADDR", "localhost"},
-		{"address with too many colons", "LINDEN_ADDR", "a:b:c"},
 		{"unknown log level", "LINDEN_LOG_LEVEL", "verbose"},
 		{"url without scheme", "OLLAMA_URL", "localhost:11434"},
 		{"url with unsupported scheme", "OLLAMA_URL", "ftp://localhost"},
