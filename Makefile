@@ -96,7 +96,10 @@ docs-serve: docs-check
 	mdbook serve --open
 
 # Container
-docker-build:
+check-docker:
+	@docker info >/dev/null 2>&1 || (echo "error: docker daemon is not running"; exit 1)
+
+docker-build: check-docker
 	docker build --build-arg VERSION=$(VERSION) --build-arg COMMIT=$(COMMIT) -t linden:dev .
 
 docker-smoke: docker-build
