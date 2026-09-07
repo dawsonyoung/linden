@@ -16,7 +16,8 @@ services:
     ports:
       - "8080:8080"
     environment:
-      LINDEN_ADDR: ":8080"
+      LINDEN_HOST: 0.0.0.0
+      LINDEN_PORT: 8080
       LINDEN_LOG_LEVEL: info
       LINDEN_DATA_DIR: /app/data
       # Defaults to Ollama on the host. Override when using the ollama profile.
