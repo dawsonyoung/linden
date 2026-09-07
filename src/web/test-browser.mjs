@@ -6,19 +6,19 @@ import { chromium } from '@playwright/test';
 
   const browser = await chromium.launch();
   const page = await browser.newPage();
-  
+
   page.on('console', msg => {
     if (msg.type() === 'error') {
       console.error(`BROWSER ERROR: ${msg.text()}`);
       hasErrors = true;
     }
   });
-  
+
   page.on('pageerror', error => {
     console.error(`PAGE ERROR: ${error.message}`);
     hasErrors = true;
   });
-  
+
   page.on('requestfailed', request => {
     console.error(`REQUEST FAILED: ${request.url()} - ${request.failure().errorText}`);
     hasErrors = true;
@@ -26,18 +26,18 @@ import { chromium } from '@playwright/test';
 
   try {
     await page.goto(targetUrl, { waitUntil: 'networkidle' });
-    
+
     const content = await page.content();
     if (content.length < 2000) {
-        console.error('DOM content looks suspiciously small, UI might not have rendered.');
-        hasErrors = true;
+      console.error('DOM content looks suspiciously small, UI might not have rendered.');
+      hasErrors = true;
     }
-    
+
     // Specifically check for the Chat UI mounting
     const chatInput = await page.$('input[placeholder="Type a message..."]');
     if (!chatInput) {
-        console.error('Chat input not found! App failed to mount.');
-        hasErrors = true;
+      console.error('Chat input not found! App failed to mount.');
+      hasErrors = true;
     }
   } catch (err) {
     console.error('Failed to load page:', err);

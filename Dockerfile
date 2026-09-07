@@ -6,10 +6,10 @@ FROM node:22-alpine AS web
 WORKDIR /build
 COPY src/web/ ./
 RUN if [ -f package.json ]; then \
-      npm ci && npm run build; \
-    else \
-      mkdir -p build && echo "web assets arrive in Stage C.3" > build/.placeholder; \
-    fi
+  npm ci && npm run build; \
+  else \
+  mkdir -p build && echo "web assets arrive in Stage C.3" > build/.placeholder; \
+  fi
 
 FROM golang:1.22-alpine AS server
 WORKDIR /build
@@ -20,9 +20,9 @@ ARG VERSION=dev
 ARG COMMIT=unknown
 # Static binary: the runtime image has no libc and no shell.
 RUN CGO_ENABLED=0 GOOS=linux go build \
-      -trimpath \
-      -ldflags "-s -w -X main.version=${VERSION} -X main.commit=${COMMIT}" \
-      -o /out/linden ./cmd/
+  -trimpath \
+  -ldflags "-s -w -X main.version=${VERSION} -X main.commit=${COMMIT}" \
+  -o /out/linden ./cmd/
 
 FROM gcr.io/distroless/static-debian12:nonroot
 COPY --from=server /out/linden /linden
