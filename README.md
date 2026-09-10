@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="assets/linden_logo.jpg" alt="Linden Logo" width="460" />
+  <img src="assets/linden_logo.jpg" alt="Linden Logo" width="220" />
 </p>
 
-<h1 align="center">Linden</h1>
+<h1 align="center">Linden: A Home AI Solution. </h1>
 
 <p align="center">
-  <em>A Home AI Solution. The AI you can trust, because you own it.</em>
+  <em>The AI you can trust, because you own it.</em>
 </p>
 
 <p align="center">
