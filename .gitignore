@@ -6,6 +6,7 @@ bin/
 docs/.site/
 
 # Go
+.gocache/
 src/**/vendor/
 *.out
 
