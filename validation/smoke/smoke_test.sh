@@ -36,8 +36,21 @@ func main() {
 	http.ListenAndServe(":11434", nil)
 }
 EOF
-go run /tmp/mock_ollama.go >/dev/null 2>&1 &
+go build -o /tmp/mock_ollama /tmp/mock_ollama.go
+/tmp/mock_ollama >/dev/null 2>&1 &
 MOCK_PID=$!
+
+# Wait for mock server to be ready
+MAX_WAIT=50
+WAIT=0
+while ! curl -s http://localhost:11434/ >/dev/null 2>&1; do
+    sleep 0.1
+    WAIT=$((WAIT + 1))
+    if [ $WAIT -ge $MAX_WAIT ]; then
+        echo "Mock server failed to start"
+        exit 1
+    fi
+done
 
 echo "Starting smoke test container..."
 # Ensure any old container is removed

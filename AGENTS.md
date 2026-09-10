@@ -111,7 +111,7 @@ make build        # Production build → bin/linden
 ### Web (src/web/)
 - SvelteKit with static adapter. Output served by the api layer.
 - TypeScript strict mode. No `any`.
-- Minimal dependencies. No component libraries. No Tailwind.
+- Tailwind CSS v4 and DaisyUI for clean utility styling; `@ai-sdk/svelte` for chat streaming.
 - Fetch + Server-Sent Events for streaming.
 
 ### Validation (validation/)

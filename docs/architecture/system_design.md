@@ -31,9 +31,9 @@ This document outlines the core software architecture for the Linden local AI ap
 ---
 
 ## 2. Frontend & User Experience
-- **Stack:** Lightweight Next.js / React client utilizing `@ai-sdk/react` (`useChat`) and `assistant-ui` / shadcn AI primitives.
-- **Deployment:** Served directly over local network (`http://linden.local` via mDNS/Avahi) for a zero-configuration "plug-and-play" experience.
-- **Key Features:** Streaming code blocks, markdown parsing, tool call expanders, drag-and-drop document upload for local RAG.
+- **Stack:** Modern SvelteKit (Svelte 5) client utilizing `@ai-sdk/svelte`, `@sveltejs/adapter-static`, Tailwind CSS v4, and DaisyUI.
+- **Deployment:** Compiled to static assets embedded directly into the Go server binary (`embed.FS`) and served over the local network (`http://linden.local` via mDNS/Avahi) for zero-configuration access.
+- **Key Features:** Server-Sent Events (SSE) streaming chat, markdown parsing, model selection, session persistence, and error resilience.
 
 ---
 

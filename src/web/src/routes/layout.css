@@ -1,2 +1,18 @@
 @import 'tailwindcss';
 @plugin "daisyui";
+
+/* Linden "Digital Nature" Palette: Gold, Forest Green, Wood Brown */
+:root, [data-theme="dark"], [data-theme="linden"] {
+  --color-primary: #C5A059;          /* Rich Gold */
+  --color-primary-content: #1B1811;  /* Deep Contrast */
+  --color-secondary: #2D5A27;        /* Deep Forest Green */
+  --color-secondary-content: #FFFFFF;
+  --color-accent: #8B5A2B;           /* Grounded Wood Brown */
+  --color-accent-content: #FFFFFF;
+  --color-neutral: #1E261D;          /* Deep Earth */
+  --color-neutral-content: #EBE6DC;  /* Soft Warm Cream */
+  --color-base-100: #121811;         /* Forest Dark Background */
+  --color-base-200: #192218;
+  --color-base-300: #222E21;
+  --color-base-content: #F5F2EB;     /* Warm Cream Text */
+}
