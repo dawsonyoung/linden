@@ -26,13 +26,22 @@
 				body: JSON.stringify({ model: "tinyllama", messages: payloadMessages }),
 			});
 
-			if (!res.ok) throw new Error(await res.text());
+			if (!res.ok) {
+				const text = await res.text();
+				let errMsg = text;
+				try {
+					const json = JSON.parse(text);
+					if (json && json.error) errMsg = json.error;
+				} catch {}
+				throw new Error(errMsg || `Request failed with status ${res.status}`);
+			}
 
 			const reader = res.body?.getReader();
 			if (!reader) throw new Error("No response body");
 
 			const decoder = new TextDecoder();
 			let buffer = "";
+			let currentEvent = "";
 
 			while (true) {
 				const { done, value } = await reader.read();
@@ -43,14 +52,24 @@
 				buffer = lines.pop() || "";
 
 				for (const line of lines) {
-					if (line.startsWith("data: ")) {
+					if (line.startsWith("event: ")) {
+						currentEvent = line.slice(7).trim();
+					} else if (line.startsWith("data: ")) {
 						try {
 							const data = JSON.parse(line.slice(6));
-							if (data.text) {
+							if (currentEvent === "error" || data.error) {
+								throw new Error(data.error || "An error occurred during generation");
+							} else if (data.text) {
 								messages[assistantMsgIndex].content +=
 									data.text;
 							}
-						} catch (e) {}
+						} catch (e: any) {
+							if (currentEvent === "error" || (e.message && !e.message.startsWith("JSON"))) {
+								throw e;
+							}
+						}
+					} else if (line === "") {
+						currentEvent = "";
 					}
 				}
 			}

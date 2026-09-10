@@ -113,3 +113,42 @@ func Test_WebUI_Integration_BrowserE2E(t *testing.T) {
 		t.Fatalf("Browser E2E test failed. Ensure no JS errors occurred. Error: %v", err)
 	}
 }
+
+func Test_WebUI_Integration_BrowserE2E_ErrorHandling(t *testing.T) {
+	// Require node in path
+	if _, err := os.Stat("../../src/web/test-browser-error.mjs"); os.IsNotExist(err) {
+		t.Skip("test-browser-error.mjs not found, skipping error E2E test")
+	}
+
+	targetURL := os.Getenv("LINDEN_TEST_URL")
+
+	if targetURL == "" {
+		// Local: spin up a server with an unreachable Ollama so /chat returns 503
+		logger := slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelDebug}))
+		store, _ := storage.NewFileStore(t.TempDir())
+
+		// Use an Ollama backend that does NOT exist to force a connection error
+		inf, _ := inference.NewOllama(inference.OllamaConfig{
+			BaseURL: "http://localhost:59999", // Invalid port
+		})
+		chatSvc := orchestrator.NewService(inf, store)
+
+		buildInfo := api.BuildInfo{Version: "test", Commit: "test"}
+		srv := api.NewServer("localhost:0", logger, buildInfo, chatSvc)
+
+		ts := httptest.NewServer(srv.Handler)
+		defer ts.Close()
+		targetURL = ts.URL
+	} else {
+		t.Logf("Running error handling E2E test against external URL: %s", targetURL)
+	}
+
+	cmd := exec.Command("node", "../../src/web/test-browser-error.mjs", targetURL)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+	if err != nil {
+		t.Fatalf("Browser error E2E test failed. UI did not handle the error gracefully. Error: %v", err)
+	}
+}
