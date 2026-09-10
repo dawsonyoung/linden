@@ -84,8 +84,12 @@
 <div
 	class="flex flex-col h-screen bg-base-100 text-base-content max-w-4xl mx-auto"
 >
-	<header class="p-4 border-b border-base-300">
-		<h1 class="text-xl font-bold">Linden AI</h1>
+	<header class="p-4 border-b border-base-300 flex items-center justify-between">
+		<div class="flex items-center gap-3">
+			<img src="/linden_logo.jpg" alt="Linden Logo" class="h-8 w-auto rounded shadow-sm" />
+			<h1 class="text-xl font-bold tracking-tight text-primary">Linden AI</h1>
+		</div>
+		<span class="text-xs font-semibold tracking-wide text-primary/80 border border-primary/30 bg-primary/10 px-2.5 py-1 rounded-full">Local AI</span>
 	</header>
 
 	<main class="flex-1 overflow-y-auto p-4 space-y-4 pb-32">
