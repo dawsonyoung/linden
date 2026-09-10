@@ -28,14 +28,30 @@ type chatChunk struct {
 
 func handleChat(chatService orchestrator.ChatService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		// Limit request body size to 1MB to prevent DOS via massive payloads
+		r.Body = http.MaxBytesReader(w, r.Body, 1024*1024)
+
 		var req chatRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			writeError(w, errs.Wrap(errs.InvalidArgument, "invalid JSON payload", err))
+			writeError(w, errs.Wrap(errs.InvalidArgument, "invalid JSON payload or payload too large", err))
+			return
+		}
+
+		if req.Model == "" {
+			writeError(w, errs.New(errs.InvalidArgument, "model name is required"))
+			return
+		}
+		if len(req.Model) > 100 {
+			writeError(w, errs.New(errs.InvalidArgument, "model name is too long"))
 			return
 		}
 
 		if len(req.Messages) == 0 {
 			writeError(w, errs.New(errs.InvalidArgument, "messages array is empty"))
+			return
+		}
+		if len(req.Messages) > 1000 {
+			writeError(w, errs.New(errs.InvalidArgument, "too many messages"))
 			return
 		}
 
@@ -45,6 +61,18 @@ func handleChat(chatService orchestrator.ChatService) http.HandlerFunc {
 			Messages:  make([]orchestrator.Message, len(req.Messages)),
 		}
 		for i, m := range req.Messages {
+			if m.Role != "user" && m.Role != "assistant" && m.Role != "system" {
+				writeError(w, errs.New(errs.InvalidArgument, "invalid role: must be user, assistant, or system"))
+				return
+			}
+			if len(m.Content) == 0 {
+				writeError(w, errs.New(errs.InvalidArgument, "message content cannot be empty"))
+				return
+			}
+			if len(m.Content) > 64000 {
+				writeError(w, errs.New(errs.InvalidArgument, "message content too large"))
+				return
+			}
 			orchReq.Messages[i] = orchestrator.Message{
 				Role:    orchestrator.Role(m.Role),
 				Content: m.Content,
