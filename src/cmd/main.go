@@ -16,6 +16,7 @@ import (
 
 	"github.com/dawsonyoung/linden/api"
 	"github.com/dawsonyoung/linden/config"
+	"github.com/dawsonyoung/linden/discovery"
 	"github.com/dawsonyoung/linden/inference"
 	"github.com/dawsonyoung/linden/orchestrator"
 	"github.com/dawsonyoung/linden/storage"
@@ -106,7 +107,30 @@ func run() error {
 
 	chatService := orchestrator.NewService(inf, store)
 
+	// Validate inference engine connection before serving
+	pingCtx, pingCancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer pingCancel()
+	if _, err := chatService.ListModels(pingCtx); err != nil {
+		return fmt.Errorf("fatal: inference engine unreachable at startup: %w", err)
+	}
+
 	srv := api.NewServer(cfg.Addr, logger, api.BuildInfo{Version: version, Commit: commit}, chatService)
+
+	_, portStr, err := net.SplitHostPort(cfg.Addr)
+	if err != nil {
+		return fmt.Errorf("invalid addr %q: %w", cfg.Addr, err)
+	}
+	var port int
+	if _, err := fmt.Sscanf(portStr, "%d", &port); err != nil {
+		return fmt.Errorf("invalid port %q: %w", portStr, err)
+	}
+
+	adv := discovery.NewAdvertiser(logger)
+	if err := adv.Start(port); err != nil {
+		logger.Warn("failed to start mDNS advertiser", slog.String("error", err.Error()))
+	} else {
+		defer adv.Stop()
+	}
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
