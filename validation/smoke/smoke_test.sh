@@ -21,15 +21,33 @@ if [ -z "$LAN_IP" ]; then
     LAN_IP="localhost"
 fi
 
+echo "Starting dummy Ollama server for startup validation..."
+cat << 'EOF' > /tmp/mock_ollama.go
+package main
+import (
+	"fmt"
+	"net/http"
+)
+func main() {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, `{"models":[]}`)
+	})
+	http.ListenAndServe(":11434", nil)
+}
+EOF
+go run /tmp/mock_ollama.go >/dev/null 2>&1 &
+MOCK_PID=$!
+
 echo "Starting smoke test container..."
 # Ensure any old container is removed
 docker rm -f linden-smoke >/dev/null 2>&1 || true
 
-# Run container mapping port 8080
-docker run -d --name linden-smoke -p 8080:8080 linden:dev
+# Run container mapping port 8080 and setting OLLAMA_URL to the LAN IP mock
+docker run -d --name linden-smoke -e OLLAMA_URL="http://${LAN_IP}:11434" -p 8080:8080 linden:dev
 
 # Ensure cleanup on exit
-trap 'echo "Cleaning up container..." && docker rm -f linden-smoke >/dev/null 2>&1' EXIT
+trap 'echo "Cleaning up..." && kill $MOCK_PID 2>/dev/null && docker rm -f linden-smoke >/dev/null 2>&1' EXIT
 
 echo "Waiting for /health endpoint..."
 MAX_TRIES=15
