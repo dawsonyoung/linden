@@ -84,6 +84,7 @@ export LINDEN_TEST_URL="http://${LAN_IP}:8080"
 
 # Run the integration suite against the LAN URL
 cd ../..
-go test -v -tags=integration ./validation/integration/...
+cd validation
+go test -v -tags=integration ./integration/...
 
 echo "Smoke test passed."
