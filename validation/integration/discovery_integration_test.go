@@ -18,7 +18,7 @@ import (
 
 func Test_Discovery_Advertiser_AdvertisesToLoopback(t *testing.T) {
 	logger := slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelDebug}))
-	
+
 	// Start advertiser
 	adv := discovery.NewAdvertiser(logger)
 	err := adv.Start(8080)
@@ -38,7 +38,7 @@ func Test_Discovery_Advertiser_AdvertisesToLoopback(t *testing.T) {
 	}
 
 	entries := make(chan *zeroconf.ServiceEntry)
-	
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
