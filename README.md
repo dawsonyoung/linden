@@ -157,5 +157,6 @@ Please report vulnerabilities privately. See [SECURITY.md](SECURITY.md) for disc
 
 ## License
 
-See [LICENSE](LICENSE) for terms.
+Licensed under the [Business Source License 1.1](LICENSE). Free for personal, home, evaluation, and privacy-auditing use, converting to GNU GPL v2.0 or later after four years. Commercial or for-profit use requires a separate commercial license.
+
 
