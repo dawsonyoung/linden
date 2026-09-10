@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log/slog"
+	"net"
 
 	"github.com/dawsonyoung/linden/errs"
 	"github.com/grandcat/zeroconf"
@@ -44,13 +45,37 @@ func (a *zeroConfAdvertiser) Start(port int) error {
 		fmt.Sprintf("id=%s", a.id),
 	}
 
-	server, err := zeroconf.Register(instanceName, serviceType, domain, port, txtRecords, nil)
+	var ips []string
+	if ifaces, err := net.Interfaces(); err == nil {
+		for _, iface := range ifaces {
+			if iface.Flags&net.FlagUp == 0 {
+				continue
+			}
+			addrs, err := iface.Addrs()
+			if err != nil {
+				continue
+			}
+			for _, addr := range addrs {
+				if ipNet, ok := addr.(*net.IPNet); ok {
+					if ip4 := ipNet.IP.To4(); ip4 != nil {
+						ips = append(ips, ip4.String())
+					}
+				}
+			}
+		}
+	}
+
+	server, err := zeroconf.RegisterProxy(instanceName, serviceType, domain, port, "linden", ips, txtRecords, nil)
 	if err != nil {
-		return errs.Wrap(errs.Internal, "failed to start zeroconf mDNS server", err)
+		// Fall back to system hostname registration if proxy registration fails
+		server, err = zeroconf.Register(instanceName, serviceType, domain, port, txtRecords, nil)
+		if err != nil {
+			return errs.Wrap(errs.Internal, "failed to start zeroconf mDNS server", err)
+		}
 	}
 
 	a.server = server
-	a.logger.Info("mDNS advertiser started", slog.String("instance", instanceName), slog.String("service", serviceType), slog.Int("port", port))
+	a.logger.Info("mDNS advertiser started", slog.String("instance", instanceName), slog.String("service", serviceType), slog.String("host", "linden.local"), slog.Int("port", port))
 	return nil
 }
 
