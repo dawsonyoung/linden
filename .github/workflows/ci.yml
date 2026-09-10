@@ -282,8 +282,45 @@ jobs:
       - name: make docker-smoke
         run: make docker-smoke
 
+      - name: Start mock Ollama for remaining checks
+        run: |
+          cat <<'EOF' > /tmp/mock_ollama.go
+          package main
+          import (
+            "fmt"
+            "net/http"
+          )
+          func main() {
+            http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+              w.Header().Set("Content-Type", "application/json")
+              fmt.Fprintln(w, `{"models":[]}`)
+            })
+            http.ListenAndServe(":11434", nil)
+          }
+          EOF
+          go build -o /tmp/mock_ollama /tmp/mock_ollama.go
+          /tmp/mock_ollama >/dev/null 2>&1 &
+          for i in $(seq 1 50); do
+            curl -s http://localhost:11434/ >/dev/null 2>&1 && break
+            sleep 0.1
+          done
+
       - name: Start container for remaining checks
-        run: docker run -d --name linden-smoke -p 8080:8080 linden:dev
+        run: docker run -d --name linden-smoke -e OLLAMA_URL=http://172.17.0.1:11434 -p 8080:8080 linden:dev
+
+      - name: Wait for container to be ready
+        run: |
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/health || true)
+            if [ "${code}" = "200" ]; then
+              echo "container ready after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::container did not become ready within 30s"
+          docker logs linden-smoke || true
+          exit 1
 
       - name: Version endpoint reports build args
         run: |
