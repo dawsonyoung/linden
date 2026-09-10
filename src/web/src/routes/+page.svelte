@@ -23,16 +23,25 @@
 			const res = await fetch("/chat", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ messages: payloadMessages }),
+				body: JSON.stringify({ model: "tinyllama", messages: payloadMessages }),
 			});
 
-			if (!res.ok) throw new Error(await res.text());
+			if (!res.ok) {
+				const text = await res.text();
+				let errMsg = text;
+				try {
+					const json = JSON.parse(text);
+					if (json.error) errMsg = json.error;
+				} catch (e) {}
+				throw new Error(errMsg || `HTTP ${res.status}`);
+			}
 
 			const reader = res.body?.getReader();
 			if (!reader) throw new Error("No response body");
 
 			const decoder = new TextDecoder();
 			let buffer = "";
+			let currentEvent = "";
 
 			while (true) {
 				const { done, value } = await reader.read();
@@ -43,14 +52,31 @@
 				buffer = lines.pop() || "";
 
 				for (const line of lines) {
-					if (line.startsWith("data: ")) {
-						try {
-							const data = JSON.parse(line.slice(6));
-							if (data.text) {
-								messages[assistantMsgIndex].content +=
-									data.text;
+					if (line.startsWith("event: ")) {
+						currentEvent = line.slice(7).trim();
+					} else if (line.startsWith("data: ")) {
+						const dataStr = line.slice(6);
+						if (currentEvent === "error") {
+							try {
+								const data = JSON.parse(dataStr);
+								throw new Error(data.error || "An unknown error occurred during generation.");
+							} catch (e: any) {
+								if (e !== error) {
+									throw e; // re-throw if we just parsed it
+								}
+								throw new Error(dataStr);
 							}
-						} catch (e) {}
+						} else if (currentEvent === "message") {
+							try {
+								const data = JSON.parse(dataStr);
+								if (data.text) {
+									messages[assistantMsgIndex].content += data.text;
+								}
+							} catch (e) {}
+						}
+					} else if (line === "") {
+						// Empty line signifies end of an event block
+						currentEvent = "";
 					}
 				}
 			}
@@ -65,8 +91,12 @@
 <div
 	class="flex flex-col h-screen bg-base-100 text-base-content max-w-4xl mx-auto"
 >
-	<header class="p-4 border-b border-base-300">
-		<h1 class="text-xl font-bold">Linden AI</h1>
+	<header class="p-4 border-b border-base-300 flex items-center justify-between">
+		<div class="flex items-center gap-3">
+			<img src="/linden_logo.jpg" alt="Linden Logo" class="h-8 w-auto rounded shadow-sm" />
+			<h1 class="text-xl font-bold tracking-tight text-primary">Linden AI</h1>
+		</div>
+		<span class="text-xs font-semibold tracking-wide text-primary/80 border border-primary/30 bg-primary/10 px-2.5 py-1 rounded-full">Local AI</span>
 	</header>
 
 	<main class="flex-1 overflow-y-auto p-4 space-y-4 pb-32">
@@ -94,20 +124,28 @@
 		{/if}
 
 		{#if error}
-			<div class="alert alert-error mt-4">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="stroke-current shrink-0 h-6 w-6"
-					fill="none"
-					viewBox="0 0 24 24"
-					><path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-					/></svg
-				>
-				<span>{error.message}</span>
+			<div class="alert alert-error mt-4 flex flex-col items-start gap-2">
+				<div class="flex items-center gap-2">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="stroke-current shrink-0 h-6 w-6"
+						fill="none"
+						viewBox="0 0 24 24"
+						><path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+						/></svg
+					>
+					<span class="font-bold">Something went wrong</span>
+				</div>
+				<details class="w-full">
+					<summary class="cursor-pointer text-sm opacity-75 select-none">Show technical details</summary>
+					<div class="mt-2 p-2 bg-base-100/50 rounded text-xs font-mono whitespace-pre-wrap break-all text-error-content opacity-90">
+						{error.message}
+					</div>
+				</details>
 			</div>
 		{/if}
 	</main>
