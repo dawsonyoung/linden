@@ -122,7 +122,7 @@ func Test_WebUI_Integration_BrowserE2E_ErrorHandling(t *testing.T) {
 
 	logger := slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelDebug}))
 	store, _ := storage.NewFileStore(t.TempDir())
-	
+
 	// Use an Ollama backend that does NOT exist to force a connection error
 	inf, _ := inference.NewOllama(inference.OllamaConfig{
 		BaseURL: "http://localhost:59999", // Invalid port
