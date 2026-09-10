@@ -83,7 +83,6 @@ echo "Container is healthy. Running integration suite against LAN IP: $LAN_IP"
 export LINDEN_TEST_URL="http://${LAN_IP}:8080"
 
 # Run the integration suite against the LAN URL
-cd ../..
 cd validation
 go test -v -tags=integration ./integration/...
 
