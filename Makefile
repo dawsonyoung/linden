@@ -90,7 +90,7 @@ docs: docs-check verify-interfaces
 	mdbook build
 
 verify-interfaces:
-	go run tools/docgen/main.go -verify
+	cd tools && go run ./docgen -verify
 
 docs-check:
 	@sh scripts/check-docs.sh
