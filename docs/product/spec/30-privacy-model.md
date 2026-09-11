@@ -1,29 +1,28 @@
 # Privacy Model
 
-> **Status:** Stub. This document is a commitment surface — treat changes here as breaking.
+This document outlines the privacy guarantees, data boundaries, and network behavior of the Linden appliance.
 
 ## Data categories
 
-TODO: Enumerate every category of data Linden handles, and for each: where it is stored, how long it persists, whether the user can delete it, and whether it can leave the device.
+| Category | Stored Location | Retention | User-deletable | Leaves device |
+|----------|-----------------|-----------|----------------|---------------|
+| Message content | Local disk (`data/sessions`) | Host file store | Yes (clearing data dir) | No |
+| Model selection | In-memory / browser state | Session duration | Yes (reset browser) | No |
+| Operational logs | Host stdout / journald | Rotated by host OS | Yes (OS log purge) | No |
 
-| Category | Stored | Retention | User-deletable | Leaves device |
-|----------|--------|-----------|----------------|---------------|
-| Message content | TODO | TODO | TODO | No |
-| Model selection | TODO | TODO | TODO | No |
-| Logs | TODO | TODO | TODO | No |
+## Logging commitments
 
-## Logging commitment
-
-No user content appears in logs at any level, including debug. Logs record
-request metadata only: method, path, status, duration, and request identifier.
-
-Query strings are never logged, because they can carry user content. This is
-enforced by an automated test, not by convention.
+1. **Zero User Data in Logs:** No message content, prompt text, or model output ever appears in server logs at any log level (including `DEBUG`).
+2. **Metadata Only:** Server logs record operational metadata only: HTTP method, path, response status, duration, and generated `X-Request-ID`.
+3. **Query String Scrubbing:** URL query parameters are stripped and excluded from access logs to prevent accidental content leakage.
+4. **Sanitized Error Payloads:** Error responses returned to clients never contain internal stack traces or database internals.
 
 ## Network behavior
 
-TODO: Enumerate every outbound connection Linden can make, what triggers it, and how the user disables it. The expected steady state for the MVP is: connections to a local model backend only.
+1. **LAN-Bound Operation:** Linden binds to the configured local address (`0.0.0.0:8080` by default) and advertises service presence over local multicast DNS (`linden.local`). It does not open firewall ports or establish outbound internet tunnels.
+2. **Local Inference Communication:** By default, Linden communicates exclusively across loopback with the local inference engine (`http://localhost:11434`).
+3. **Zero Telemetry:** Linden contains no telemetry collectors, crash reporting daemons, or usage tracking modules. No phone-home requests are initiated.
 
-## Verification
+## Extensibility boundary (External Engines)
 
-TODO: Describe how a user or auditor can verify these claims without reading the source.
+Linden supports user-configured inference backend URLs. If an operator manually configures Linden to target a cloud-hosted inference provider or third-party proxy, data dispatched to that endpoint is subject to that external provider's policies. Linden remains strictly local by default.

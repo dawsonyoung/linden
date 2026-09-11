@@ -8,7 +8,7 @@ Linden is a privacy-first local AI platform. All inference runs locally via Olla
 No user data leaves the device by default.
 
 ## Repository Layout
-- src/          — Go server (cmd, api, orchestrator, inference, storage, discovery) + SvelteKit web
+- src/          — Go server (cmd, api, orchestrator, inference, storage, discovery, mcp) + SvelteKit web
 - validation/   — contracts, integration, security, smoke test suites
 - prompts/      — reusable prompt templates for product and dev use
 - evals/        — AI output evaluation datasets and test harnesses
@@ -20,9 +20,10 @@ No user data leaves the device by default.
 - docs/architecture/ — layer interfaces and dependency rules
 - docs/project/  — branching, contract-first delivery, agent workflow
 - docs/adr/      — architecture decision records
-- plans/         — project planning documents (purpose, MVP, roadmap, stage detail)
+- plans/         — holding area for forward-looking designs, architecture proposals, and candidate implementation plans
 
 ## Key Rules for AI Agents
+- Consult `plans/` for forward-looking design guidance or when tasked with specific future plans.
 - Never log user data, not even at debug level.
 - Validate all input at the API boundary (src/api).
 - Layers communicate only through their defined interfaces; no layer reaches into another's internals.

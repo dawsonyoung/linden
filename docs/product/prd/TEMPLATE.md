@@ -1,48 +1,57 @@
-# PRD-NNNN: <Capability name>
+# PRD-NNNN: <Capability Name>
 
 | Field | Value |
 |-------|-------|
 | Status | Draft \| Accepted \| Shipped \| Superseded \| Rejected |
 | Author | |
 | Created | YYYY-MM-DD |
-| Spec sections | Links into `docs/product/spec/` once shipped |
+| Spec Reference | Link to `docs/product/spec/` once shipped |
 | Supersedes | PRD-NNNN, or None |
 
-## Problem
+---
 
-What is broken or missing today, from the user's point of view. No solution language.
+## 1. Problem Statement & User Value
 
-## Users and jobs
+- What is broken, missing, or frustrating for the user today?
+- Why can't existing local tools or cloud alternatives solve this simply and privately?
+- Frame entirely from the user's perspective without referring to technical solutions.
 
-Who has this problem and what they are trying to accomplish. Reference the audiences in `plans/01-high-level-purpose-overview.md` rather than inventing new personas.
+## 2. Target Users & User Stories
 
-## Scope
+Who has this problem and what are they trying to accomplish? Reference primary audiences (e.g. privacy-conscious homeowner, small team, local developer).
 
-What this capability includes. Bullet the observable behaviors a user could point at.
+- **Story 1:** As a `<user type>`, I want to `<action>` so that `<benefit>`.
+- **Story 2:** As a `<user type>`, I want to `<action>` so that `<benefit>`.
 
-## Non-goals
+## 3. Scope & Boundaries
 
-What this deliberately does not do, and why. This section prevents scope creep during implementation and is the first thing a reviewer checks.
+### Must Have (Initial Version)
+- Bullet the observable, high-level behaviors the user can see and rely on.
 
-## Requirements
+### Out of Scope (Non-Goals)
+- What this deliberately does *not* do in this release.
+- Critical for bounding agent and contributor scope.
 
-Numbered, testable statements. Each one should be verifiable by someone with no access to the code.
+## 4. High-Level Requirements
 
-1. R1 — ...
-2. R2 — ...
+Numbered, verifiable statements written without referring to internal code:
 
-## Privacy considerations
+1. **R1:** ...
+2. **R2:** ...
+3. **R3:** ...
 
-What data this touches, where it is stored, whether it ever leaves the device, and what the user can see or delete. Required for every PRD; write `None — this capability touches no user data` if that is genuinely true.
+## 5. Privacy, Safety, & Trust Constraints
 
-## Success criteria
+- What user data does this feature touch, store, or process?
+- Under what conditions (if any) could data leave the local network?
+- What controls does the user have to audit, view, or permanently delete this data?
 
-How we know this worked. Prefer observable outcomes over metrics we cannot measure locally.
+## 6. Success & Acceptance Criteria
 
-## Open questions
+- How do we know this capability succeeded for the user?
+- What observable conditions must be verified before marking this capability shipped?
 
-Unresolved decisions, each with an owner. Empty this section before moving status to Accepted.
+## 7. Open Questions
 
-## Implementation notes
-
-Link to the stage or branch that implements this. Do not describe the implementation here.
+- Unresolved product decisions or design trade-offs.
+- Must be resolved before advancing status to Accepted.

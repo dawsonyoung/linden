@@ -17,7 +17,7 @@ build-web:
 	@if [ -f src/web/package.json ]; then \
 	  cd src/web && npm ci && npm run build; \
 	else \
-	  echo "skip build-web: src/web/package.json not present (Stage C.3)"; \
+	  echo "skip build-web: src/web/package.json not present"; \
 	fi
 
 build-server: build-web
@@ -36,7 +36,7 @@ test-web:
 	@if [ -f src/web/package.json ]; then \
 	  cd src/web && npm run check; \
 	else \
-	  echo "skip test-web: src/web/package.json not present (Stage C.3)"; \
+	  echo "skip test-web: src/web/package.json not present"; \
 	fi
 
 # Validation suite
@@ -48,14 +48,14 @@ validate-contracts:
 	@if [ -f validation/go.mod ]; then \
 	  cd validation && go test -tags=contracts -race ./contracts/...; \
 	else \
-	  echo "skip validate-contracts: validation/go.mod not present (Stage A.1)"; \
+	  echo "skip validate-contracts: validation/go.mod not present"; \
 	fi
 
 validate-integration:
 	@if [ -f validation/go.mod ]; then \
 	  cd validation && go test -tags=integration -race ./integration/...; \
 	else \
-	  echo "skip validate-integration: validation/go.mod not present (Stage B.2)"; \
+	  echo "skip validate-integration: validation/go.mod not present"; \
 	fi
 
 # Lint
@@ -65,10 +65,11 @@ lint:
 	cd src && go vet ./...
 	@if [ -f validation/go.mod ]; then \
 	  cd validation && go vet -tags=contracts ./...; \
-	else \
-	  echo "skip validation vet: validation/go.mod not present (Stage A.1)"; \
 	fi
-	@unformatted=$$(gofmt -l src validation); \
+	@if [ -f tools/go.mod ]; then \
+	  cd tools && go vet ./...; \
+	fi
+	@unformatted=$$(gofmt -l src validation tools); \
 	if [ -n "$$unformatted" ]; then \
 	  echo "gofmt reported unformatted files:"; \
 	  echo "$$unformatted"; \
@@ -80,14 +81,17 @@ lint-web:
 	@if [ -f src/web/package.json ]; then \
 	  cd src/web && npm run check; \
 	else \
-	  echo "skip lint-web: src/web/package.json not present (Stage C.3)"; \
+	  echo "skip lint-web: src/web/package.json not present"; \
 	fi
 
 # Documentation
 # docs-check catches what mdBook does not: pages absent from SUMMARY.md are
 # silently unpublished, and relative links are never verified.
-docs: docs-check
+docs: docs-check verify-interfaces
 	mdbook build
+
+verify-interfaces:
+	cd tools && go run ./docgen -verify
 
 docs-check:
 	@sh scripts/check-docs.sh

@@ -212,6 +212,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+
+      - name: Verify architectural interface sync
+        run: cd tools && go run ./docgen -verify
+
       # mdBook ignores pages absent from SUMMARY.md and never checks relative
       # links, so this runs before the build rather than relying on it.
       - name: Documentation integrity

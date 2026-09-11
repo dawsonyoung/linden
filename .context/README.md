@@ -81,11 +81,8 @@ Duplication is drift. When content exists in `docs/`, `.context` links to it.
 | Branching, commits, PR titles and bodies | `docs/project/branching-strategy.md` |
 | Contract-first delivery policy | `docs/project/contract-first-delivery.md` |
 | Agent workflow, gates, delegation | `docs/project/agentic-workflow-framework.md` |
-| Product purpose and positioning | `plans/01-high-level-purpose-overview.md` |
-| MVP scope and phase plan | `plans/02-repository-setup-and-mvp-plan.md` |
-| Long-range roadmap and tracks | `plans/03-exhaustive-full-implementation-plan.md` |
-| Implementation roadmap | `plans/04-implementation-sequence.md` |
-| Current stage detail | `plans/09-track-b-distribution.md` |
+| Product purpose and positioning | `README.md`, `TRUST.md` |
+| Future implementation plans & designs | `plans/` (dynamic holding area for proposals and ideas) |
 | Agent definitions and tool scopes | `.agents/AGENTS.md` |
 
 ### Memory

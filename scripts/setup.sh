@@ -78,7 +78,7 @@ if command -v ollama >/dev/null 2>&1; then
   fi
 else
   warn "ollama not found"
-  hint "Not required until Stage A.3"
+  hint "Required for local model inference and chat"
   hint "https://ollama.com/download"
 fi
 

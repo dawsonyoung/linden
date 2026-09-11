@@ -25,8 +25,8 @@ Statements of current state go stale silently; nothing in CI can tell that a
 true-looking sentence has become false.
 
 1. When behavior ships, correct every statement of what the software can do:
-   `README.md`, `docs/product/spec/00-overview.md`, and the endpoint table in
-   `docs/product/spec/40-api-surface.md`.
+   `README.md`, `docs/product/spec/00-overview.md`, and the interface specifications in
+   `docs/architecture/interfaces/api-gateway.md`.
 2. Prefer coarse claims over fine ones. A per-stage progress table must be
    updated by every PR and will not be; a link to the plan stays true.
 3. Do not introduce a status list that duplicates something already tracked in

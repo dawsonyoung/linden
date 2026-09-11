@@ -30,6 +30,7 @@ Classify every incoming request before building a plan.
 
 Never advance past a stage without confirming its gate:
 
+- Spec Gate: Classify change against product spec, PRD tree (`docs/product/prd/`), and interface spec. Agents are not blocked by a lack of exhaustive specs; they use the PRD tree as reference and draft or extend the spec tree for review before implementation.
 - Contract Gate: `go test -tags=contracts` exits 0.
 - Unit Gate: `go test -race` exits 0.
 - Integration Gate: `go test -tags=integration` exits 0.

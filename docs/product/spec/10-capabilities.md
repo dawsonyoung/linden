@@ -1,30 +1,38 @@
 # Capabilities
 
-> **Status:** Stub. No capability is implemented yet.
+Each capability lists its originating requirement and its current observable state in the system.
 
-Each capability lists its originating PRD and its current state. A capability is only described here once its behavior is real.
-
-| Capability | PRD | State |
-|-----------|-----|-------|
-| Local chat | PRD-0001 | Not implemented |
-| Document retrieval | TODO | Not specified |
-| Multi-device access | TODO | Not specified |
-| Conversation history | TODO | Not specified |
+| Capability | Origin | State |
+|-----------|--------|-------|
+| Local chat | PRD-0001 | Available |
+| Model inspection & API routing | PRD-0001 | Available (API) |
+| Web UI model selector | PRD-0001 | Planned |
+| OpenAI API compatibility | Feature | Available |
+| Zero-config LAN discovery | Feature | Available |
+| Document retrieval (RAG) | Planned | Track C |
+| Multi-device access control | Planned | Track E |
 
 ## Local chat
 
-TODO: Specify once Stage A and B land. Must cover: message exchange, streaming behavior, cancellation, model selection, and behavior when the model backend is unavailable.
+Users can carry out streaming multi-turn conversations with locally running language models.
 
-Originating PRD: `../prd/0001-local-chat.md`
+- **Message Exchange:** Accepts user input, constructs conversation turns (system, user, assistant), and dispatches them to the local inference backend.
+- **Streaming Response:** Text tokens stream to the client incrementally using standard Server-Sent Events (`text/event-stream`), enabling immediate reading without waiting for generation to finish.
+- **Cancellation:** If the user cancels generation or closes the browser tab, generation terminates without blocking subsequent requests.
+- **Backend Error Resilience:** If the local inference engine is unreachable or fails during generation, Linden emits structured, sanitized error states to the UI without logging user message content.
 
-## Document retrieval
+Originating PRD: [PRD-0001: Local Chat](../prd/0001-local-chat.md)
 
-TODO: No PRD yet.
+## Model inspection & API routing
 
-## Multi-device access
+Linden inspects the local inference daemon at startup and on demand via `GET /models`, reporting all installed models. API clients targeting `POST /chat` or `POST /v1/chat/completions` can dynamically request any installed model by specifying its name in the request payload.
 
-TODO: No PRD yet.
+*Note on Web Client:* The embedded SvelteKit web interface currently defaults to the primary local model (`tinyllama`). Interactive in-browser model selection via a header dropdown is planned for a subsequent UI cycle.
 
-## Conversation history
+## OpenAI API compatibility
 
-TODO: No PRD yet.
+External developer tools, IDE extensions, or agent scripts can target Linden's `POST /v1/chat/completions` endpoint as an alternative to cloud OpenAI endpoints, receiving streaming chat completions using standard OpenAI-formatted chunks.
+
+## Zero-config LAN discovery
+
+Linden broadcasts service presence across the local network via mDNS as `linden.local` (`_linden._tcp`), allowing any device on the same home network to connect without knowing the host's numerical IP address.

@@ -33,7 +33,7 @@ Advance only after each gate passes. Never skip Contract before Implement.
 
 ## Quality Gate Checks
 
-Before advancing past Spec: change classified against product spec, PRD, and interface spec, with "no impact" stated explicitly rather than assumed.
+Before advancing past Spec: change classified against product spec, PRD tree (`docs/product/prd/`), and interface spec, with "no impact" stated explicitly rather than assumed. Agents are not blocked by a lack of exhaustive specs; they use the PRD tree as reference and draft or extend the spec tree for review before implementation.
 Before advancing past Contract: contract tests exist and compile.
 Before advancing past Implement: unit tests exist and pass.
 Before advancing past Integrate: integration tests pass on Linux.

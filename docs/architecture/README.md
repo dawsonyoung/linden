@@ -23,17 +23,17 @@ Concretely, this directory owns:
 
 It does not own capability descriptions, user flows, privacy commitments, roadmap, or test policy.
 
-## Boundary with the product spec
+## Boundary with the product documentation
 
-Both this directory and `docs/product/spec/` describe the HTTP API, at different levels and for different readers.
+Client-facing HTTP wire contracts, internal Go interfaces, and subsystem specifications live here in `docs/architecture/interfaces/` rather than in `docs/product/`.
 
-| | `docs/product/spec/40-api-surface.md` | `docs/architecture/layer-interface-spec.md` |
+| | `docs/product/` | `docs/architecture/interfaces/api-gateway.md` |
 |--|--|--|
-| Reader | Someone building against Linden | Someone building Linden |
-| Content | What each endpoint is for, what it guarantees, what errors mean | Exact schemas, event names, field types, error code mapping |
-| Changes when | The guarantee changes | The wire format changes |
+| Reader | Homeowners, operators, and evaluators | Developers and autonomous agents building or integrating with Linden |
+| Content | User guides, privacy guarantees, capability matrices, and troubleshooting | Exact HTTP routes, JSON/SSE wire schemas, headers, status codes, and error taxonomies |
+| Changes when | The user experience or capability changes | The wire format or interface changes |
 
-**The normative definition lives here.** Contract tests in `validation/contracts/` assert against this document, so it must stay in lockstep with the implementation. The product spec describes the surface for a human reader and links here rather than restating field lists — a duplicated schema is a schema that will drift.
+**The normative definitions live here.** Contract tests in `validation/contracts/` assert against these documents (enforced by `tools/docgen -verify`), so they stay in lockstep with the implementation. The product documentation focuses on user-observable behavior and troubleshooting without duplicating low-level API schemas.
 
 ## Contents
 
@@ -41,6 +41,7 @@ Both this directory and `docs/product/spec/` describe the HTTP API, at different
 |----------|---------|
 | `layer-interface-spec.md` | Layer boundaries, dependency rules, shared contracts, per-layer interface shapes |
 | `system_design.md` | Software & runtime stack, inference daemon, MCP tooling, and update pipelines |
+| `interfaces/` | Dedicated, table-driven technical specifications for each layer interface |
 
 ## Related
 

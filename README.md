@@ -168,8 +168,8 @@ graph TD
 
 | Domain | Focus | Key Documents |
 |--------|-------|---------------|
-| **Architecture & Interfaces** | Layer seams, wire contracts, and system design | &bull; [Layer Interface Specification](docs/architecture/layer-interface-spec.md)<br>&bull; [System Architecture](docs/architecture/system_design.md)<br>&bull; [Architecture Decision Records (ADRs)](docs/adr/) |
-| **Product Specifications** | Observable guarantees, API contracts, and user flows | &bull; [Product Spec Overview](docs/product/spec/00-overview.md)<br>&bull; [API Surface Specification](docs/product/spec/40-api-surface.md)<br>&bull; [PRD-0001: Local Chat](docs/product/prd/0001-local-chat.md) |
+| **Architecture & Interfaces** | Layer seams, wire contracts, and system design | &bull; [Layer Interface Specification](docs/architecture/layer-interface-spec.md)<br>&bull; [Interface Technical Specs](docs/architecture/interfaces/)<br>&bull; [System Architecture](docs/architecture/system_design.md)<br>&bull; [Architecture Decision Records (ADRs)](docs/adr/) |
+| **User Guide & Product Specs** | Observable guarantees, user flows, and troubleshooting | &bull; [Product Spec Overview](docs/product/spec/00-overview.md)<br>&bull; [Troubleshooting Guide](docs/product/spec/40-troubleshooting.md)<br>&bull; [PRD-0001: Local Chat](docs/product/prd/0001-local-chat.md) |
 | **Engineering & Practices** | Development workflow, testing standards, and agent rules | &bull; [Contract-First Delivery](docs/project/contract-first-delivery.md)<br>&bull; [Branching Strategy](docs/project/branching-strategy.md)<br>&bull; [Agentic Workflow Framework](docs/project/agentic-workflow-framework.md)<br>&bull; [AGENTS.md](AGENTS.md) |
 
 ---

@@ -1,39 +1,52 @@
-# Product Documentation
+# Linden Documentation
 
-Human-readable product documentation. This directory is the published surface — it ships with the source and is rendered to HTML for reading outside the repository.
+Welcome to the documentation for **Linden**, a privacy-first, zero-cloud personal AI platform for your home network.
 
-Everything here describes **what Linden does and why**. Nothing here describes how the repository is organized or how work gets done; that lives in `docs/project/`.
+Linden runs directly on hardware you own. It requires no user accounts, makes no external network calls to cloud LLMs, and ensures all conversations, documents, and vectors remain strictly within your local environment.
 
-## Structure
+---
 
-| Path | Contains | Audience |
-|------|----------|----------|
-| `prd/` | Product requirement documents, one per capability | Product, engineering, reviewers |
-| `spec/` | The product specification — the authoritative description of behavior | Everyone, including end users |
+## Documentation Structure
 
-## PRD vs Spec
+To serve users, developers, and autonomous agents effectively, Linden's documentation is divided into three primary sections:
 
-They answer different questions and have different lifecycles.
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                              Linden Docs                                │
+├─────────────────────────┬─────────────────────────┬─────────────────────┤
+│      1. User Guide      │  2. Technical Specs     │      3. PRDs        │
+│  "How to Use & Trust"   │ "What Exists & APIs"    │ "Why & What's Next" │
+└─────────────────────────┴─────────────────────────┴─────────────────────┘
+```
 
-|  | PRD | Spec |
-|--|-----|------|
-| Question | Should we build this, and for whom? | What does the system do today? |
-| Tense | Future — proposes | Present — describes |
-| Lifecycle | Written once, then frozen with a status | Living; updated with every behavior change |
-| Numbered | Yes, sequential and immutable | No; organized by topic |
+---
 
-A PRD is a decision record for a capability. Once accepted and shipped, it is not rewritten — the spec becomes the current truth and the PRD stands as the reason.
+### 1. User Guide
+Written for homeowners, operators, and everyday users who interact with Linden on their home network.
 
-## Rules
+- **[Overview & Commitments](spec/00-overview.md):** What Linden is, core privacy guarantees, and current runtime status.
+- **[User Flows & First Run](spec/20-user-flows.md):** Step-by-step walkthroughs of discovering `linden.local`, starting local chat sessions, and handling offline inference recovery.
+- **[Privacy & Trust Model](spec/30-privacy-model.md):** Clear explanations of data boundaries, local file storage, and the strict zero-logging policy.
+- **[Troubleshooting Guide](spec/40-troubleshooting.md):** Diagnostics, network mDNS recovery, Ollama model setup, and port configuration.
 
-1. Describe behavior, not implementation. No file paths, function names, or struct fields.
-2. Interface-level detail belongs in `docs/architecture/layer-interface-spec.md`. Link to it.
-3. Every user-visible behavior change updates `spec/` in the same PR that changes the behavior.
-4. New capabilities require a PRD before implementation begins.
-5. Write for a reader who has never seen the codebase.
+---
 
-## Publishing
+### 2. Technical Specifications
+Authoritative, living technical references describing Linden's observable capabilities and terminology.
 
-Sources are Markdown, rendered with mdBook. `make docs` builds this directory to HTML into `docs/.site/` (git-ignored); `make docs-serve` previews it. See `docs/adr/0001-documentation-publishing-toolchain.md`.
+- **[Capabilities Matrix](spec/10-capabilities.md):** The current status of all platform capabilities (Local Streaming Chat, OpenAI Compatibility, mDNS LAN Discovery).
+- **[Glossary](spec/90-glossary.md):** Standard terminology used across Linden's interfaces and documentation.
 
-Navigation is declared in `SUMMARY.md`. A new page is not published until it appears there, and `make docs-check` fails if one is missing or a relative link is broken.
+*(Note: Normative API contracts, HTTP wire schemas, Go interfaces, and layer specifications are maintained in [`docs/architecture/interfaces/`](https://github.com/dawsonyoung/linden/tree/main/docs/architecture/interfaces), including [`api-gateway.md`](https://github.com/dawsonyoung/linden/tree/main/docs/architecture/interfaces/api-gateway.md) for external client integration).*
+
+---
+
+### 3. Product Requirements (PRDs)
+High-level, problem-centric requirement documents establishing user pain points, target personas, scope boundaries (Must-Have vs. Non-Goals), and privacy constraints.
+
+- **Role:** PRDs serve as the primary **behavioral anchor** for engineering and autonomous AI agents before code or contract tests are written.
+- **Agent Workflow:** Agents are not blocked by missing low-level specs; they reference the PRD tree for intent and propose spec extensions for review.
+- **[How We Design Linden](prd/README.md):** Design philosophy and guide to how PRDs bound development.
+- **[PRD-0001: Local Streaming Chat](prd/0001-local-chat.md):** Shipped MVP capability for multi-turn local chat with SSE token streaming.
+- **[PRD-0002: Document Ingestion & Retrieval](prd/0002-document-retrieval.md):** Accepted requirement specification for Track C (Private Document Ingestion & Local RAG).
+- **[PRD Template](prd/TEMPLATE.md):** Standardized format for authoring future capability PRDs.
