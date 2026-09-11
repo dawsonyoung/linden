@@ -27,17 +27,17 @@ Written for homeowners, operators, and everyday users who interact with Linden o
 - **[Overview & Commitments](spec/00-overview.md):** What Linden is, core privacy guarantees, and current runtime status.
 - **[User Flows & First Run](spec/20-user-flows.md):** Step-by-step walkthroughs of discovering `linden.local`, starting local chat sessions, and handling offline inference recovery.
 - **[Privacy & Trust Model](spec/30-privacy-model.md):** Clear explanations of data boundaries, local file storage, and the strict zero-logging policy.
+- **[Troubleshooting Guide](spec/40-troubleshooting.md):** Diagnostics, network mDNS recovery, Ollama model setup, and port configuration.
 
 ---
 
 ### 2. Technical Specifications
-Authoritative, living technical references describing Linden's observable software surface, API endpoints, and system behaviors as they exist today.
+Authoritative, living technical references describing Linden's observable capabilities and terminology.
 
 - **[Capabilities Matrix](spec/10-capabilities.md):** The current status of all platform capabilities (Local Streaming Chat, OpenAI Compatibility, mDNS LAN Discovery).
-- **[API Surface](spec/40-api-surface.md):** Exact HTTP contracts and schemas for client integration, including `POST /chat`, `GET /models`, `GET /health`, and the OpenAI-compatible `POST /v1/chat/completions`.
 - **[Glossary](spec/90-glossary.md):** Standard terminology used across Linden's interfaces and documentation.
 
-*(Note: Internal layer boundaries, Go interfaces, and architectural guidelines are maintained in [`docs/architecture/`](https://github.com/dawsonyoung/linden/tree/main/docs/architecture)).*
+*(Note: Normative API contracts, HTTP wire schemas, Go interfaces, and layer specifications are maintained in [`docs/architecture/interfaces/`](https://github.com/dawsonyoung/linden/tree/main/docs/architecture/interfaces), including [`api-gateway.md`](https://github.com/dawsonyoung/linden/tree/main/docs/architecture/interfaces/api-gateway.md) for external client integration).*
 
 ---
 

@@ -88,7 +88,7 @@ Intake ──► Spec (PRD Check) ──► Contract ──► Implement ──�
 ### Step 2: Specification Synthesis / Extension
 - **Agent:** Document Agent (`document.agent.md`).
 - **Procedure:**
-  - If the capability introduces observable behavior, draft or update the corresponding page in `docs/product/spec/` (`10-capabilities.md`, `20-user-flows.md`, `30-privacy-model.md`, or `40-api-surface.md`).
+  - If the capability introduces observable behavior, draft or update the corresponding page in `docs/product/spec/` (`10-capabilities.md`, `20-user-flows.md`, `30-privacy-model.md`, or `40-troubleshooting.md`).
   - Ensure spec language is in the **present tense** and strictly describes observable behavior without referencing internal Go struct names, file paths, or private functions.
 
 ### Step 3: Contract Test Authoring (Contract Gate)

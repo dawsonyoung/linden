@@ -14,7 +14,7 @@ import (
 // The charset a request identifier must fall within to be safe to record.
 var safeRequestID = regexp.MustCompile(`^[A-Za-z0-9_-]{1,64}$`)
 
-// These tests assert the surface published in docs/product/spec/40-api-surface.md.
+// These tests assert the surface published in docs/architecture/interfaces/api-gateway.md.
 // They exercise the handler chain a client reaches, not individual handlers.
 
 func Test_Health_Get_ReturnsOKWithStatusField(t *testing.T) {

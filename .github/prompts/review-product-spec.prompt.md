@@ -22,7 +22,8 @@ Answer all four. "No" must be a decision, not an omission.
 - Capability behavior → `docs/product/spec/10-capabilities.md`
 - Flow or error experience → `docs/product/spec/20-user-flows.md`
 - Data handling, retention, or network egress → `docs/product/spec/30-privacy-model.md`
-- Client-facing endpoint or event → `docs/product/spec/40-api-surface.md`
+- Troubleshooting & operational diagnostics → `docs/product/spec/40-troubleshooting.md`
+- Client-facing endpoint or event → `docs/architecture/interfaces/api-gateway.md`
 - New term the spec relies on → `docs/product/spec/90-glossary.md`
 
 ## Step 3: Update
@@ -39,7 +40,8 @@ falsifies:
 
 - `README.md` — status and quick start
 - `docs/product/spec/00-overview.md` — current state section
-- `docs/product/spec/40-api-surface.md` — endpoint table
+- `docs/architecture/interfaces/api-gateway.md` — endpoint table
+- `docs/product/spec/40-troubleshooting.md` — diagnostics and recovery guide
 
 An endpoint listed as planned that now works is a defect, not a formality.
 

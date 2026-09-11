@@ -9,13 +9,13 @@
 - [Overview & Commitments](spec/00-overview.md)
 - [User Flows & First Run](spec/20-user-flows.md)
 - [Privacy & Trust Model](spec/30-privacy-model.md)
+- [Troubleshooting Guide](spec/40-troubleshooting.md)
 
 ---
 
 # Technical Specifications
 
 - [Capabilities Matrix](spec/10-capabilities.md)
-- [API Surface](spec/40-api-surface.md)
 - [Glossary](spec/90-glossary.md)
 
 ---
