@@ -1,50 +1,125 @@
 # API Surface
 
-> **Status:** Stub.
+The client-facing HTTP contract for Linden.
 
-The client-facing HTTP contract, described for someone building against Linden.
-
-Exact schemas, event names, and field types are normative in `docs/architecture/layer-interface-spec.md`. This page describes what each endpoint is for and what it guarantees; it links rather than restating, because a duplicated schema drifts.
-
-## Stability
-
-TODO: State the versioning and compatibility commitment before the first client ships.
+Detailed Go interface shapes and internal error mappings are normative in `docs/architecture/layer-interface-spec.md`. This specification defines the client-facing HTTP routes, request/response formats, and streaming behaviors.
 
 ## Endpoints
 
-TODO: Specify as each endpoint lands. For each: purpose, request shape, response shape, error cases, and streaming behavior where applicable.
+| Endpoint | Purpose | Format | State |
+|----------|---------|--------|-------|
+| `GET /health` | Service liveness probe | JSON | Available |
+| `GET /version` | Build version & commit | JSON | Available |
+| `GET /models` | List locally available models | JSON | Available |
+| `POST /chat` | Native Linden chat streaming | JSON / SSE | Available |
+| `POST /v1/chat/completions` | OpenAI-compatible chat completion | JSON / SSE | Available |
 
-| Endpoint | Purpose | State |
-|----------|---------|-------|
-| `GET /health` | Liveness | Available |
-| `GET /version` | Build identification | Available |
-| `POST /chat` | Send a message, receive a reply | Planned — Stage A.7 |
-| `GET /models` | List available models | Planned — Stage A.7 |
+---
 
 ### `GET /health`
 
-Reports whether the server is running and able to serve requests. Returns `200`
-with a status field. Used by container orchestration and by clients deciding
-whether the server is reachable.
+Reports whether the server process is alive and responsive.
+* **Response Status:** `200 OK`
+* **Response Body:**
+  ```json
+  {"status":"ok"}
+  ```
 
-It reports process liveness only. It does not indicate whether a model backend
-is available.
+---
 
 ### `GET /version`
 
-Reports the running build: version, commit, and Go runtime version. Present so a
-user can tell which build they are running when reporting a problem.
+Reports the running application version, Git commit hash, and Go runtime version.
+* **Response Status:** `200 OK`
+* **Response Body:**
+  ```json
+  {
+    "version": "v0.1.0",
+    "commit": "0cc737b",
+    "go_version": "go1.22.x"
+  }
+  ```
 
-### Request identity
+---
 
-Every response carries an `X-Request-ID` header. A client may supply one to
-correlate its own logs; if the supplied value is absent or unsafe to record, the
-server substitutes a generated identifier.
+### `GET /models`
 
-## Streaming
+Queries the underlying inference engine (Ollama) and returns all currently installed models available for chat.
+* **Response Status:** `200 OK`
+* **Response Body:**
+  ```json
+  {
+    "models": [
+      {"name": "tinyllama:latest"},
+      {"name": "qwen2.5:7b"}
+    ]
+  }
+  ```
 
-Replies stream over Server-Sent Events. TODO: Describe the observable behavior a client can rely on — ordering, termination, and what happens if the connection drops. Link to the event contract in `docs/architecture/layer-interface-spec.md` for exact event names and payload shapes.
+---
 
-## Errors
+### `POST /chat`
 
-TODO: Publish the client-facing error code list and what each means for the user. Internal detail is never included in a response body.
+The primary conversational endpoint used by the Linden web interface.
+* **Headers:** `Content-Type: application/json`
+* **Request Body:**
+  ```json
+  {
+    "model": "tinyllama:latest",
+    "messages": [
+      {"role": "user", "content": "Hello Linden"}
+    ]
+  }
+  ```
+* **Response Headers:** `Content-Type: text/event-stream`
+* **Streaming Event Format:**
+  Incremental text tokens stream over Server-Sent Events (SSE). Each event carries a JSON chunk:
+  ```
+  data: {"text":"Hello","done":false}
+
+  data: {"text":"! How","done":false}
+
+  data: {"text":" can I help?","done":true}
+  ```
+
+---
+
+### `POST /v1/chat/completions`
+
+OpenAI-compatible translation endpoint supporting drop-in integration with external tools, IDE extensions, and agent frameworks.
+* **Headers:** `Content-Type: application/json`
+* **Request Body:**
+  ```json
+  {
+    "model": "tinyllama:latest",
+    "messages": [
+      {"role": "user", "content": "Hello Linden"}
+    ],
+    "stream": true
+  }
+  ```
+* **Response Headers:** `Content-Type: text/event-stream`
+* **Streaming Event Format:**
+  Conforms to OpenAI chunk streaming conventions:
+  ```
+  data: {"id":"chatcmpl-...","object":"chat.completion.chunk","created":1726056000,"model":"tinyllama:latest","choices":[{"index":0,"delta":{"content":"Hello"}}]}
+
+  data: [DONE]
+  ```
+
+---
+
+## Request Correlation
+
+Every response carries an `X-Request-ID` header. Clients can provide their own tracking header in requests, or Linden generates a cryptographically random identifier.
+
+## Client Error Handling
+
+Client errors return standardized HTTP status codes (`400 Bad Request`, `404 Not Found`, `500 Internal Server Error`, `502 Bad Gateway` if inference is unreachable) with sanitized JSON payloads:
+```json
+{
+  "code": "invalid_argument",
+  "message": "model and messages are required"
+}
+```
+Internal error traces are never exposed in API responses.

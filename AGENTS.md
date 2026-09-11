@@ -14,19 +14,21 @@ another layer's internals. Every interface is testable in `validation/`.
 src/
 ├── cmd/             # Entry point (main.go) — wires layers together, no logic
 ├── api/             # HTTP gateway — receives client requests, returns responses
-│                      Interface: routes, middleware, SSE streaming
+│                      Interface: routes, middleware, SSE streaming, OpenAI compat
 │                      Depends on: orchestrator
 ├── orchestrator/    # Request routing — manages conversation context, dispatches
 │                      Interface: ChatService (accepts message, returns streamed response)
-│                      Depends on: inference, storage (future)
+│                      Depends on: inference, storage
 ├── inference/       # LLM abstraction — talks to Ollama or other backends
 │                      Interface: Client (ChatStream, ListModels)
 │                      Depends on: errs (shared kernel)
-├── storage/         # Data persistence — conversations, profiles, documents (future)
+├── storage/         # Data persistence — conversations, profiles, documents
 │                      Interface: Store (Save, Load, Query)
 │                      Depends on: errs (shared kernel)
-├── discovery/       # Network discovery — mDNS advertisement (future)
+├── discovery/       # Network discovery — mDNS advertisement
 │                      Interface: Advertiser (Start, Stop)
+│                      Depends on: errs (shared kernel)
+├── mcp/             # Extensibility — Model Context Protocol layer boundary
 │                      Depends on: errs (shared kernel)
 ├── errs/            # Shared kernel — the published error taxonomy
 │                      Interface: Code, Error, New, Wrap, CodeOf, Is
@@ -42,7 +44,7 @@ src/
 - `cmd/` depends on all layers (it wires them). No other layer imports `cmd/`.
 - `api/` depends only on `orchestrator/`.
 - `orchestrator/` depends on `inference/` and `storage/`.
-- `inference/`, `storage/`, `discovery/` are leaf layers — they depend on no other layer.
+- `inference/`, `storage/`, `discovery/`, `mcp/` are leaf layers — they depend on no other layer.
 - `web/` is a separate build (Node/SvelteKit). Its output is static files consumed by `api/`.
 
 **Shared kernels:** a dependency-free, logic-free package may be imported by any
@@ -85,7 +87,7 @@ docs/
 `docs/product/` never contains file paths, function names, or struct fields. It is written for readers who have not seen the codebase.
 
 ### Planned (future directories at repo root)
-- Deferred expansion directories (content-sdk, protocol, marketplace, clients/mobile, system) are tracked in the exhaustive implementation plan (`plans/03-exhaustive-full-implementation-plan.md`) and should not be scaffolded in the current repository phase.
+- Deferred expansion directories (content-sdk, protocol, marketplace, clients/mobile, system) are tracked in the long-term roadmap (`plans/long-term-roadmap.md`) and should not be scaffolded in the current repository phase.
 
 ## Build & Run
 
@@ -157,6 +159,7 @@ make build        # Production build → bin/linden
 
 When working in this codebase:
 
+- Consult `plans/` as a dynamic holding area for forward-looking design intent, architectural ideas, or when directed to implement specific future capabilities.
 - Prefer simple, obvious solutions over clever ones.
 - Do not add features, abstractions, or refactors beyond what is requested.
 - Do not add comments to code you did not write or change.
