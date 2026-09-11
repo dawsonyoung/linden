@@ -4,7 +4,7 @@ This file provides a high-level orientation for LLMs working in this codebase.
 For full agent instructions, see AGENTS.md.
 
 ## What This Project Is
-Linden is a privacy-first, safety optimized personal AI platform. Local-only capable on your home network for a secure chat experience, all inference runs locally via Ollama.
+Linden is a privacy-first, safety optimized personal AI platform featuring streamlined deployment of the local-only chat experience. All inference runs locally via Ollama.
 No user data leaves the device by default.
 
 ## Repository Layout
