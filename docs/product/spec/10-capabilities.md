@@ -5,7 +5,8 @@ Each capability lists its originating requirement and its current observable sta
 | Capability | Origin | State |
 |-----------|--------|-------|
 | Local chat | PRD-0001 | Available |
-| Model selection | PRD-0001 | Available |
+| Model inspection & API routing | PRD-0001 | Available (API) |
+| Web UI model selector | PRD-0001 | Planned |
 | OpenAI API compatibility | Feature | Available |
 | Zero-config LAN discovery | Feature | Available |
 | Document retrieval (RAG) | Planned | Track C |
@@ -22,9 +23,11 @@ Users can carry out streaming multi-turn conversations with locally running lang
 
 Originating PRD: [PRD-0001: Local Chat](../prd/0001-local-chat.md)
 
-## Model selection
+## Model inspection & API routing
 
-Linden queries the local inference daemon at startup and on demand (`GET /models`), allowing users to dynamically select from installed GGUF models directly in the web UI header.
+Linden inspects the local inference daemon at startup and on demand via `GET /models`, reporting all installed models. API clients targeting `POST /chat` or `POST /v1/chat/completions` can dynamically request any installed model by specifying its name in the request payload.
+
+*Note on Web Client:* The embedded SvelteKit web interface currently defaults to the primary local model (`tinyllama`). Interactive in-browser model selection via a header dropdown is planned for a subsequent UI cycle.
 
 ## OpenAI API compatibility
 

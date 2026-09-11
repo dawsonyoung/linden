@@ -27,7 +27,7 @@ Linden solves this by providing a personal conversational assistant that runs 10
 - Send conversational messages and receive replies generated entirely by a local LLM backend.
 - Incremental streaming text delivery over standard Server-Sent Events (SSE) so users don't wait for complete generation.
 - User cancellation: ability to stop generation mid-stream without crashing or blocking subsequent prompts.
-- Dynamic local model selection from installed backend models.
+- Dynamic local model inspection and selection via API endpoints.
 - Actionable error feedback when the local model engine is offline or missing.
 
 ### Out of Scope (Initial Release)
@@ -42,7 +42,7 @@ Linden solves this by providing a personal conversational assistant that runs 10
 3. **R3:** The user can stop generation at any time, retaining the partial reply received so far.
 4. **R4:** If no local model is available or installed, Linden displays an actionable notice explaining how to pull a model.
 5. **R5:** If the local inference engine is unreachable, the client remains responsive and presents an actionable recovery message.
-6. **R6:** The user can switch between any locally installed model directly in the interface.
+6. **R6:** The system can route requests to any locally installed model via API parameters (interactive web UI selector planned for subsequent UI cycle).
 
 ## 5. Privacy, Safety, & Trust Constraints
 

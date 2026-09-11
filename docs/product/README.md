@@ -25,7 +25,7 @@ To serve users, developers, and autonomous agents effectively, Linden's document
 Written for homeowners, operators, and everyday users who interact with Linden on their home network.
 
 - **[Overview & Commitments](spec/00-overview.md):** What Linden is, core privacy guarantees, and current runtime status.
-- **[User Flows & First Run](spec/20-user-flows.md):** Step-by-step walkthroughs of discovering `linden.local`, starting local chat sessions, selecting models, and handling offline inference recovery.
+- **[User Flows & First Run](spec/20-user-flows.md):** Step-by-step walkthroughs of discovering `linden.local`, starting local chat sessions, and handling offline inference recovery.
 - **[Privacy & Trust Model](spec/30-privacy-model.md):** Clear explanations of data boundaries, local file storage, and the strict zero-logging policy.
 
 ---

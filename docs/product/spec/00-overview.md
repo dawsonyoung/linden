@@ -24,6 +24,6 @@ Linden currently runs as a standalone, single-binary application providing:
 - **Embedded Web Client:** A responsive SvelteKit interface compiled into the Go binary and served over HTTP.
 - **Zero-Config LAN Discovery:** Advertises `linden.local` across the local Wi-Fi/LAN via mDNS.
 - **Streaming Local Chat:** Multi-turn conversational chat with live token streaming over Server-Sent Events (SSE), backed by a local Ollama inference daemon.
-- **Model Selection:** Dynamic inspection and selection of locally installed models via `GET /models`.
+- **Model Inspection & API Routing:** Dynamic inspection of installed local models via `GET /models` with model-routing support in the API; web client currently defaults to `tinyllama`.
 - **OpenAI Compatibility:** A standard `POST /v1/chat/completions` translation endpoint for drop-in integration with external tools and agent workflows.
 - **Operational Endpoints:** Liveness checks (`GET /health`), build identification (`GET /version`), and request correlation headers (`X-Request-ID`).
