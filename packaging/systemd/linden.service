@@ -1,0 +1,29 @@
+[Unit]
+Description=Linden: A Home AI Solution
+Documentation=https://github.com/dawsonyoung/linden
+After=network-online.target ollama.service
+Wants=network-online.target
+# If Ollama is local, start it first if installed
+After=ollama.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/linden
+Restart=on-failure
+RestartSec=5s
+
+# Security & Sandboxing
+DynamicUser=yes
+StateDirectory=linden
+Environment=LINDEN_HOST=0.0.0.0
+Environment=LINDEN_PORT=8080
+Environment=LINDEN_DATA_DIR=/var/lib/linden
+Environment=OLLAMA_URL=http://127.0.0.1:11434
+
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=read-only
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
