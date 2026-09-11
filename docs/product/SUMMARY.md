@@ -4,20 +4,25 @@
 
 ---
 
-# Tier 1: Requirements (PRDs)
+# User Guide
 
-- [Design Philosophy & Index](prd/README.md)
-- [PRD-0001: Local Chat](prd/0001-local-chat.md)
-- [PRD-0002: Document Ingestion & Retrieval](prd/0002-document-retrieval.md)
-- [PRD Template](prd/TEMPLATE.md)
+- [Overview & Commitments](spec/00-overview.md)
+- [User Flows & First Run](spec/20-user-flows.md)
+- [Privacy & Trust Model](spec/30-privacy-model.md)
 
 ---
 
-# Tier 2: Product Specification
+# Technical Specifications
 
-- [Overview & Commitments](spec/00-overview.md)
-- [Capabilities](spec/10-capabilities.md)
-- [User Flows](spec/20-user-flows.md)
-- [Privacy Model](spec/30-privacy-model.md)
+- [Capabilities Matrix](spec/10-capabilities.md)
 - [API Surface](spec/40-api-surface.md)
 - [Glossary](spec/90-glossary.md)
+
+---
+
+# Product Requirements (PRDs)
+
+- [How We Design Linden](prd/README.md)
+- [PRD-0001: Local Streaming Chat](prd/0001-local-chat.md)
+- [PRD-0002: Document Ingestion & Retrieval](prd/0002-document-retrieval.md)
+- [PRD Template](prd/TEMPLATE.md)
