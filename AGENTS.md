@@ -1,6 +1,6 @@
 # Linden
 
-A privacy-first personal AI platform. Users run an assistant locally on their home network with complete offline capability, built on a foundation of trust that opens the door for future optional cloud-enhanced services.
+A privacy-first, safety optimized personal AI platform. Local-only capable on your home network for a secure chat experience, built on a foundation of trust that opens the door for future optional cloud-enhanced services.
 
 ## Architecture
 
