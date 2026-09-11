@@ -10,8 +10,8 @@ import (
 	"github.com/dawsonyoung/linden/orchestrator"
 )
 
-// Runs the conformance suite against a scripted double. No concrete service exists yet;
-// this proves the contract is coherent and satisfiable before Stage A.5 implementation.
+// Runs the conformance suite against a scripted double. This proves the contract is
+// coherent and satisfiable in isolation with minimal dependencies.
 func Test_ScriptedChatService_SatisfiesChatServiceContract(t *testing.T) {
 	runChatServiceContract(t, func(_ *testing.T, s orchestratorScript) orchestrator.ChatService {
 		return &scriptedChatService{script: s}

@@ -20,7 +20,7 @@ Without a devcontainer:
 
 ```sh
 ./scripts/setup.sh              # check the toolchain
-./scripts/setup.sh --pull-model # also fetch the model used from Stage A.3
+./scripts/setup.sh --pull-model # also fetch the default local model (tinyllama)
 ```
 
 `scripts/setup.ps1` exists as a Windows convenience and is not the canonical
@@ -83,7 +83,7 @@ Contract tests come before implementation. This is not a preference.
 
 An implementation PR without a corresponding contract test is not ready for review. See [docs/project/contract-first-delivery.md](docs/project/contract-first-delivery.md).
 
-Stage 0 is the one exception — it introduces no cross-layer interface. The exemption ends at Stage A.
+Only changes that touch no cross-layer interfaces (such as internal refactors or documentation) are exempt from contract tests.
 
 ## Before opening a PR
 
@@ -96,8 +96,8 @@ Stage 0 is the one exception — it introduces no cross-layer interface. The exe
 ```sh
 make lint                                                    # go vet + svelte-check
 cd src && go test -race ./...                                # unit
-cd src && go test -tags=contracts -race ../validation/contracts/...
-cd src && go test -tags=integration -race ../validation/integration/...
+cd validation && go test -tags=contracts -race ./contracts/... # contract
+cd validation && go test -tags=integration -race ./integration/... # integration
 make docker-build && make docker-smoke                       # runtime
 ```
 

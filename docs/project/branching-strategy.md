@@ -114,7 +114,7 @@ Five required sections. Every section appears in every PR. A section that does n
 
 ### Intent
 
-What changes and why, in two or three sentences. Lead with the problem, not the diff. If the PR implements a planned item, cite it: `Implements 0.2 from plans/05-stage-0-groundwork.md`.
+What changes and why, in two or three sentences. Lead with the problem, not the diff. If the PR implements a planned item or capability, cite it (e.g. `Implements PRD-0002` or `Implements retrieval indexing from plans/03-track-c-platform-scaling-and-retrieval.md`).
 
 ### Interface changes
 

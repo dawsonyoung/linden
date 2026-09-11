@@ -70,116 +70,49 @@ When Stage C is complete, testing from a mobile device or separate computer on t
 3. Container smoke checks include health endpoint and SSE stream behavior.
 4. Windows scripts remain supported, but cannot bypass Linux gating.
 
-## Proposed PR Sequence
+## Standard Capability PR Sequence
 
-### PR 1: Foundation contract skeleton
+For any new feature or capability (e.g. Track C document retrieval), the contract-first lifecycle proceeds through these distinct stages:
 
-Includes:
+### Phase 1: Interface & Contract Specification
+1. Update or create the normative technical specification in `docs/architecture/interfaces/`.
+2. Define exact Go interface methods and types.
+3. Author isolated contract tests under `validation/contracts/` using `//go:build contracts`.
+4. Run `cd tools && go run ./docgen -verify` to confirm documentation and AST parity.
+5. Contract tests should fail or compile against minimal doubles before implementation is written.
 
-1. Contract test harness structure in validation/contracts.
-2. Shared test helpers for contract assertions.
-3. Initial API contract test stubs for health/version/chat schema.
+### Phase 2: Layer Implementation & Unit Testing
+1. Implement the interface within the target layer package (`src/orchestrator/`, `src/inference/`, etc.).
+2. Write comprehensive, table-driven unit tests in the same package (`Test_FunctionName_Scenario_Expected`).
+3. Run `cd validation && go test -tags=contracts ./contracts/...` to prove the implementation satisfies the contract.
+4. Verify edge cases: nil contexts, network timeouts, empty inputs, disk exhaustion.
 
-Must pass:
+### Phase 3: Cross-Layer Integration & Wiring
+1. Wire the new layer implementation into `src/cmd/main.go`.
+2. Expand cross-layer tests in `validation/integration/` using real (non-mocked) internal components.
+3. Assert that errors bubble up correctly through the shared `errs` taxonomy.
 
-1. Contract tests compile and run.
-2. No implementation yet beyond compile-safe placeholders.
+### Phase 4: Runtime & Security Validation
+1. Execute the full local validation suite:
+   ```sh
+   make lint && make test && make validate
+   ```
+2. Verify container build and smoke tests:
+   ```sh
+   make docker-smoke
+   ```
+3. Audit for privacy: zero user chat data in logs, sanitized API error responses.
 
-### PR 2: Inference interface contracts
-
-Includes:
-
-1. Inference interface definitions.
-2. Contract tests for ListModels and ChatStream semantics.
-
-Must pass:
-
-1. Contract tests fail first, then pass with minimal adapter mock.
-2. Unit tests for inference request/response mapping helpers.
-
-### PR 3: Orchestrator interface contracts
-
-Includes:
-
-1. ChatService and orchestration contracts.
-2. Dependency interaction contracts using inference/store doubles.
-
-Must pass:
-
-1. Unit tests for orchestration decision paths.
-2. Contract tests for mapping and error behavior.
-
-### PR 4: API interface contracts and SSE behavior
-
-Includes:
-
-1. HTTP request/response schema contracts.
-2. SSE framing, event ordering, and terminal behavior contracts.
-
-Must pass:
-
-1. Unit tests for request validation and response encoding.
-2. Contract tests asserting message, done, and error event semantics.
-
-### PR 5: Minimal concrete vertical slice
-
-Includes:
-
-1. cmd wiring.
-2. api to orchestrator to inference flow.
-3. Health and version endpoints.
-
-Must pass:
-
-1. Existing contract tests.
-2. New integration test for end-to-end chat happy path.
-
-### PR 6: Storage module contracts and implementation
-
-Includes:
-
-1. Session persistence contract tests.
-2. Minimal storage implementation.
-3. Orchestrator integration with optional session behavior.
-
-Must pass:
-
-1. Unit tests for storage edge cases.
-2. Integration tests for session save/load behavior.
-
-### PR 7: Discovery contracts and implementation
-
-Includes:
-
-1. Discovery start/stop/status contracts.
-2. Minimal LAN advertisement behavior.
-
-Must pass:
-
-1. Unit tests for lifecycle and idempotency.
-2. Integration tests with startup wiring.
-
-### PR 8: Functional baseline and smoke
-
-Includes:
-
-1. validation/smoke startup and chat stream checks.
-2. validation/security baseline checks.
-3. Linux Docker smoke execution path.
-
-Must pass:
-
-1. CI gates for lint, unit, contracts, integration, smoke.
-2. Docker build plus container smoke checks.
+---
 
 ## Definition of Done Per PR
 
-1. Interface and behavior documented or explicitly unchanged.
-2. Contract tests included first for new behavior.
-3. Unit tests included with implementation.
-4. Linux CI green.
-5. If runtime behavior changes, Docker smoke still green.
-6. No unresolved TODO that affects security boundaries.
+1. Interface and behavior documented in `docs/architecture/interfaces/`.
+2. Contract tests included and passing in `validation/contracts/`.
+3. Table-driven unit tests included with the implementation.
+4. Linux CI gates 100% green.
+5. If runtime behavior or endpoints change, container smoke tests pass.
+6. No user content in error messages or server logs.
 
 ## Review Checklist
 
@@ -196,20 +129,14 @@ Branch naming and PR rules: `docs/project/branching-strategy.md`.
 
 Suggested labels:
 
-1. layer:api
-2. layer:orchestrator
-3. layer:inference
-4. layer:storage
-5. layer:discovery
-6. test:contracts
-7. test:integration
-8. test:smoke
-9. platform:linux
-10. platform:docker
-
-## Immediate Execution Tasks
-
-1. Approve and freeze the interface specification document.
-2. Create contract test skeleton directories and helper package.
-3. Open PR 1 for foundation contract skeleton.
-4. Add CI job separation for contract, unit, integration, smoke, and docker checks.
+1. `layer:api`
+2. `layer:orchestrator`
+3. `layer:inference`
+4. `layer:storage`
+5. `layer:discovery`
+6. `layer:mcp`
+7. `test:contracts`
+8. `test:integration`
+9. `test:smoke`
+10. `platform:linux`
+11. `platform:docker`

@@ -3,8 +3,9 @@
 // lockstep with normative architectural specifications in docs/architecture/interfaces/.
 //
 // Usage:
-//   go run ./tools/docgen -verify     # Fails with non-zero exit code if docs have drifted from code
-//   go run ./tools/docgen -dump       # Dumps extracted interfaces and signatures to stdout
+//
+//	go run ./tools/docgen -verify     # Fails with non-zero exit code if docs have drifted from code
+//	go run ./tools/docgen -dump       # Dumps extracted interfaces and signatures to stdout
 package main
 
 import (
