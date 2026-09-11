@@ -8,6 +8,9 @@ applyTo: "docs/product/**"
 - Describe observable behavior only. No file paths, function names, struct fields, or package names.
 - Write for a reader who has never seen the codebase.
 - The spec is present tense and describes what is real today. Planned behavior belongs in a PRD until it ships.
+- The PRD tree (`docs/product/prd/`) establishes high-level intent, user jobs, non-goals, and privacy constraints.
+- At this stage, agents are NOT blocked by a lack of exhaustive specs; they must use the PRD tree as reference for product boundaries.
+- Agents should draft or extend the spec tree for review before implementation when adding or changing observable behavior.
 - A PRD is frozen once shipped. Do not rewrite it to match what was built; update the spec instead.
 - Layer-internal detail belongs in `docs/architecture/layer-interface-spec.md`. Link to it rather than restating it.
 - A new page must be listed in `docs/product/SUMMARY.md` or it is not published.

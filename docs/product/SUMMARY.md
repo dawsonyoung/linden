@@ -14,6 +14,7 @@
 
 ---
 
-# Product Requirements
+# Product Requirements (PRDs)
 
+- [Design Philosophy](prd/README.md)
 - [PRD-0001: Local Chat](prd/0001-local-chat.md)

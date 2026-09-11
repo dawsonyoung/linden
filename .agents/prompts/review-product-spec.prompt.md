@@ -12,7 +12,7 @@ Answer all four. "No" must be a decision, not an omission.
 
 | Question | If yes |
 |----------|--------|
-| Does this add a capability a user could name? | An accepted PRD is required in `docs/product/prd/` before implementation |
+| Does this add a capability a user could name? | Reference the PRD tree in `docs/product/prd/` for scope and problem framing; draft/extend spec for review |
 | Does this change behavior a user can observe? | `docs/product/spec/` must be updated in the same PR as the behavior |
 | Does this change a layer interface, schema, error code, or config key? | `docs/architecture/layer-interface-spec.md` must be updated |
 | Is this internal only? | Record `Spec impact: none` and why |
@@ -53,8 +53,8 @@ Pages touched: <paths, or none>
 PRD: <PRD-NNNN and status, or N/A with reason>
 ```
 
-## Stop conditions
+## Stop conditions & Workflow Guidance
 
-- A new capability with no PRD — stop and escalate.
+- At this stage, agents are not blocked by a lack of exhaustive specs; they should consult the PRD tree as their high-level problem and privacy reference. Over time, agents should autonomously build out full spec trees for review prior to implementation.
 - A PRD with unresolved Open questions — stop; it cannot move to Accepted.
 - Behavior change that cannot be described without naming internals — the design is leaking; escalate to Design Agent.
