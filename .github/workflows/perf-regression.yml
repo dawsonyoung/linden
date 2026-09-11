@@ -45,12 +45,44 @@ jobs:
           cd src
           CGO_ENABLED=0 go build -trimpath -o ../linden ./cmd/
 
-      - name: Start Linden Background Server
+      - name: Start Mock Ollama
         run: |
-          ./linden &
+          cat <<'EOF' > /tmp/mock_ollama.go
+          package main
+          import (
+            "fmt"
+            "net/http"
+          )
+          func main() {
+            http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+              w.Header().Set("Content-Type", "application/json")
+              fmt.Fprintln(w, `{"models":[]}`)
+            })
+            http.ListenAndServe(":11434", nil)
+          }
+          EOF
+          go build -o /tmp/mock_ollama /tmp/mock_ollama.go
+          /tmp/mock_ollama >/dev/null 2>&1 &
+          for i in $(seq 1 50); do
+            curl -s http://localhost:11434/ >/dev/null 2>&1 && break
+            sleep 0.1
+          done
+
+      - name: Start Linden Server
+        run: |
+          OLLAMA_URL=http://localhost:11434 ./linden > linden.log 2>&1 &
           echo $! > linden.pid
-          # Wait for server to bind to port 8080
-          sleep 3
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/health || true)
+            if [ "${code}" = "200" ]; then
+              echo "Linden ready after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Linden failed to start. Logs:"
+          cat linden.log
+          exit 1
 
       - name: Basic API Latency Smoke Test
         run: |
