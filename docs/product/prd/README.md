@@ -27,4 +27,4 @@ Linden is developed using advanced AI-assisted and autonomous agent workflows. I
 | PRD | Title | Status | Primary Capability |
 |---|---|---|---|
 | [PRD-0001](0001-local-chat.md) | Local Streaming Chat | **Shipped** | Multi-turn conversational chat with SSE token streaming |
-| *PRD-0002* | *Local Document Ingestion (RAG)* | *Draft* | *Private document parsing, vector indexing, and citations* |
+| [PRD-0002](0002-document-retrieval.md) | Local Document Ingestion & Retrieval | **Accepted** | Private document parsing, vector indexing, and citations |
