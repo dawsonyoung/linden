@@ -1,6 +1,6 @@
 # Linden Documentation
 
-Welcome to the documentation for **Linden**, a privacy-first personal AI platform for your home network.
+Welcome to the documentation for **Linden**, a privacy-first, safety optimized personal AI platform. Local-only capable on your home network for a secure chat experience.
 
 Linden runs directly on hardware you own with complete local-only capability. By default, it operates fully offline without requiring external cloud LLM connections, keeping all conversations, documents, and vectors within your local environment while establishing the trust needed for future optional cloud-enhanced services.
 
