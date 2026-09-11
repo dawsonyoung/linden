@@ -35,6 +35,7 @@ The distinction from `plans/` is durability. A document here describes how work 
 | `branching-strategy.md` | Branching model, naming, commits, PR titles and bodies |
 | `contract-first-delivery.md` | Test sequencing policy and PR-by-PR delivery approach |
 | `agentic-workflow-framework.md` | Agent topology, delegation contracts, quality gates |
+| `prd-agentic-workflow.md` | PRD-driven agent development lifecycle, non-blocking spec workflow, and traceability chain |
 
 ## Admission test
 
