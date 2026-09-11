@@ -14,7 +14,7 @@ What is broken or missing today, from the user's point of view. No solution lang
 
 ## Users and jobs
 
-Who has this problem and what they are trying to accomplish. Reference the audiences in `plans/01-high-level-purpose-overview.md` rather than inventing new personas.
+Who has this problem and what they are trying to accomplish. Reference the audiences established in product specification overview (`docs/product/spec/00-overview.md`) rather than inventing new personas.
 
 ## Scope
 

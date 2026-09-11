@@ -87,7 +87,7 @@ docs/
 `docs/product/` never contains file paths, function names, or struct fields. It is written for readers who have not seen the codebase.
 
 ### Planned (future directories at repo root)
-- Deferred expansion directories (content-sdk, protocol, marketplace, clients/mobile, system) are tracked in the long-term roadmap (`plans/long-term-roadmap.md`) and should not be scaffolded in the current repository phase.
+- Deferred expansion directories (content-sdk, protocol, marketplace, clients/mobile, system) are tracked in external strategic roadmaps and should not be scaffolded in the current repository phase.
 
 ## Build & Run
 
