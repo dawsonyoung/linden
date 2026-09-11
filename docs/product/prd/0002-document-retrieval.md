@@ -18,14 +18,14 @@ Today, getting AI answers about personal documents requires either:
 1. Uploading private files to cloud AI providers (violating privacy, risking data leaks, and granting third parties access to personal history).
 2. Complex developer tooling that requires command-line expertise, Python environments, and external vector database subscriptions.
 
-Linden solves this by bringing zero-cloud, private Document Ingestion and Grounded Retrieval (RAG) directly into the home appliance. Users drop documents into Linden and get instant, grounded conversational answers with transparent citations—completely offline, private, and running on their home network.
+Linden solves this by bringing private, local Document Ingestion and Grounded Retrieval (RAG) directly into the home appliance. Users drop documents into Linden and get instant, grounded conversational answers with transparent citations—running privately on their local hardware.
 
 ---
 
 ## 2. Target Users & User Stories
 
 - **Privacy-Conscious Homeowner:**
-  - *Story:* As a homeowner, I want to index my mortgage and home appliance manuals so I can ask questions like "How do I clear error code E3 on my dishwasher?" without searching through filing cabinets or uploading manuals to the cloud.
+  - *Story:* As a homeowner, I want to index my mortgage and home appliance manuals so I can ask questions like "How do I clear error code E3 on my dishwasher?" without searching through filing cabinets or uploading manuals to external services.
 - **Independent Professional / Researcher:**
   - *Story:* As an independent researcher, I want to query a repository of research notes and PDF papers offline so I can synthesize findings during travel or air-gapped field work.
 - **Family / Household Member:**
@@ -37,7 +37,7 @@ Linden solves this by bringing zero-cloud, private Document Ingestion and Ground
 
 ### Must Have (Track C Delivery)
 - **Local File Formats:** Direct ingestion and text extraction for Plain Text (`.txt`), Markdown (`.md`), and standard portable document format (`.pdf`).
-- **Zero-Cloud Embeddings:** Automatic vector generation using dedicated local embedding models (e.g. `nomic-embed-text`) managed transparently by the local inference backend.
+- **Local Embeddings:** Automatic vector generation using dedicated local embedding models (e.g. `nomic-embed-text`) managed transparently by the local inference backend.
 - **Grounded Chat Mode:** A toggle in the chat interface allowing users to query their document library or conduct general ungrounded chat.
 - **Verifiable Citations:** Responses generated from retrieved context include visible source pill citations showing the document name and matched text excerpt.
 - **Document Management:** Dedicated document library screen showing indexed files, file sizes, chunk counts, and indexing timestamps.

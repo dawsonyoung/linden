@@ -1,8 +1,8 @@
 # Linden Documentation
 
-Welcome to the documentation for **Linden**, a privacy-first, zero-cloud personal AI platform for your home network.
+Welcome to the documentation for **Linden**, a privacy-first personal AI platform for your home network.
 
-Linden runs directly on hardware you own. It requires no user accounts, makes no external network calls to cloud LLMs, and ensures all conversations, documents, and vectors remain strictly within your local environment.
+Linden runs directly on hardware you own with complete local-only capability. By default, it operates fully offline without requiring external cloud LLM connections, keeping all conversations, documents, and vectors within your local environment while establishing the trust needed for future optional cloud-enhanced services.
 
 ---
 

@@ -6,7 +6,7 @@ This document outlines the proposed design for the initial device onboarding exp
 1. **Zero-Config Discovery:** The app must discover the Linden device on the local network automatically without the user entering IP addresses.
 2. **Secure Claiming:** The first user to connect should be able to establish themselves as the owner of the device.
 3. **Customization:** The owner can assign a friendly name to the device (e.g., "Living Room AI"), which updates its mDNS broadcast.
-4. **Offline First:** This entire process must happen without requiring an internet connection or external cloud accounts.
+4. **Offline First:** This entire setup process operates locally without requiring mandatory internet access or external cloud accounts.
 
 ## Discovery Phase
 As implemented in the MVP, the Linden server broadcasts an mDNS service (`_linden._tcp`) with a unique randomly-generated ID in the TXT records (e.g., `id=4F8A`).
