@@ -1,313 +1,156 @@
 # Linden Layer Interface Specification
 
 ## Status
-Draft for implementation guidance.
+Accepted & Active Architectural Specification.
 
 ## Purpose
-Define the implementation target for each runtime layer, the interface boundaries between layers, and the contracts that must be validated before implementation code is accepted.
+This document provides the authoritative architectural overview of Linden's runtime layers, the strict one-way dependency model, and the interface boundaries separating each subsystem. It serves as the primary index and architectural guide for the dedicated, table-driven technical specifications located in [`docs/architecture/interfaces/`](interfaces/).
 
 ## Scope
-This specification covers MVP and near-MVP runtime behavior for:
-
-1. cmd
-2. api
-3. orchestrator
-4. inference
-5. storage
-6. discovery
-7. web
-
-It does not define marketplace, mobile, hardware image, or distributed deployment concerns.
+This specification defines the runtime boundaries and contracts for:
+1. `src/cmd/` — Entrypoint & wiring
+2. `src/api/` — HTTP Gateway & OpenAI compatibility
+3. `src/orchestrator/` — Conversational context & coordination
+4. `src/inference/` — Local LLM provider abstraction
+5. `src/storage/` — Session persistence & data storage
+6. `src/discovery/` — Local network mDNS advertisement
+7. `src/mcp/` — Extensibility & Model Context Protocol boundary
+8. `src/errs/` — Shared error taxonomy kernel
+9. `src/web/` — SvelteKit user interface build artifact
+
+---
+
+## Architectural Invariants
+
+1. **One-Way Dependencies:** Dependencies are strictly hierarchical and follow layer order. Circular or reverse dependencies are forbidden.
+2. **Interface Decoupling:** Consumers depend exclusively on exported Go interfaces (`ChatService`, `Client`, `Store`, `Advertiser`), never on concrete struct implementations.
+3. **Contract-First Testing:** Every layer interface must have an isolated conformance suite under `validation/contracts/` asserting compliance against its normative specification before code merges.
+4. **Shared Kernel Rule:** A package imported across multiple layers without restriction must be a logic-free, dependency-free shared kernel. Currently, `src/errs` is the only approved shared kernel (see [`docs/adr/0004-shared-error-taxonomy.md`](../adr/0004-shared-error-taxonomy.md)).
+5. **Strict Privacy Boundary:** User conversational data, message bodies, and internal system stack traces must never appear in logs or error bodies returned to clients.
+6. **Linux & Container Parity:** All interfaces, builds, and validation tests must execute deterministically across Linux CI and local Docker containers.
+
+---
+
+## Dependency Topology
+
+### Layer Architecture Graph
+
+```mermaid
+graph TD
+    cmd["cmd (Entrypoint)"] --> api["api (HTTP Gateway)"]
+    cmd --> discovery["discovery (mDNS)"]
+    api --> orchestrator["orchestrator (ChatService)"]
+    orchestrator --> inference["inference (Client)"]
+    orchestrator --> storage["storage (Store)"]
+    orchestrator -.-> mcp["mcp (Tool Boundary)"]
+    web["web (SvelteKit Assets)"] -.->|Static Embed| api
+
+    subgraph Shared Kernel
+        errs["errs (Taxonomy)"]
+    end
+
+    api -.-> errs
+    orchestrator -.-> errs
+    inference -.-> errs
+    storage -.-> errs
+    discovery -.-> errs
+    mcp -.-> errs
+```
+
+### Import Rules Matrix
+
+| Layer | May Import | Must Never Import |
+|---|---|---|
+| **`cmd/`** | `api`, `orchestrator`, `inference`, `storage`, `discovery`, `config`, `errs` | None (it is the root composer) |
+| **`api/`** | `orchestrator`, `config`, `errs` | `inference`, `storage`, `discovery`, `mcp`, `cmd` |
+| **`orchestrator/`** | `inference`, `storage`, `mcp`, `config`, `errs` | `api`, `cmd`, `discovery`, `web` |
+| **`inference/`** | `errs`, stdlib | `api`, `orchestrator`, `storage`, `cmd` |
+| **`storage/`** | `errs`, stdlib | `api`, `orchestrator`, `inference`, `cmd` |
+| **`discovery/`** | `errs`, stdlib (or approved mDNS library) | `api`, `orchestrator`, `inference`, `storage`, `cmd` |
+| **`mcp/`** | `errs`, stdlib | `api`, `orchestrator`, `inference`, `storage`, `cmd` |
+| **`errs/`** | stdlib only | Any layer in `src/` |
+| **`web/`** | Standalone Node/SvelteKit | Go source code |
+
+---
+
+## Layer Interface Catalog
+
+Detailed method signatures, payload schemas, concurrency rules, and error matrices are maintained in individual normative technical specifications in [`interfaces/`](interfaces/):
+
+| Layer | Interface / Boundary | Role & Primary Responsibility | Primary Consumer | Normative Technical Specification |
+|---|---|---|---|---|
+| **`api`** | HTTP Gateway & Handlers | Exposes REST & SSE endpoints, request validation, 1MB payload limits, and OpenAI translation. | Web Client, External LAN Tools | [`interfaces/api-gateway.md`](interfaces/api-gateway.md) |
+| **`orchestrator`** | `orchestrator.ChatService` | Manages conversational state, session retrieval, inference dispatch, and token streaming callbacks. | `api` layer | [`interfaces/orchestrator-service.md`](interfaces/orchestrator-service.md) |
+| **`inference`** | `inference.Client` | Encapsulates LLM backend communication (Ollama), token chunk streaming, and context cancellation. | `orchestrator` layer | [`interfaces/inference-client.md`](interfaces/inference-client.md) |
+| **`storage`** | `storage.Store` | Atomic filesystem session persistence, message retrieval, and deterministic data purging. | `orchestrator` layer | [`interfaces/storage-store.md`](interfaces/storage-store.md) |
+| **`discovery`** | `discovery.Advertiser` | Advertises Linden's presence on the LAN via mDNS (`linden.local`) on port 8080. | `cmd` layer | [`interfaces/discovery-advertiser.md`](interfaces/discovery-advertiser.md) |
+| **`mcp`** | Tool Boundary | Sandboxed subprocess execution for Model Context Protocol tools with strict privacy guardrails. | `orchestrator` layer | [`interfaces/mcp-boundary.md`](interfaces/mcp-boundary.md) |
+| **`errs`** | Shared Kernel | Defines the closed error taxonomy and uniform error wrapping primitives for all layers. | All Layers | [`interfaces/error-taxonomy.md`](interfaces/error-taxonomy.md) |
+| **`web`** | User Interface | SvelteKit static single-page application providing responsive local chat, served directly by `api`. | End User Browser | Standalone build in `src/web/` |
+| **`cmd`** | Application Entrypoint | Wires concrete layer implementations, binds OS signals, and oversees clean process shutdown. | OS Runtime | `src/cmd/main.go` |
+
+---
+
+## Shared Error Taxonomy
+
+All internal errors cross layer boundaries using the published error taxonomy defined in `src/errs` (normative spec: [`interfaces/error-taxonomy.md`](interfaces/error-taxonomy.md)).
+
+### Error Code Enum
+
+The taxonomy is a closed, stable set of codes:
+
+| Code | Semantic Meaning | Recommended HTTP Status |
+|---|---|---|
+| `invalid_argument` | Client specified an invalid argument (empty messages, missing required fields, payload >1MB). | `400 Bad Request` |
+| `unauthenticated` | Request does not have valid authentication credentials for the operation. | `401 Unauthorized` |
+| `permission_denied` | Caller does not have permission to execute the specified operation. | `403 Forbidden` |
+| `not_found` | A requested resource (model, session) was not found. | `404 Not Found` |
+| `conflict` | Resource conflict or concurrency update failure. | `409 Conflict` |
+| `resource_exhausted` | Quota exceeded, host storage full, or memory limits reached. | `429 Too Many Requests` / `507 Insufficient Storage` |
+| `unavailable` | Upstream service (e.g. Ollama daemon) is temporarily unreachable or starting up. | `502 Bad Gateway` / `503 Service Unavailable` |
+| `deadline_exceeded` | Operation timed out before completion. | `504 Gateway Timeout` |
+| `internal` | Unrecoverable internal failure; unclassified system errors default here. | `500 Internal Server Error` |
 
-## Architectural Rules
-
-1. Dependencies are one-way and follow layer order.
-2. Consumers depend on interfaces, not concrete implementations.
-3. Each interface must have contract tests under validation/contracts before implementation is merged.
-4. Unit tests must be added with each implementation PR.
-5. Integration and functional tests are introduced only after enough interfaces are implemented to execute real flows.
-6. No user content in logs or user-facing error bodies.
-7. Linux parity is strict: all CI gates must pass on Linux and Docker runtime behavior must be testable early.
+### Error Handling Rules
 
-## Dependency Graph
+1. **Context Wrapping:** Layers must always wrap errors using `errs.Wrap(code, msg, err)` to preserve causality without dropping codes.
+2. **Code Preservation:** If an underlying error already contains an `errs.Code`, upper layers preserve it unless intentionally reclassifying.
+3. **No User Content:** Error strings must describe operational failure modes (e.g. `"failed to load session: not found"`) and must never interpolate user messages or prompt text.
+4. **Client Sanitization:** At the API boundary, internal error messages are mapped to standardized client-safe responses.
 
-cmd -> api -> orchestrator -> inference
-cmd -> api -> orchestrator -> storage
-cmd -> discovery
-api serves static output from web build artifacts
+---
 
-Any layer may import `src/errs`. It is a shared kernel, not a layer, and it
-imports nothing itself.
+## Cross-Cutting Execution Semantics
 
-Forbidden:
+### 1. Concurrency & Goroutine Safety
+- All interface implementations (`ChatService`, `Client`, `Store`, `Advertiser`) must be safe for concurrent access by multiple goroutines.
+- Streaming callbacks (`onChunk func(Chunk) error`) are invoked **synchronously and sequentially** on the caller's goroutine. The caller does not need mutexes inside the callback.
 
-1. api importing inference or storage directly.
-2. inference importing api or orchestrator.
-3. storage importing api or orchestrator.
-4. discovery importing api or orchestrator.
-5. Any layer importing cmd.
+### 2. Context Cancellation Precedence
+- Every blocking or streaming method accepts a `context.Context` as its first parameter.
+- Implementations check `ctx.Err()` prior to invoking external network calls or delivering chunks.
+- If a context is canceled by the client, cancellation takes strict precedence over downstream transport errors (e.g., returning `context.Canceled` rather than `unavailable`).
 
-## Shared Domain Contracts
+### 3. Idempotency & Clean Resource Lifecycle
+- Background services (`Advertiser`, server listeners) must implement idempotent `Start()` and `Stop()` methods.
+- Calling `Stop()` on an already-stopped service returns `nil`.
 
-### Chat message contract
+---
 
-- role: system | user | assistant
-- content: string
-- timestamp: RFC3339 UTC string
+## Contract Conformance & Drift Detection
 
-### Chat request contract
+To guarantee that code and architecture never diverge, two automated quality gates enforce conformance:
 
-- model: string
-- messages: array of chat messages, minimum length 1
-- stream: boolean
-- session_id: optional string
+1. **Contract Test Verification:**
+   - Isolated black-box contract tests in `validation/contracts/` verify that implementations honor their respective interface contracts under success, error, timeout, and cancellation conditions.
+   - Run locally and in CI:
+     ```sh
+     go test -tags=contracts ./validation/contracts/...
+     ```
 
-### Chat response contract (non-stream)
-
-- id: string
-- model: string
-- output_text: string
-- finish_reason: string
-- usage: optional token counts
-
-### SSE stream contract
-
-- content type: text/event-stream
-- events:
-  - message: incremental text chunk
-  - metadata: model or usage updates
-  - done: terminal completion status
-  - error: safe client-facing error event
-
-SSE behavior requirements:
-
-1. Event order is preserved.
-2. done or error is terminal.
-3. Stream closes after terminal event.
-4. Keep-alive comments may be sent for long generations.
-
-### Error taxonomy
-*Normative Technical Specification:* [`interfaces/error-taxonomy.md`](interfaces/error-taxonomy.md)
-
-Implemented by `src/errs`. The package and this list are one contract: adding a
-code requires changing both in the same PR. See
-`docs/adr/0004-shared-error-taxonomy.md`.
-
-- invalid_argument
-- unauthenticated
-- permission_denied
-- not_found
-- conflict
-- resource_exhausted
-- unavailable
-- deadline_exceeded
-- internal
-
-Rules:
-
-1. API maps internal errors to stable error codes.
-2. Internal details remain server-side only.
-3. Correlation/request ID included in server logs and optional response header.
-4. An error carrying no code is treated as `internal`.
-5. Any layer may import `src/errs`. No layer imports another layer for error
-   definitions.
-
-## Layer Interfaces
-
-### cmd layer
-Responsibility:
-
-1. Read config.
-2. Wire concrete implementations.
-3. Start and stop processes.
-
-Public boundary:
-
-- main entrypoint only.
-
-Rules:
-
-1. No business logic.
-2. No direct HTTP handler logic.
-
-### api layer
-*Normative Technical Specification:* [`interfaces/api-gateway.md`](interfaces/api-gateway.md)
-
-Responsibility:
-
-1. Expose HTTP routes.
-2. Validate request shape and limits.
-3. Convert HTTP to orchestrator calls.
-4. Return JSON and SSE responses.
-
-Required interface dependency:
-
-- ChatService from orchestrator.
-
-Expected interface shape:
-
-- Health endpoint handler.
-- Version endpoint handler.
-- Chat handler supporting JSON and SSE.
-- Model list handler.
-
-### orchestrator layer
-*Normative Technical Specification:* [`interfaces/orchestrator-service.md`](interfaces/orchestrator-service.md)
-
-Responsibility:
-
-1. Validate workflow-level semantics.
-2. Assemble context and policy decisions.
-3. Call inference and storage.
-4. Transform provider output into product output schema.
-
-Required interface dependencies:
-
-- InferenceClient
-- ConversationStore (initially minimal)
-
-Expected interface shape:
-
-- Chat: accepts chat request and streaming writer/callback.
-- ListModels: pass-through plus policy filtering.
-
-### inference layer
-*Normative Technical Specification:* [`interfaces/inference-client.md`](interfaces/inference-client.md)
-
-Responsibility:
-
-1. Provide model listing.
-2. Provide chat generation streaming and non-streaming.
-3. Map provider transport errors to inference-level errors.
-
-Expected interface shape:
-
-- ListModels(ctx) -> []Model, error
-- ChatStream(ctx, request, onChunk func(Chunk) error) -> Result, error
-
-Rules:
-
-1. Provider-specific details are hidden behind interface.
-2. Timeouts and retry policy are explicit and testable.
-3. The callback returns an error so a consumer can abort a stream. When it
-   returns non-nil, ChatStream stops delivering, does no further provider work,
-   and returns that error unwrapped.
-4. Context cancellation is user-initiated stop; a callback error is
-   consumer-side failure. Both are supported and they are distinct.
-5. Errors use `src/errs` codes: provider unreachable maps to `unavailable`,
-   provider timeout to `deadline_exceeded`, unknown model to `not_found`, and a
-   request carrying no messages to `invalid_argument` before any provider call.
-6. The callback is invoked on the calling goroutine, in order, and never after
-   ChatStream returns. Consumers need no synchronization.
-7. An implementation checks `ctx.Err()` before each delivery and before
-   classifying any transport failure. Cancellation takes precedence over
-   transport classification.
-8. Result is meaningful only when the error is nil or is a context error. On
-   every other error path it is the zero value.
-
-Every implementation must pass the conformance suite in
-`validation/contracts/inference_contract_test.go`.
-
-#### Supported Ollama Container Topologies
-
-Per `docs/adr/0002-role-of-docker-in-distribution.md`, three network topologies are supported for communicating with Ollama:
-
-1. **Host-native Ollama (GPU-accelerated)**:
-   - Ollama runs natively on the host OS for direct GPU hardware acceleration.
-   - The Linden container connects using `OLLAMA_URL=http://host.docker.internal:11434` (Docker Desktop / host gateway).
-2. **Compose Sibling Container**:
-   - Ollama runs as a container service on the same Docker network as Linden.
-   - Linden connects using `OLLAMA_URL=http://ollama:11434`.
-3. **Local Process (Bare Metal / Development)**:
-   - Linden and Ollama run directly as local processes on the host.
-   - Linden connects using `OLLAMA_URL=http://127.0.0.1:11434`.
-
-### storage layer
-*Normative Technical Specification:* [`interfaces/storage-store.md`](interfaces/storage-store.md)
-
-Responsibility:
-
-1. Persist sessions and settings.
-2. Persist retrieval metadata in later phase.
-
-Expected interface shape for MVP:
-
-- SaveSession(ctx, session) -> error
-- LoadSession(ctx, sessionID) -> session, error
-- ListSessions(ctx, filter) -> []session, error
-
-Rules:
-
-1. Storage errors map to stable error taxonomy.
-2. Sensitive fields have explicit serialization rules.
-
-### discovery layer
-*Normative Technical Specification:* [`interfaces/discovery-advertiser.md`](interfaces/discovery-advertiser.md)
-
-Responsibility:
-
-1. Advertise service on LAN.
-2. Support pairing and revocation hooks in later phase.
-
-Expected interface shape:
-
-- Start(ctx) -> error
-- Stop(ctx) -> error
-- Status() -> discovery state
-
-### web layer
-Responsibility:
-
-1. Render chat and settings views.
-2. Consume API JSON and SSE endpoints.
-3. Surface privacy controls and status to user.
-
-Rules:
-
-1. Strict TypeScript.
-2. No any.
-3. SSE reconnection strategy is explicit.
-
-### mcp layer
-*Normative Technical Specification:* [`interfaces/mcp-boundary.md`](interfaces/mcp-boundary.md)
-
-Responsibility:
-
-1. Model Context Protocol tool execution and resource boundary.
-2. Sandboxing, timeout enforcement, and privacy isolation for local tools.
-
-## Cross-Cutting Non-Functional Requirements
-
-1. Linux parity is mandatory in CI.
-2. Docker image path must work early and remain green.
-3. Health endpoint is required for runtime and container health checks.
-4. Request timeouts and payload limits are required at API boundary.
-5. Observability baseline includes structured logs and request IDs.
-
-## Contract Test Coverage Matrix
-
-Minimum contract tests before implementation merge:
-
-1. api contracts
-   - request validation and error mapping
-   - SSE framing and terminal event behavior
-2. orchestrator contracts
-   - dependency invocation order
-   - fallback and error mapping behavior
-3. inference contracts
-   - model list mapping
-   - stream chunk, done, and error mapping
-4. storage contracts
-   - persistence and retrieval behavior
-   - not found and conflict semantics
-5. discovery contracts
-   - start/stop idempotency and status behavior
-
-## Exit Criteria For Interface Spec Stability
-
-This document is considered stable enough for implementation when:
-
-1. API request and response schemas are frozen for MVP.
-2. SSE event contract is accepted.
-3. Error taxonomy is accepted.
-4. Each layer has at least one contract test file stub committed.
+2. **Automated AST Drift Detection (`tools/docgen`):**
+   - The Go AST inspection utility parses all interfaces in `src/` and asserts that every exported method and error code exists in the corresponding specification document in `docs/architecture/interfaces/`.
+   - Run locally and in CI:
+     ```sh
+     cd tools && go run ./docgen -verify
+     ```
