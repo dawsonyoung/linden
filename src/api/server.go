@@ -39,6 +39,9 @@ func NewServer(addr string, logger *slog.Logger, build BuildInfo, chatService or
 	mux.HandleFunc("GET /models", handleModels(chatService))
 	mux.HandleFunc("POST /chat", handleChat(chatService))
 
+	// OpenAI Compatibility Layer
+	mux.HandleFunc("POST /v1/chat/completions", handleOpenAIChat(chatService))
+
 	buildFS, err := fs.Sub(web.BuildFS, "build")
 	if err == nil {
 		mux.Handle("GET /", http.FileServer(http.FS(buildFS)))

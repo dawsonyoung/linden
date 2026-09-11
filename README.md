@@ -2,10 +2,10 @@
   <img src="assets/linden_logo.jpg" alt="Linden Logo" width="220" />
 </p>
 
-<h1 align="center">Linden</h1>
+<h1 align="center">Linden: A Home AI Solution.</h1>
 
 <p align="center">
-  <em>A Home AI Solution. The AI you can trust, because you own it.</em>
+  <em>The AI you can trust, because you own it.</em>
 </p>
 
 <p align="center">
@@ -18,34 +18,43 @@
 
 ---
 
-Linden is a self-contained, local AI appliance built for Linux. It runs directly on your local network hardware, serving chat completions and streaming responses using locally running language models. With zero external cloud dependencies, no tracking, and fully auditable source code, Linden gives you a personal assistant that you control completely.
+Linden is a self-contained, local AI appliance built for Linux. It runs directly on your local network hardware, serving chat completions and streaming responses using locally running language models. With zero external cloud dependencies, no tracking, and fully auditable source code, Linden gives you a personal assistant that you control completely that is easy to install on any Linux device and simple for anyone to use.
 
 See [AGENTS.md](AGENTS.md) for agentic engineering workflows and contributor conventions.
 
 ## Key Design Principles
 
 - **Local & Source-Auditable**: Runs entirely on your own local hardware without external cloud services or telemetry. The source is open to audit so you can inspect exactly what runs on your network. No user chat content is ever recorded in logs at any level, and error messages are strictly sanitized.
+- **Agentic Engineering Rigor**: Built from the ground up using rigorous AI-agent workflows. Our `.agents/` directory ensures contract-first test reliability and structural integrity, proving that Linden is built to enterprise-grade standards.
+- **Ecosystem Compatible**: While Linden offers a standalone single-binary web UI, it also exposes an **OpenAI-Compatible REST API** (`/v1/chat/completions`) and is laying the groundwork for **Model Context Protocol (MCP)** integrations. This allows Linden to act as a drop-in, zero-friction replacement for cloud AI in your existing workflows.
 - **Single-Binary Full-Stack Deployment**: The SvelteKit frontend compiles to static assets embedded directly into the Go server binary (`embed.FS`). Running a single binary serves both the responsive web UI and the streaming API.
 - **Zero-Config LAN Discovery**: Automatically advertises `linden.local` across your home Wi-Fi via mDNS, allowing any phone, laptop, or tablet on your network to connect without manual IP configuration.
 - **Clean Layered Architecture**: Strict one-way layer seams (`cmd` &rarr; `api` &rarr; `orchestrator` &rarr; `inference` / `storage`) with isolated leaf layers and a standard shared error taxonomy.
-- **Contract-First Reliability**: Layer interfaces are defined as explicit contracts and validated with automated contract suites before implementation merges.
 
 ---
 
-## Quick Start & Easy Onboarding
+## Quick Start & Turnkey Onboarding
 
-Turn any Linux machine into a private home AI assistant in minutes.
+Turn any Linux host or low-cost home appliance into a private AI assistant in minutes.
 
-### Prerequisites
+### Option 1: Turnkey Binary Install (Recommended)
 
-- **Linux** (native or containerized)
-- **Ollama** installed with a pulled model (e.g. `ollama run qwen2.5` or `ollama run tinyllama`)
-- **Go 1.22+** & **Node.js 20+** (or simply **Docker**)
-
-### Option A: Run Directly (Native Linux)
+For barebones Linux servers and home appliances—no Go, Node.js, or compiler tools required:
 
 ```sh
-# 1. Verify your local toolchain
+curl -fsSL https://raw.githubusercontent.com/dawsonyoung/linden/main/scripts/install.sh | bash
+```
+
+This automated installer:
+1. Detects your hardware architecture (`x86_64` or `arm64`) and downloads the self-contained static binary.
+2. Checks for Ollama and requests your explicit approval before installing the engine and downloading models.
+3. Automatically provisions and starts a secure background `systemd` daemon (`linden.service`).
+4. Prints your local Wi-Fi address (`http://linden.local:8080`) ready for immediate use.
+
+### Option 2: Run from Source (Native Toolchain)
+
+```sh
+# 1. Verify your local toolchain (Go 1.22+, Node 20+)
 ./scripts/setup.sh
 
 # 2. Build the embedded full-stack binary
@@ -55,7 +64,7 @@ make build
 ./bin/linden
 ```
 
-### Option B: Run with Docker
+### Option 3: Run with Docker
 
 ```sh
 # Run containerized Linden connected to your host Ollama
@@ -66,13 +75,40 @@ OLLAMA_URL=http://host.docker.internal:11434 docker compose up --build
 
 Once started, Linden is ready to use immediately:
 
-1. **In your browser**: Open **`http://localhost:8080`** (on the host) or **`http://linden.local:8080`** from any device on your local Wi-Fi.
+1. **In your browser**: Open **`http://localhost:8080`** (on the host) or **`http://linden.local:8080`** from any phone, laptop, or tablet on your local Wi-Fi.
 2. **Start chatting**: Send a message to receive real-time streamed responses generated entirely by your local model.
 3. **Verify health**:
    ```sh
    curl http://localhost:8080/health    # {"status":"ok"}
    curl http://localhost:8080/version   # build metadata
    ```
+
+---
+
+## Hardware & Operating System Recommendations
+
+Linden is engineered specifically for **low-cost, dedicated home appliance hardware** operating 24/7 on your local network.
+
+### Target Hardware Profile (< 32GB RAM)
+
+- **Target Systems**: Low-power mini-PCs (e.g., Intel N100 / N97, AMD Ryzen 5000/7000 series) or compact SBCs (Raspberry Pi 5 8GB/16GB).
+- **Primary Use Case**: Sensitive text document ingestion and local knowledge retrieval (RAG). Linden is optimized for analyzing private files—such as financial statements, tax filings, health & medical records, or educational papers—without a single byte of data leaving your premises.
+- **Model Recommendations by Memory Tier**:
+
+| Host RAM | Recommended Model | Engine RAM Footprint | Characteristics |
+|---|---|---|---|
+| **8 GB** | **`qwen2.5:3b`** or `llama3.2:3b` | ~2.2 GB | Snappy CPU inference (~15 tok/s). Excellent for document summarization and quick Q&A. |
+| **16 GB** *(Sweet Spot)* | **`qwen2.5:7b`** (Q4_K_M) | ~4.8 GB | High-accuracy extraction from dense tables, medical terminology, and financial records with native long context. Leaves ~10GB RAM free for vector stores and system cache. |
+| **32 GB** | **`qwen2.5:14b`** (Q4_K_M) | ~9.5 GB | Frontier-level multi-turn reasoning and complex cross-document comparative analysis. |
+
+### Recommended Linux Distributions
+
+For dedicated appliance setups, choose minimal server distributions without heavy desktop graphical interfaces:
+
+- **Debian 12 (Bookworm) Minimal** *(Top Recommendation)*:
+  Uses only ~150MB of idle RAM at boot, providing maximum memory headroom for models and document embeddings. Proven long-term stability with native `systemd` sandboxing.
+- **Ubuntu Server 24.04 LTS**:
+  Uses ~300MB of idle RAM. Excellent out-of-the-box hardware driver support for the latest mini-PC chipsets and network adapters.
 
 ---
 
