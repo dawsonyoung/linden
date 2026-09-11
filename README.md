@@ -18,7 +18,7 @@
 
 ---
 
-Linden is a privacy-first, safety optimized personal AI platform. Local-only capable on your home network for a secure chat experience, it runs directly on your local network hardware, serving chat completions and streaming responses using locally running language models. With complete offline capability, auditable source code, and full control over your data, Linden gives you a personal assistant that you control completely.
+Linden is a privacy-first, safety optimized personal AI platform featuring streamlined deployment of the local-only chat experience. It runs directly on your local network hardware, serving chat completions and streaming responses using locally running language models. With complete offline capability, auditable source code, and full control over your data, Linden gives you a personal assistant that you control completely.
 
 See [AGENTS.md](AGENTS.md) for agentic engineering workflows and contributor conventions.
 

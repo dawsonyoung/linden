@@ -2,7 +2,7 @@
 
 ## What Linden is
 
-Linden is a privacy-first, safety optimized personal AI platform. A user runs it on a machine they own, on their own network, and gets a personal AI assistant that is local-only capable for a secure chat experience, requiring no mandatory accounts or third-party LLM dependencies.
+Linden is a privacy-first, safety optimized personal AI platform featuring streamlined deployment of the local-only chat experience. A user runs it on a machine they own, on their own network, and gets a personal AI assistant requiring no mandatory accounts or third-party LLM dependencies.
 
 ## Design commitments
 
