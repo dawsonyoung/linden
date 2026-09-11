@@ -18,7 +18,7 @@
 
 ---
 
-Linden is a self-contained, local-first personal AI appliance built for Linux. It runs directly on your local network hardware, serving chat completions and streaming responses using locally running language models. With complete local-only capability, auditable source code, and full control over your data, Linden gives you a personal assistant that you control completely—establishing the trust needed for future optional cloud-enhanced services (such as encrypted backups, secure tunneling, and document inboxes).
+Linden is a self-contained, local-first personal AI appliance built for Linux. It runs directly on your local network hardware, serving chat completions and streaming responses using locally running language models. With complete local-only capability, auditable source code, and full control over your data, Linden gives you a personal assistant that you control completely.
 
 See [AGENTS.md](AGENTS.md) for agentic engineering workflows and contributor conventions.
 
