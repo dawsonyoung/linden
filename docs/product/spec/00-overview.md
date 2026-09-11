@@ -2,7 +2,7 @@
 
 ## What Linden is
 
-Linden is a privacy-first local AI platform. A user runs it on a machine they own, on their own network, and gets a personal AI assistant. There are no accounts, no cloud dependency, and no telemetry.
+Linden is a privacy-first personal AI platform. A user runs it on a machine they own, on their own network, and gets a personal AI assistant that operates completely offline by default, requiring no mandatory accounts or third-party LLM dependencies.
 
 ## Design commitments
 

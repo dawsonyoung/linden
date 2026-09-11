@@ -19,10 +19,10 @@ This document outlines the privacy guarantees, data boundaries, and network beha
 
 ## Network behavior
 
-1. **LAN-Bound Operation:** Linden binds to the configured local address (`0.0.0.0:8080` by default) and advertises service presence over local multicast DNS (`linden.local`). It does not open firewall ports or establish outbound internet tunnels.
+1. **LAN-Bound Operation:** Linden binds to the configured local address (`0.0.0.0:8080` by default) and advertises service presence over local multicast DNS (`linden.local`). It does not open firewall ports or establish outbound internet tunnels by default.
 2. **Local Inference Communication:** By default, Linden communicates exclusively across loopback with the local inference engine (`http://localhost:11434`).
-3. **Zero Telemetry:** Linden contains no telemetry collectors, crash reporting daemons, or usage tracking modules. No phone-home requests are initiated.
+3. **No Hidden Tracking:** By default, Linden initiates no phone-home requests, user tracking, or hidden background telemetry. Future cloud-enhanced services (such as encrypted backups, secure command tunneling, or document inbox synchronization) will always be strictly opt-in and transparently disclosed.
 
 ## Extensibility boundary (External Engines)
 
-Linden supports user-configured inference backend URLs. If an operator manually configures Linden to target a cloud-hosted inference provider or third-party proxy, data dispatched to that endpoint is subject to that external provider's policies. Linden remains strictly local by default.
+Linden supports user-configured inference backend URLs. If an operator manually configures Linden to target a third-party inference provider or external proxy, data dispatched to that endpoint is subject to that external provider's policies. Linden remains strictly local by default.

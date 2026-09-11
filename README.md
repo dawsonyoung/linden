@@ -18,15 +18,15 @@
 
 ---
 
-Linden is a self-contained, local AI appliance built for Linux. It runs directly on your local network hardware, serving chat completions and streaming responses using locally running language models. With zero external cloud dependencies, no tracking, and fully auditable source code, Linden gives you a personal assistant that you control completely that is easy to install on any Linux device and simple for anyone to use.
+Linden is a self-contained, local-first personal AI appliance built for Linux. It runs directly on your local network hardware, serving chat completions and streaming responses using locally running language models. With complete local-only capability, auditable source code, and full control over your data, Linden gives you a personal assistant that you control completely—establishing the trust needed for future optional cloud-enhanced services (such as encrypted backups, secure tunneling, and document inboxes).
 
 See [AGENTS.md](AGENTS.md) for agentic engineering workflows and contributor conventions.
 
 ## Key Design Principles
 
-- **Local & Source-Auditable**: Runs entirely on your own local hardware without external cloud services or telemetry. The source is open to audit so you can inspect exactly what runs on your network. No user chat content is ever recorded in logs at any level, and error messages are strictly sanitized.
+- **Local-Only Capable & Auditable**: Runs natively on your own local hardware with full offline functionality. The source is open to audit so you can inspect exactly what runs on your network. No user chat content is ever recorded in logs at any level, and error messages are strictly sanitized.
 - **Agentic Engineering Rigor**: Built from the ground up using rigorous AI-agent workflows. Our `.agents/` directory ensures contract-first test reliability and structural integrity, proving that Linden is built to enterprise-grade standards.
-- **Ecosystem Compatible**: While Linden offers a standalone single-binary web UI, it also exposes an **OpenAI-Compatible REST API** (`/v1/chat/completions`) and is laying the groundwork for **Model Context Protocol (MCP)** integrations. This allows Linden to act as a drop-in, zero-friction replacement for cloud AI in your existing workflows.
+- **Ecosystem Compatible**: While Linden offers a standalone single-binary web UI, it also exposes an **OpenAI-Compatible REST API** (`/v1/chat/completions`) and is laying the groundwork for **Model Context Protocol (MCP)** integrations. This allows Linden to act as a drop-in, zero-friction local alternative to remote AI in your existing workflows.
 - **Single-Binary Full-Stack Deployment**: The SvelteKit frontend compiles to static assets embedded directly into the Go server binary (`embed.FS`). Running a single binary serves both the responsive web UI and the streaming API.
 - **Zero-Config LAN Discovery**: Automatically advertises `linden.local` across your home Wi-Fi via mDNS, allowing any phone, laptop, or tablet on your network to connect without manual IP configuration.
 - **Clean Layered Architecture**: Strict one-way layer seams (`cmd` &rarr; `api` &rarr; `orchestrator` &rarr; `inference` / `storage`) with isolated leaf layers and a standard shared error taxonomy.

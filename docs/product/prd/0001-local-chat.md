@@ -48,7 +48,7 @@ Linden solves this by providing a personal conversational assistant that runs 10
 
 - **In-Memory Transport:** Message tokens are dispatched to the local inference daemon over loopback and held in memory for request duration.
 - **Strict Zero-Logging:** Prompt text and generated tokens are strictly forbidden from server logs at all levels (including `DEBUG`).
-- **No Cloud Egress:** No tokens, usage telemetry, or identifiers are transmitted outside the local home network.
+- **Local Network Privacy:** During local operation, no tokens, user telemetry, or identifiers are transmitted outside the local home network.
 
 ## 6. Success & Acceptance Criteria
 
