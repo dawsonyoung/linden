@@ -87,6 +87,7 @@ SSE behavior requirements:
 4. Keep-alive comments may be sent for long generations.
 
 ### Error taxonomy
+*Normative Technical Specification:* [`interfaces/error-taxonomy.md`](interfaces/error-taxonomy.md)
 
 Implemented by `src/errs`. The package and this list are one contract: adding a
 code requires changing both in the same PR. See
@@ -130,6 +131,8 @@ Rules:
 2. No direct HTTP handler logic.
 
 ### api layer
+*Normative Technical Specification:* [`interfaces/api-gateway.md`](interfaces/api-gateway.md)
+
 Responsibility:
 
 1. Expose HTTP routes.
@@ -149,6 +152,8 @@ Expected interface shape:
 - Model list handler.
 
 ### orchestrator layer
+*Normative Technical Specification:* [`interfaces/orchestrator-service.md`](interfaces/orchestrator-service.md)
+
 Responsibility:
 
 1. Validate workflow-level semantics.
@@ -167,6 +172,8 @@ Expected interface shape:
 - ListModels: pass-through plus policy filtering.
 
 ### inference layer
+*Normative Technical Specification:* [`interfaces/inference-client.md`](interfaces/inference-client.md)
+
 Responsibility:
 
 1. Provide model listing.
@@ -216,6 +223,8 @@ Per `docs/adr/0002-role-of-docker-in-distribution.md`, three network topologies 
    - Linden connects using `OLLAMA_URL=http://127.0.0.1:11434`.
 
 ### storage layer
+*Normative Technical Specification:* [`interfaces/storage-store.md`](interfaces/storage-store.md)
+
 Responsibility:
 
 1. Persist sessions and settings.
@@ -233,6 +242,8 @@ Rules:
 2. Sensitive fields have explicit serialization rules.
 
 ### discovery layer
+*Normative Technical Specification:* [`interfaces/discovery-advertiser.md`](interfaces/discovery-advertiser.md)
+
 Responsibility:
 
 1. Advertise service on LAN.
@@ -256,6 +267,14 @@ Rules:
 1. Strict TypeScript.
 2. No any.
 3. SSE reconnection strategy is explicit.
+
+### mcp layer
+*Normative Technical Specification:* [`interfaces/mcp-boundary.md`](interfaces/mcp-boundary.md)
+
+Responsibility:
+
+1. Model Context Protocol tool execution and resource boundary.
+2. Sandboxing, timeout enforcement, and privacy isolation for local tools.
 
 ## Cross-Cutting Non-Functional Requirements
 

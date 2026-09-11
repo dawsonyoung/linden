@@ -41,6 +41,7 @@ Both this directory and `docs/product/spec/` describe the HTTP API, at different
 |----------|---------|
 | `layer-interface-spec.md` | Layer boundaries, dependency rules, shared contracts, per-layer interface shapes |
 | `system_design.md` | Software & runtime stack, inference daemon, MCP tooling, and update pipelines |
+| `interfaces/` | Dedicated, table-driven technical specifications for each layer interface |
 
 ## Related
 

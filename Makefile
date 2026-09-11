@@ -86,8 +86,11 @@ lint-web:
 # Documentation
 # docs-check catches what mdBook does not: pages absent from SUMMARY.md are
 # silently unpublished, and relative links are never verified.
-docs: docs-check
+docs: docs-check verify-interfaces
 	mdbook build
+
+verify-interfaces:
+	go run tools/docgen/main.go -verify
 
 docs-check:
 	@sh scripts/check-docs.sh
