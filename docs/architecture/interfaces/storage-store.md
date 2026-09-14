@@ -74,7 +74,7 @@ type Store interface {
 
 1. **Local Filesystem Placement:** Sessions are stored under `data/sessions/` on the local machine using atomic write operations (`.tmp` write followed by `os.Rename`).
 2. **Deterministic Data Purge:** When a session or turn is deleted, the file is unlinked immediately (`os.Remove`). No orphaned chunks or tombstone records remain on disk.
-3. **Local Storage Guarantee:** The default storage directory resides strictly on the local host. Any future cloud synchronization (e.g. encrypted backup) will be strictly opt-in and end-to-end encrypted.
+3. **Local Storage Guarantee:** The default storage directory resides strictly on the local host.
 
 ---
 
