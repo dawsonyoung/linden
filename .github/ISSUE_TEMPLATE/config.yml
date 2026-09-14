@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Vulnerability Reporting
+    url: https://github.com/dawsonyoung/linden/security/advisories/new
+    about: Please report security vulnerabilities privately. Do not open public issues for security or data privacy leaks.
+  - name: Documentation & Architecture
+    url: https://dawsonyoung.github.io/linden
+    about: Read the official documentation, specifications, and architecture decision records.
+  - name: General Discussions & Questions
+    url: https://github.com/dawsonyoung/linden/discussions
+    about: Ask questions, share ideas, and connect with the community.
