@@ -1,0 +1,53 @@
+name: Feature Proposal
+description: Suggest an enhancement or new capability for Linden
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Linden is designed around core privacy principles: **provably private**, **zero-config**, **tool not authority**, **owned not rented**, and **offline-first**.
+        Proposals should explain how they align with or advance these principles.
+
+  - type: textarea
+    id: problem-statement
+    attributes:
+      label: Problem Statement / Motivation
+      description: What problem are you trying to solve, or what user need is currently unmet?
+      placeholder: I need a way to... because...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the desired capability, API, or user experience.
+      placeholder: Linden should provide...
+    validations:
+      required: true
+
+  - type: textarea
+    id: privacy-architecture-impact
+    attributes:
+      label: Privacy & Architectural Alignment
+      description: How does this proposal respect Linden's offline-first, local-only privacy guarantees?
+      placeholder: |
+        - Data stays on-device: Yes / N/A
+        - External network dependencies: None
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: What other solutions or workarounds have you considered?
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have searched existing issues and discussions to verify this proposal is not already being tracked.
+          required: true

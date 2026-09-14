@@ -1,0 +1,92 @@
+name: Bug Report
+description: Report a defect, error, or unexpected behavior in Linden
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue! Please note that Linden is a privacy-first platform.
+        **Do NOT include private conversation content, personal identifiable information (PII), or secret keys in bug reports.**
+        If you suspect a security vulnerability or data leak, please report it via [Private Vulnerability Reporting](https://github.com/dawsonyoung/linden/security/advisories/new) instead.
+
+  - type: textarea
+    id: problem-description
+    attributes:
+      label: Description
+      description: A clear and concise description of what the bug is.
+      placeholder: What happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to Reproduce
+      description: Exact steps to reproduce the behavior.
+      placeholder: |
+        1. Start server with `make dev` or `bin/linden`
+        2. Open http://localhost:8080
+        3. Send message '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs-output
+    attributes:
+      label: Relevant Logs or Terminal Output
+      description: Please copy and paste any relevant terminal output or browser console logs (strip all personal/private information).
+      render: shell
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      description: Which OS are you running Linden on?
+      options:
+        - Linux (Ubuntu/Debian)
+        - Linux (Arch/Fedora/Other)
+        - macOS (Apple Silicon)
+        - macOS (Intel)
+        - Windows (WSL2)
+        - Windows (Native)
+        - Docker
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Linden Version or Commit SHA
+      description: Run `bin/linden -v` or provide `git rev-parse --short HEAD`.
+      placeholder: e.g. main / 9cd926b
+    validations:
+      required: false
+
+  - type: input
+    id: ollama-version
+    attributes:
+      label: Ollama Model & Version
+      description: Which model backend and model name are you using?
+      placeholder: e.g. Ollama 0.3.x with tinyllama:latest
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Privacy and Verification
+      options:
+        - label: I have verified that no private conversation data, tokens, or PII are included in this report.
+          required: true
+        - label: I have searched existing open and closed issues to ensure this is not a duplicate.
+          required: true
